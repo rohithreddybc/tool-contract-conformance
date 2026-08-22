@@ -1,7 +1,7 @@
 """Tests for core/predicates.py. Run with: python -m unittest discover tests"""
 import unittest
 
-from core.predicates import PathError, PredicateError, compile_predicate, evaluate
+from core.predicates import PathError, PredicateError, PredicateTypeError, compile_predicate, evaluate
 
 
 def ev(src, pre=None, post=None, args=None, result=None):
@@ -51,6 +51,13 @@ class TestWhitelist(unittest.TestCase):
     def test_bitwise_binop_rejected(self):
         with self.assertRaises(PredicateError):
             compile_predicate("pre.x & 1")
+
+    def test_exponentiation_rejected(self):
+        # Regression: ast.Pow used to be in ALLOWED_BINOPS. `pre.x ** 10 ** 10 ** 10` compiles,
+        # passes the whitelist, and hangs the process with no timeout anywhere in the evaluation
+        # path. No shipped contract uses exponentiation.
+        with self.assertRaises(PredicateError):
+            compile_predicate("pre.x ** 2")
 
     def test_starred_call_arg_rejected(self):
         with self.assertRaises(PredicateError):
@@ -152,15 +159,89 @@ class TestMissingPaths(unittest.TestCase):
             evaluate(compiled, {"items": [1, 2]}, {}, {}, {})
 
 
+class TestPredicateTypeError(unittest.TestCase):
+    """core/predicates.py:267 -- TypeError must not be misreported as PathError/no_observable_
+    state when the path resolved perfectly and the failure is a comparison/arithmetic type
+    mismatch. PREDICATE-GRAMMAR.md sec 2.3 is about paths that do not resolve; this is a
+    different, separately-countable failure."""
+
+    def test_comparison_against_null_raises_predicate_type_error_not_path_error(self):
+        # `balance` resolves on both sides -- the path is fine. `None > 0` is a TypeError, and
+        # must not be silently recorded as an unresolved path.
+        compiled = compile_predicate("post.balance > pre.balance")
+        pre = {"balance": 0}
+        post = {"balance": None}
+        with self.assertRaises(PredicateTypeError):
+            evaluate(compiled, pre, post, {}, {})
+        # and it must NOT be a PathError (PredicateTypeError does not subclass PathError)
+        try:
+            evaluate(compiled, pre, post, {}, {})
+        except PredicateTypeError:
+            pass
+        except PathError:
+            self.fail("TypeError on a resolved path must not be raised as PathError")
+
+    def test_predicate_type_error_is_not_a_path_error(self):
+        self.assertFalse(issubclass(PredicateTypeError, PathError))
+        self.assertTrue(issubclass(PredicateTypeError, PredicateError))
+
+    def test_subscripting_a_number_still_raises_something_catchable(self):
+        # The genuine ambiguity the fix does not paper over: subscripting a non-container is
+        # ALSO a TypeError (`pre.foo.bar` where `foo` is a number is `int.__getitem__`, not a
+        # KeyError). It now lands in PredicateTypeError too, not PathError -- deliberately: both
+        # causes are TypeErrors and are counted together under predicate_type_error, distinct
+        # from genuine KeyError/IndexError path failures.
+        compiled = compile_predicate("pre.foo.bar")
+        with self.assertRaises(PredicateTypeError):
+            evaluate(compiled, {"foo": 5}, {}, {}, {})
+
+    def test_missing_key_still_raises_path_error_not_predicate_type_error(self):
+        # KeyError/IndexError are unaffected by this fix -- still PathError.
+        compiled = compile_predicate("pre.customers")
+        with self.assertRaises(PathError):
+            evaluate(compiled, {}, {}, {}, {})
+
+
+class TestNonBooleanResult(unittest.TestCase):
+    """core/predicates.py:269 -- a predicate must evaluate to bool. Silent bool() coercion would
+    let e.g. `len(post.reservations)` (author meant `== 0`) report CONFORMS on every non-empty
+    collection -- the inverse of the intent, with no error anywhere."""
+
+    def test_truthy_non_bool_result_raises(self):
+        compiled = compile_predicate("len(post.reservations)")
+        with self.assertRaises(PredicateError):
+            evaluate(compiled, {}, {"reservations": [1, 2, 3]}, {}, {})
+
+    def test_falsy_non_bool_result_also_raises(self):
+        # The coercion bug is not just "non-empty coerces True" -- ANY non-bool return is a
+        # contract-authoring error, including one that happens to coerce False, because that
+        # correctness only holds by accident of the current data.
+        compiled = compile_predicate("len(post.reservations)")
+        with self.assertRaises(PredicateError):
+            evaluate(compiled, {}, {"reservations": []}, {}, {})
+
+    def test_genuine_boolean_result_still_passes(self):
+        compiled = compile_predicate("len(post.reservations) == 0")
+        self.assertTrue(evaluate(compiled, {}, {"reservations": []}, {}, {}))
+        self.assertFalse(evaluate(compiled, {}, {"reservations": [1]}, {}, {}))
+
+
 class TestDottedRewrite(unittest.TestCase):
     def test_dotted_access_is_subscripting(self):
-        c1 = compile_predicate("pre.customers")
-        c2 = compile_predicate("pre['customers']")
+        # NOTE: this test previously called evaluate() on the bare non-boolean expression
+        # "pre.customers" and asserted `is not None` -- which passed only because evaluate()
+        # used to coerce any truthy non-bool result to True with `bool(value)`. That is exactly
+        # the silent-coercion bug TestNonBooleanResult now guards against (a real contract
+        # author's mistake -- e.g. `len(post.reservations)` instead of `== 0` -- would have
+        # reported CONFORMS silently). Rewritten to compare dotted vs subscript access through a
+        # genuinely boolean predicate instead of relying on truthy coercion of a bare path.
         snap = {"customers": {"a": 1}}
-        self.assertEqual(evaluate(c1, snap, {}, {}, {}) is not None, True)
-        self.assertEqual(
-            bool(evaluate(compile_predicate("pre.customers == pre['customers']"), snap, {}, {}, {})),
-            True,
+        dotted = compile_predicate("pre.customers.a == 1")
+        subscripted = compile_predicate("pre['customers']['a'] == 1")
+        self.assertTrue(evaluate(dotted, snap, {}, {}, {}))
+        self.assertTrue(evaluate(subscripted, snap, {}, {}, {}))
+        self.assertTrue(
+            evaluate(compile_predicate("pre.customers == pre['customers']"), snap, {}, {}, {})
         )
 
     def test_result_error_membership(self):

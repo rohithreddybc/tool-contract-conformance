@@ -1,7 +1,7 @@
 """Tests for core/frame.py. Run with: python -m unittest discover tests"""
 import unittest
 
-from core.frame import FrameMatchError, FrameSyntaxError, get_path, match_paths, parse_pattern
+from core.frame import FrameMatchError, FrameResolutionError, FrameSyntaxError, get_path, match_paths, parse_pattern
 
 
 class TestSegmentKinds(unittest.TestCase):
@@ -77,6 +77,29 @@ class TestGetPath(unittest.TestCase):
     def test_resolves_a_concrete_path(self):
         snap = {"customers": {"a": {"x": 42}}}
         self.assertEqual(get_path(snap, ("customers", "a", "x")), 42)
+
+    def test_missing_key_raises_typed_frame_resolution_error_not_bare_keyerror(self):
+        # Regression: get_path used to let a bare KeyError escape, inconsistent with
+        # core/predicates.py's evaluate() which turns the identical failure into a typed
+        # PathError rather than crashing the caller.
+        snap = {"customers": {"a": {"x": 42}}}
+        with self.assertRaises(FrameResolutionError):
+            get_path(snap, ("customers", "missing"))
+
+    def test_index_out_of_range_raises_typed_frame_resolution_error(self):
+        snap = {"items": [1, 2]}
+        with self.assertRaises(FrameResolutionError):
+            get_path(snap, ("items", 5))
+
+    def test_subscripting_a_non_container_raises_typed_frame_resolution_error(self):
+        snap = {"items": 5}
+        with self.assertRaises(FrameResolutionError):
+            get_path(snap, ("items", "x"))
+
+    def test_frame_resolution_error_is_a_frame_path_error(self):
+        from core.frame import FramePathError
+
+        self.assertTrue(issubclass(FrameResolutionError, FramePathError))
 
 
 if __name__ == "__main__":

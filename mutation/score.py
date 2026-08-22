@@ -39,7 +39,7 @@ from dataclasses import dataclass, field
 from typing import Any, Optional
 
 from adapters.contract_check import check_effects, check_precondition_enforcement, to_result_binding
-from core.canonical import CanonicalConfig, canonicalize, diff
+from core.canonical import CanonicalConfig, canonical_equal, diff
 from core.model import Contract
 from core.predicates import compile_predicate
 from core.verdict import ClauseVerdict, Verdict
@@ -258,11 +258,11 @@ def is_behaviorally_live(
     for args in probe_args_list:
         orig = invoke_direct(original_cls(), tool, args)
         mut = invoke_direct(mutant_cls(), tool, args)
-        if canonicalize(orig.post_state, cfg) != canonicalize(mut.post_state, cfg):
+        if not canonical_equal(orig.post_state, mut.post_state, cfg):
             return True
         orig_result = to_result_binding(orig.raw, orig.success, orig.error)
         mut_result = to_result_binding(mut.raw, mut.success, mut.error)
-        if canonicalize(orig_result, cfg) != canonicalize(mut_result, cfg):
+        if not canonical_equal(orig_result, mut_result, cfg):
             return True
     return False
 

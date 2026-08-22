@@ -32,7 +32,7 @@ from typing import Any, Optional
 
 from core.canonical import CanonicalConfig, diff
 from core.model import Contract
-from core.predicates import PathError, compile_predicate, evaluate
+from core.predicates import PathError, PredicateTypeError, compile_predicate, evaluate
 from core.verdict import ClauseVerdict, DefectClass, Verdict, Witness
 
 __all__ = ["to_result_binding", "check_effects", "check_precondition_enforcement"]
@@ -61,12 +61,17 @@ def _clause_verdict(
 ) -> ClauseVerdict:
     """Evaluate one predicate; CONFORMS if True, VIOLATES (tagged `on_false`, with a witness) if
     False, UNTESTABLE if a snapshot path did not resolve (PREDICATE-GRAMMAR.md sec 2.3 -- a
-    missing path is never silently False)."""
+    missing path is never silently False) or if evaluation raised TypeError on a path that DID
+    resolve (core/predicates.py's PredicateTypeError -- e.g. a comparison against a null field;
+    kept as its own reason_code, deliberately never merged into no_observable_state, so the two
+    causes are counted separately)."""
     compiled = compile_predicate(predicate_src)
     try:
         ok = evaluate(compiled, pre, post, args, result)
     except PathError:
         return ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=clause_id, reason_code="no_observable_state")
+    except PredicateTypeError:
+        return ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=clause_id, reason_code="predicate_type_error")
     if ok:
         return ClauseVerdict(verdict=Verdict.CONFORMS, clause_id=clause_id)
     return ClauseVerdict(
@@ -153,7 +158,7 @@ def check_precondition_enforcement(
         compiled = compile_predicate(pc.predicate)
         try:
             held = evaluate(compiled, pre, post, args, result)
-        except PathError:
+        except (PathError, PredicateTypeError):
             continue  # untestable for this clause; does not block grading other clauses
         if not held:
             violated_ids.append(pc.id)

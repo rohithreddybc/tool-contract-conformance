@@ -1,7 +1,7 @@
 """Tests for core/canonical.py. Run with: python -m unittest discover tests"""
 import unittest
 
-from core.canonical import VOLATILE_SENTINEL, CanonicalConfig, canonicalize, diff
+from core.canonical import VOLATILE_SENTINEL, CanonicalConfig, canonical_equal, canonicalize, diff
 
 
 class TestSortedKeys(unittest.TestCase):
@@ -40,11 +40,53 @@ class TestFloatTolerance(unittest.TestCase):
         cfg = CanonicalConfig()
         self.assertNotEqual(canonicalize({"x": 1.0001}, cfg), canonicalize({"x": 1.0002}, cfg))
 
-    def test_tolerance_rounds_nearby_floats_to_the_same_bucket(self):
+    def test_canonicalize_never_mutates_numbers(self):
+        # Regression: canonicalize() used to bucket floats with round(node / tol) * tol -- a
+        # quantization, not a tolerance. Canonicalization is structural only now; tolerance is a
+        # comparison concern handled by canonical_equal()/diff(). A value survives canonicalize()
+        # unchanged regardless of the declared tolerance.
         cfg = CanonicalConfig(float_tolerance=0.01)
-        a = canonicalize({"x": 1.001}, cfg)
-        b = canonicalize({"x": 1.004}, cfg)
-        self.assertEqual(a, b)
+        self.assertEqual(canonicalize({"x": 1.001}, cfg), {"x": 1.001})
+        self.assertEqual(canonicalize({"x": 1.004}, cfg), {"x": 1.004})
+
+    def test_bucket_edge_values_closer_than_tolerance_compare_equal(self):
+        # Regression for the bucketing bug: round(node / tol) * tol puts 0.014999 and 0.015001
+        # in different buckets (0.01 vs 0.02) at tol=0.01 even though they are 2e-6 apart --
+        # well within the declared tolerance. canonical_equal must say these are equal.
+        cfg = CanonicalConfig(float_tolerance=0.01)
+        self.assertTrue(canonical_equal({"x": 0.014999}, {"x": 0.015001}, cfg))
+
+    def test_bucket_edge_values_are_reported_unchanged_by_canonicalize(self):
+        cfg = CanonicalConfig(float_tolerance=0.01)
+        self.assertEqual(canonicalize({"x": 0.014999}, cfg), {"x": 0.014999})
+        self.assertEqual(canonicalize({"x": 0.015001}, cfg), {"x": 0.015001})
+
+    def test_equal_int_and_float_compare_equal_under_tolerance(self):
+        # Regression: round(node / tol) * tol only matched isinstance(node, float), so an int
+        # left untouched (100) and an equal float rounded to its own bucket (100.0 at
+        # tol=0.3 -> round(100.0/0.3)*0.3 == 333*0.3 == 99.89999999999999) compared UNEQUAL --
+        # enabling tolerance created a diff where tolerance 0 correctly reported none.
+        cfg = CanonicalConfig(float_tolerance=0.3)
+        self.assertTrue(canonical_equal({"x": 100}, {"x": 100.0}, cfg))
+
+    def test_int_and_float_untouched_by_canonicalize(self):
+        cfg = CanonicalConfig(float_tolerance=0.3)
+        self.assertEqual(canonicalize({"x": 100}, cfg), {"x": 100})
+        self.assertEqual(canonicalize({"x": 100.0}, cfg), {"x": 100.0})
+
+    def test_values_further_than_tolerance_still_differ(self):
+        cfg = CanonicalConfig(float_tolerance=0.01)
+        self.assertFalse(canonical_equal({"x": 1.0}, {"x": 1.02}, cfg))
+
+    def test_bool_is_not_treated_as_a_number_under_tolerance(self):
+        # A large tolerance must never forgive a boolean flip: True/False are not "numbers"
+        # for tolerance purposes even though bool subclasses int in Python.
+        cfg = CanonicalConfig(float_tolerance=1.0)
+        self.assertFalse(canonical_equal({"x": True}, {"x": False}, cfg))
+
+    def test_canonical_equal_with_default_config_is_exact(self):
+        self.assertFalse(canonical_equal({"x": 1.0}, {"x": 1.0000001}))
+        self.assertTrue(canonical_equal({"x": 1.0}, {"x": 1.0}))
 
 
 class TestOrderSensitivity(unittest.TestCase):
@@ -88,6 +130,40 @@ class TestDiff(unittest.TestCase):
     def test_diff_empty_for_identical_snapshots(self):
         snap = {"a": {"b": [1, 2, 3]}}
         self.assertEqual(diff(snap, snap), {})
+
+    def test_diff_is_tolerance_aware(self):
+        cfg = CanonicalConfig(float_tolerance=0.01)
+        pre = {"balance": 0.014999}
+        post = {"balance": 0.015001}
+        self.assertEqual(diff(pre, post, cfg), {})
+
+    def test_diff_reports_int_vs_equal_float_as_no_change_under_tolerance(self):
+        cfg = CanonicalConfig(float_tolerance=0.3)
+        self.assertEqual(diff({"x": 100}, {"x": 100.0}, cfg), {})
+
+    def test_diff_length_differing_lists_names_the_removed_element(self):
+        # Regression: _diff used to only recurse into equal-length lists, so removing one of
+        # three elements produced a single change entry containing both full lists instead of
+        # naming the removed element.
+        pre = {"flights": ["AB1", "CD2", "EF3"]}
+        post = {"flights": ["AB1", "CD2"]}
+        changes = diff(pre, post)
+        self.assertEqual(changes, {"flights.2": {"pre": "EF3", "post": None}})
+
+    def test_diff_length_differing_lists_names_the_added_element(self):
+        pre = {"flights": ["AB1", "CD2"]}
+        post = {"flights": ["AB1", "CD2", "EF3"]}
+        changes = diff(pre, post)
+        self.assertEqual(changes, {"flights.2": {"pre": None, "post": "EF3"}})
+
+    def test_diff_length_differing_lists_common_prefix_still_diffed_individually(self):
+        pre = {"flights": ["AB1", "XX9", "EF3"]}
+        post = {"flights": ["AB1", "CD2"]}
+        changes = diff(pre, post)
+        self.assertEqual(
+            changes,
+            {"flights.1": {"pre": "XX9", "post": "CD2"}, "flights.2": {"pre": "EF3", "post": None}},
+        )
 
     def test_diff_respects_volatile_masking(self):
         cfg = CanonicalConfig(volatile_paths=("state.created_at",))

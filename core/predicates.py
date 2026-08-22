@@ -18,7 +18,7 @@ ALLOWED_BUILTINS = frozenset(
     {"len", "sum", "min", "max", "abs", "round", "sorted", "any", "all", "set", "int", "float", "str", "bool"}
 )
 
-ALLOWED_BINOPS = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod, ast.Pow)
+ALLOWED_BINOPS = (ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod)
 ALLOWED_UNARYOPS = (ast.UAdd, ast.USub, ast.Not)
 ALLOWED_CMPOPS = (ast.Eq, ast.NotEq, ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.In, ast.NotIn)
 ALLOWED_CONST_TYPES = (str, int, float, bool, type(None))
@@ -35,8 +35,23 @@ class PredicateError(Exception):
 
 
 class PathError(PredicateError):
-    """A snapshot/args/result path did not resolve. Caller maps this to UNTESTABLE /
-    no_observable_state -- see PREDICATE-GRAMMAR.md sec 2.3. Never silently False."""
+    """A snapshot/args/result path did not resolve (KeyError/IndexError -- the key or index
+    genuinely is not there). Caller maps this to UNTESTABLE / no_observable_state -- see
+    PREDICATE-GRAMMAR.md sec 2.3. Never silently False."""
+
+
+class PredicateTypeError(PredicateError):
+    """The compiled expression raised TypeError during evaluation. Deliberately NOT a PathError:
+    a TypeError has a genuine ambiguity PathError does not. It can be a path failure in disguise
+    (`pre.foo.bar` where `foo` resolved to a number is `int.__getitem__`, a TypeError, not a
+    KeyError/IndexError) -- but it can just as easily be a comparison or arithmetic op applied to
+    a value of the wrong type at a path that resolved perfectly (`post.balance > pre.balance`
+    where `balance` exists and is `None`). Collapsing that second case into PathError/
+    no_observable_state silently turns what may be a real VIOLATES into an UNTESTABLE, which is
+    exactly the miscount this exception exists to stop. Both cases land here, deliberately kept
+    countable separately from genuine path-resolution failures (reason_code
+    'predicate_type_error' vs 'no_observable_state') rather than silently merged -- see caller
+    mapping in adapters/contract_check.py."""
 
 
 @dataclass
@@ -264,6 +279,14 @@ def evaluate(compiled: CompiledPredicate, pre: Any, post: Any, args: Any, result
     env = {"__builtins__": safe_builtins, "pre": pre, "post": post, "args": args, "result": result}
     try:
         value = eval(compiled.code, env)  # noqa: S307 -- restricted AST, see compile_predicate
-    except (KeyError, IndexError, TypeError) as e:
+    except TypeError as e:
+        raise PredicateTypeError(f"type error evaluating {compiled.source!r}: {e!r}") from e
+    except (KeyError, IndexError) as e:
         raise PathError(f"path did not resolve evaluating {compiled.source!r}: {e!r}") from e
-    return bool(value)
+    if not isinstance(value, bool):
+        raise PredicateError(
+            f"predicate {compiled.source!r} evaluated to non-bool {value!r} "
+            f"({type(value).__name__}) -- predicates must be boolean expressions, "
+            "not a value that happens to be truthy/falsy"
+        )
+    return value

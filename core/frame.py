@@ -25,6 +25,14 @@ class FrameMatchError(FramePathError):
     """The pattern is syntactically valid but matched no concrete path in the snapshot."""
 
 
+class FrameResolutionError(FramePathError):
+    """A concrete path (as returned by match_paths) did not resolve against the snapshot passed
+    to get_path -- the key/index is missing, or a step subscripts a non-container. Typed the same
+    way core/predicates.py's PathError is typed for the identical situation (sec 2.3): an
+    unresolvable path is a located, catchable error, never a bare KeyError/IndexError/TypeError
+    that would crash the caller."""
+
+
 def parse_pattern(pattern: str) -> list[str]:
     """Validate and split a frame-path pattern into segments. Strips a leading 'state.' root."""
     if pattern is None or not pattern.strip():
@@ -92,8 +100,14 @@ def _match(segments: list[str], node: Any, prefix: tuple, results: list[tuple]) 
 
 
 def get_path(snapshot: Any, path: tuple) -> Any:
-    """Resolve a concrete path (as returned by match_paths) to its value in snapshot."""
+    """Resolve a concrete path (as returned by match_paths) to its value in snapshot. Raises
+    FrameResolutionError -- not a bare KeyError/IndexError/TypeError -- if a step does not
+    resolve, consistent with how core/predicates.py's evaluate() turns the same underlying
+    failures into a typed PathError rather than letting them crash the caller."""
     node = snapshot
-    for key in path:
-        node = node[key]
+    try:
+        for key in path:
+            node = node[key]
+    except (KeyError, IndexError, TypeError) as e:
+        raise FrameResolutionError(f"path {path!r} did not resolve: {e!r}") from e
     return node

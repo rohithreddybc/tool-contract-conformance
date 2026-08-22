@@ -38,6 +38,15 @@ UNTESTABLE_REASONS = frozenset(
         "requires_network",
         "no_observable_state",
         "adapter_unsupported",
+        # Not in spec/schema.json's $defs.untestable.reason enum: that enum is for clauses an
+        # adapter author statically declares untestable in a contract's `untestable:` block
+        # (schema.json, a document this project may not edit -- see CLAUDE.md). This reason is
+        # produced at RUNTIME by adapters/contract_check.py when core/predicates.py's
+        # PredicateTypeError fires: a snapshot path resolved but a comparison/arithmetic op hit a
+        # value of the wrong type (e.g. `post.balance > pre.balance` where balance is null).
+        # Kept distinct from "no_observable_state" so the two causes are never silently merged --
+        # see core/predicates.py's PredicateTypeError docstring.
+        "predicate_type_error",
     }
 )
 

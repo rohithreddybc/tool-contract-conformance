@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from core.model import Contract
-from core.predicates import PathError, compile_predicate, evaluate
+from core.predicates import PathError, PredicateTypeError, compile_predicate, evaluate
 
 __all__ = ["Probe", "generate_boundary_probes", "generate_precondition_probes", "build_equivalence_probe_corpus"]
 
@@ -124,7 +124,7 @@ def generate_precondition_probes(contract: Contract, pre: Any, candidates: "list
         for cand in candidates:
             try:
                 held = evaluate(compiled, pre, pre, cand, {})
-            except PathError:
+            except (PathError, PredicateTypeError):
                 continue
             if held and satisfying is None:
                 satisfying = cand

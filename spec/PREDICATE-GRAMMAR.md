@@ -25,7 +25,9 @@ Permitted AST nodes:
 
 - literals: `Constant`, `List`, `Tuple`, `Dict`, `Set`
 - names: `Name` (only the four bindings and comprehension binders), `Attribute` (rewritten to subscript), `Subscript`, `Slice`
-- operators: `BoolOp`, `UnaryOp`, `BinOp` restricted to `+ - * / // % **`, `Compare` including `in` and `not in`
+- operators: `BoolOp`, `UnaryOp`, `BinOp` restricted to `+ - * / // %`, `Compare` including `in` and `not in`
+
+  Exponentiation is **not** permitted. `**` was in this list until 2026-08-21, when a code review observed that `pre.x ** 10 ** 10 ** 10` compiles, passes the whitelist, and then blocks the process indefinitely — there is no timeout anywhere in the evaluation path, so one mistyped operator stalls a full-corpus run rather than failing a single clause. No contract needs exponentiation. (Unrelated: `**` remains a wildcard segment in the *frame-path* grammar of §3, which is a different language.)
 - conditionals: `IfExp`
 - comprehensions: `GeneratorExp`, `ListComp`, `SetComp`, `DictComp` — **with an explicit binder**, see §2.1
 - calls: `Call` where the callee is one of the allowed builtins below and every argument is itself permitted
