@@ -239,6 +239,36 @@ References (IEEE numeric, ~35 entries), Data Availability (Zenodo DOI), Ethics, 
 
 ---
 
+## Venue decision — settled 2026-08-21, do not relitigate
+
+**IEEE BigData 2026, Intelligent Data Mining, Sep 27. arXiv preprint and Zenodo artifact go up the same week as submission.** ML on Big Data (Sep 30) is a mechanical backstop if the Sep 20 draft gate slips, not an alternative plan.
+
+The topic-list mismatch is a framing problem, not an acceptance problem. A 34-topic session listing "LLMs" and "Autonomous Systems and Agents" is broad-scope, and broad-scope sessions need papers; the realistic failure is a reviewer who cannot see why the paper belongs, which the venue-bridge paragraph exists to fix. The bridge is real: benchmark scores are published measurement data the field mines, aggregates into leaderboards, and consumes in model selection, and this paper audits the process that generates them.
+
+Every alternative is worse on acceptance, which is the stated priority. SE venues (ISSTA/ICST) put the conceded non-novelty of technique in front of the exact reviewers who own ConTract, IcePICK and AGORA+, at a 20-25% bar. NeurIPS D&B is the best conceptual fit and eight months away — with findings disclosed publicly on Sep 10 and tau2 already moving toward a successor, waiting is how the evidence gets scooped.
+
+**Citations come from the preprint, not the proceedings.** This literature reads arXiv within weeks. The venue buys the acceptance line; the preprint and artifact buy the reach. That makes same-week release a commitment, not an option.
+
+**One hour, before the abstract is drafted:** scan the BigData 2026 special-session index and switch only if a session explicitly names LLM evaluation or benchmarking. Same conference, same format, near-zero switching cost. One hour, then stop.
+
+### Framing
+
+**Title:** *Scores at Risk: When Benchmark Tools Violate Their Own Advertised Semantics.* Method phrase goes in the subtitle.
+
+**Opening, in this order:** LiveClawBench's independent statement that benchmark mocks discard state transitions — someone else names the problem first; then the three quoted lines of MedAgentBench's POST branch with file and line, inside the first column; then the venue bridge.
+
+**Asset order.** The MedAgentBench published-number link **leads** — it is the hook and the proof the problem costs something. The cross-layer mutual-consistency result **carries the intellectual claim**: single-layer audits are structurally blind to cross-layer consistency defects by construction. That is the novelty that survives the ConTract/IcePICK concession. The framework comes **third**, as the instrument that makes the audit systematic — never as the contribution. Within it, score-at-risk gets full billing and the checker gets least.
+
+### Abstract rule, given that §VIII may null
+
+The abstract promises: the compressed count (7 benchmark-class cells across 4 benchmarks), the MedAgentBench construct-validity result, score-at-risk bounds with basis tags, and validated detection. **It promises no verdict flips.** Flips are a bonus in §VIII if they materialize; if the pre-registered null lands, the abstract never wrote a cheque the paper cannot cash.
+
+### Clinical framing — press the mechanism, drop the shaming
+
+State it exactly as the honesty constraints already commit: Table 3's Action SR column, all 11 models, computed under a commit where the write path is a no-op and the only write oracle is the agent's transcript, gated on the fabricated success string. Cite the arXiv table actually read. Mention NEJM AI **once**, factually, as evidence the numbers are consumed clinically — never in the abstract, never as a rhetorical payload. Keep the disclaimer prominent: the numbers are not wrong, they measure emitted-request well-formedness rather than clinical effect.
+
+The finding's power is that every clause is mechanically checkable, so a defensive reviewer can only attack overreach — ship none. Disclosure on Sep 10 gives seventeen days of right-of-reply before submission, and the response or dated silence enters the paper as data. The "either side of the divergence may be repaired" principle in §III is the armor if a hostile reviewer materializes.
+
 ## Format reality, verified against the CFP 2026-08-21 — read before touching the budget below
 
 Checked directly at `bigdataieee.org/BigData2026/calls/special-data-mining/` and the main CFP. Three corrections, one of them structural:
@@ -266,6 +296,20 @@ Checked directly at `bigdataieee.org/BigData2026/calls/special-data-mining/` and
 | | **Total** | **10.00** |
 
 Overflow order if the draft runs long: §VI to 0.5, §IX to 0.5, §III to 0.75. Do not cut §IV or §VII — they carry the contribution and the methodology defense respectively.
+
+### Cuts decided 2026-08-21 with the venue decision — apply these to the table above before drafting
+
+The no-appendix rule plus the reclaimed back-matter space nets out as:
+
+| Item | Decision |
+|---|---|
+| **Tier 2 of the agent experiment** | **Cut entirely.** Its appendix escape hatch is gone, the architecture's cut order already named it first, and a descriptive plot over ~15 tasks buys nothing a hostile methods reviewer cannot spend. §VIII becomes Tier 1 plus the at-risk / exercised / flipped table |
+| **§VI Checker** | **0.5 pg.** Adapter mechanics, the subprocess boundary and the Python-version work move to the artifact. Conceded-non-novel machinery must not eat page budget |
+| **§V Contract spec** | **~0.9 pg.** Keep the three-tier grounding table, one worked contract, and both true-negative showcases — the deferred update and the advertised non-enforcement. The "knows when not to fire" argument is the credibility of the whole checker. Grammar and binder detail to the artifact |
+| **§VII Mutation validation** | **~1.1 pg, both arms.** This is the methodology defense this paper needs. Keep Wilson intervals, the escape decomposition, and both raw and adjudicated rates. Equivalent-mutant construction to the artifact |
+| Held-out-contract arm | Two sentences if it lands, silence if it does not |
+| Patch diffs, permutation test | Artifact pointer and dropped respectively — already decided above, confirm rather than relitigate |
+| **§III taxonomy, §IV score-at-risk, §IX findings** | **Never cut.** Freed space goes to §IX and the venue bridge |
 
 ---
 

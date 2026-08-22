@@ -181,7 +181,11 @@ Where a patch changes mid-trajectory observations so replay diverges, fall back 
 | Sep 21-22 | Artifact: Zenodo, `run_all.sh` offline test on a clean machine, pinned submodules, lockfiles | |
 | Sep 23 | Numbers audit: every paper number regenerated from the deposited artifact alone, diffed against the draft | |
 | Sep 24-26 | Revision, simulated review pass, fold in maintainer responses ("no response by Sep 26" is itself reportable) | |
-| Sep 27 | **Submit** | Backstop Sep 30 |
+| Sep 27 | **Submit**, and in the same week post the arXiv preprint and the Zenodo artifact, and link both from the disclosure issues opened on Sep 10 | Backstop Sep 30 |
+
+**Release is a commitment, not a nice-to-have.** The venue decision of 2026-08-21 rests on it: BigData proceedings will not drive citations for this paper, and the agents literature reads arXiv within weeks. The proceedings buy the acceptance line; the preprint and the artifact buy the reach. A submission without a same-week preprint takes the costs of this venue choice without its benefit.
+
+Three things carry the citations, in order: the MedAgentBench case as the canonical verified example every later benchmark-validity paper will need; the class names — Phantom Effect, Ignored Argument, Ungrounded Oracle — as a one-page table with checker rules, built to be lifted whole into other papers' related work; and the disclosure trail itself, which distributes the preprint to precisely the audience that cites this literature. Named phenomena get cited; machinery does not. Do not bet citations on the checker — ConTract's lineage owns that shelf.
 
 Gate 1 moved from Aug 27 to Aug 29-30 and split. v1 double-booked two adapters *and* contracts for 25-40 tools into three days; at 30-45 minutes of careful docstring-reading and predicate-writing per tool, 19 tools alone is 10-14 hours on top of standing up an unfamiliar environment.
 
