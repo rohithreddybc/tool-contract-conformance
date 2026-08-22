@@ -6,7 +6,22 @@ Started as re-verification of the three known findings. Now carries **8 confirme
 
 Every finding here was read directly at its pinned commit by someone other than whoever surfaced it. Nothing enters this file on an automated report alone, and where a spike's claim could not be verified from code in hand, the unverified part is named and dropped rather than repeated.
 
-**Kill gate (2026-09-06): CLEARED on 2026-08-21, sixteen days early.** Requires at least 5 confirmed findings across at least 4 environments; 7 across 4 in hand. No existing finding failed re-verification — one label was withdrawn (Finding 3's Reset Leak) after tracing reset scope, which is the process working rather than a failure.
+**Kill gate (2026-09-06): CLEARED on 2026-08-21, sixteen days early.** Requires at least 5 confirmed findings across at least 4 environments; 8 across 4 in hand. No existing finding failed re-verification — one label was withdrawn (Finding 3's Reset Leak) after tracing reset scope, which is the process working rather than a failure.
+
+## How to count these, and how the paper must state it
+
+The instance count is 8. **It is not the headline number**, because the project's reporting-granularity rule counts unique defect classes per benchmark, not instances. Under that rule:
+
+| Benchmark | Classes observed | Cells |
+|---|---|---|
+| MedAgentBench | Phantom Effect; Ungrounded Oracle (evaluator property, not one of the six) | 2 |
+| tau2-bench | Unenforced Precondition; Partial Effect | 2 |
+| AgentDojo | Ignored Argument; Phantom Effect | 2 |
+| MM-ToolSandbox | Ignored Argument | 1 |
+
+**7 unique benchmark-class cells, 8 instances, 4 of the six tool-layer classes field-observed.** Four of the eight instances are Ignored Argument — a reviewer will compress the count this way whether or not we do, so the paper leads with the compressed number and reports instances alongside it.
+
+**Invariant Break and Reset Leak remain mutation-only**, with no field instance anywhere. Table I must mark them so. Note this improved during the audit: Ignored Argument was mutation-only until AgentDojo and MM-ToolSandbox were added, which is an argument for breadth over depth in the remaining time.
 
 Verification date: 2026-08-21. All three re-verified from fresh clones at the pinned commits. Every line number in the original claim is correct. No claim required amendment.
 
