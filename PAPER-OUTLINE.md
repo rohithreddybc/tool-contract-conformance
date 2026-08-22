@@ -101,12 +101,15 @@ The conceptual core. Short, and it earns the rest of the paper.
 |---|---|
 | Phantom Effect | success signal true ∧ effect delta absent |
 | Unenforced Precondition | precondition predicate false ∧ (no error signal ∨ state mutated) |
-| Ignored Argument | vary an effective argument across probes; post-state ∧ result invariant to it |
+| Ignored Argument | vary an effective argument across probes; **post-state** invariant to it |
+| *(separate signal, not a class)* | **Result–state disagreement**: the result varies with an argument whose effect on state is absent. Reported as an aggravating signal on the finding it accompanies, never as a class of its own |
 | Partial Effect | ≥1 effect predicate holds ∧ ≥1 fails on the same call |
 | Invariant Break | environment invariant false after a legal call sequence |
 | Reset Leak | snapshot after reset ≠ initial snapshot |
 
-- **Anchor honesty, one sentence** (`ARCHITECTURE-FINAL.md` §11.3). Phantom Effect, Unenforced Precondition and Partial Effect are field-observed. Invariant Break, Ignored Argument and Reset Leak are currently mutation-only. Say it here rather than let a reviewer count.
+- **Why the Ignored Argument rule is state-only.** The first draft required post-state *and* result to be invariant to the argument. That conjunctive rule fails on Finding 6: `reserve_car_rental` discards `end_time` from state but interpolates it into the success string, so the result *does* vary and the rule would not fire — the checker as originally specified would have missed one of its own anchor findings, and precisely the case where the misreporting result is what makes the defect egregious. The rule is therefore state-only, and result–state disagreement is reported as a separate aggravating signal. The M-IGNARG mutation operator inherits this definition and must inject state-drop with and without result-echo variants.
+
+- **Anchor honesty, one sentence** (`ARCHITECTURE-FINAL.md` §11.3). Field-observed: Phantom Effect, Unenforced Precondition, Partial Effect, and — as of the AgentDojo and MM-ToolSandbox audits — Ignored Argument, now the most common class in the set with four instances. **Invariant Break and Reset Leak remain mutation-only, with no field instance anywhere.** Say it here rather than let a reviewer count. Note the direction of travel: Ignored Argument was mutation-only until two benchmarks were added, which is the argument for breadth over depth in the remaining schedule.
 
 ---
 
