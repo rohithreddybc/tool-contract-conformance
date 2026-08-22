@@ -1,0 +1,110 @@
+# Worked example from PREDICATE-GRAMMAR.md sec 5, corrected against the real FlightDB shape
+# (repos/tau2/src/tau2/domains/airline/data_model.py at commit c3398666). The grammar doc's
+# version was written without checking the actual pydantic models -- see the corrections below
+# and spec/GRAMMAR-GAPS.md for the one clause that had to be dropped rather than reshaped.
+#
+# Real shape that matters here:
+#   FlightDB.flights: Dict[flight_number, Flight]
+#   Flight.dates: Dict[date_str, FlightDateStatus]   -- a Union; only the "available" arm has
+#     available_seats / prices. The doc's original example indexed pre.flights[f][d] directly,
+#     skipping the .dates level entirely.
+#   Reservation.cabin: CabinClass -- one cabin for the whole reservation, not per flight.
+#   Reservation.flights: List[ReservationFlight] -- each has flight_number/origin/destination/
+#     date/price. No per-flight cabin or seat count.
+#   FlightDB.users: Dict[user_id, User] -- untouched by cancel_reservation.
+
+contract_version: "1.0"
+tool: cancel_reservation
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 338
+  end_line: 368
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    reservation_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.reservation_exists
+    text: "the reservation must exist"
+    predicate: "args.reservation_id in pre.reservations"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 344
+      quote: "reservation_id: The reservation ID"
+
+effects:
+  - id: eff.status_cancelled
+    text: "the reservation is marked cancelled"
+    predicate: "post.reservations[args.reservation_id].status == 'cancelled'"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 341
+      quote: "Cancel the whole reservation"
+
+  - id: eff.seats_released
+    text: "cancelling releases the seats the booking reserved"
+    predicate: >
+      all(
+        post.flights[f.flight_number].dates[f.date].available_seats[pre.reservations[args.reservation_id].cabin]
+        == pre.flights[f.flight_number].dates[f.date].available_seats[pre.reservations[args.reservation_id].cabin]
+           + len(pre.reservations[args.reservation_id].passengers)
+        for f in pre.reservations[args.reservation_id].flights
+      )
+    provenance:
+      # Re-tiered from tool_return: check 8 (spec/PREDICATE-GRAMMAR.md sec 6.8) rejects this
+      # quote as tool_return -- it sits inside a logger.warning call (line 367), and the tool
+      # returns the reservation object at line 368 without ever surfacing this text to the
+      # agent. maintainer_annotation is the correct tier: the maintainer clearly documents the
+      # gap, but no agent-visible surface says so. See PREDICATE-GRAMMAR.md sec 5 commentary.
+      surface: maintainer_annotation
+      file: src/tau2/domains/airline/tools.py
+      line: 367
+      quote: "Seats release not implemented for cancellation!!!"
+
+frame:
+  # The doc's original "no other reservation is modified" (state.reservations.*) cannot be
+  # expressed under the current frame grammar without also matching the reservation this very
+  # call legitimately changes -- there is no exclusion syntax. See spec/GRAMMAR-GAPS.md.
+  # state.users is the closest fully-expressible substitute: cancel_reservation never touches
+  # self.db.users, and the wildcard-exclusion problem does not arise for it.
+  - id: frame.users_unchanged
+    path: state.users
+    text: "cancelling a reservation does not touch user records"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The tool returns the mutated reservation object on the success path and raises on every
+    declared failure, so a returned reservation is the interface's only signal that the whole
+    cancellation was applied. No effect on this tool is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 341
+    quote: "Cancel the whole reservation"
+
+invariants:
+  - id: inv.seat_conservation
+    text: "available seats never go negative for any flight-date currently in the 'available' state"
+    predicate: >
+      all(
+        post.flights[fn].dates[d].available_seats[c] >= 0
+        for fn in post.flights
+        for d in post.flights[fn].dates
+        if 'available_seats' in post.flights[fn].dates[d]
+        for c in post.flights[fn].dates[d].available_seats
+      )
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: unknown

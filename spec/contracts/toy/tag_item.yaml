@@ -1,0 +1,102 @@
+contract_version: "1.0"
+tool: tag_item
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 266
+  end_line: 278
+
+signature:
+  args:
+    item_id: { type: str, effective: true }
+    tag: { type: str, effective: true }
+
+preconditions:
+  - id: pre.item_exists
+    text: "the item must exist"
+    predicate: "args.item_id in pre.items"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 267
+      quote: "The item must exist"
+
+  - id: pre.tag_nonempty
+    text: "tag must be a non-empty string"
+    predicate: "len(args.tag) > 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 268
+      quote: "`tag` must be a non-empty"
+
+  - id: pre.tag_not_already_present
+    text: "tag must not already be present on the item"
+    predicate: "args.tag not in pre.items[args.item_id].tags"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 269
+      quote: "`tag` must not already be present on the item"
+
+effects:
+  - id: eff.tag_appended
+    text: "tag is appended to the item's tag list"
+    predicate: >
+      len(post.items[args.item_id].tags) == len(pre.items[args.item_id].tags) + 1
+      and post.items[args.item_id].tags[len(pre.items[args.item_id].tags)] == args.tag
+      and args.tag in post.items[args.item_id].tags
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 269
+      quote: "On success, `tag` is appended to the item's tag list"
+
+frame:
+  - id: frame.qty_unchanged
+    path: state.items.*.qty
+    text: "tagging never changes an item's total qty"
+    mode: unchanged
+    inferred: true
+  - id: frame.reserved_unchanged
+    path: state.items.*.reserved
+    text: "tagging never changes an item's reserved count"
+    mode: unchanged
+    inferred: true
+  - id: frame.accounts_unchanged
+    path: state.accounts
+    text: "tag_item never writes to accounts"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "tag_item never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    tag_item returns the full updated tag list on the only success path and raises ToyError on
+    every declared failure; no effect is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 266
+    quote: "Add `tag` to `item_id`'s tag list"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 267
+    quote: "The item must exist"
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

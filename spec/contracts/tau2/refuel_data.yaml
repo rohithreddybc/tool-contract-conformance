@@ -1,0 +1,165 @@
+# refuel_data, tau2-bench telecom, commit c3398666e6559e3a063da3fc04b5acf7f941464e (short
+# c3398666). Authored to the same standard as spec/contracts/tau2/cancel_reservation.yaml:
+# real line numbers verified against the pinned commit
+# (src/tau2/domains/telecom/tools.py at c3398666, cross-checked via `git show` against
+# repos/tau2 and via a durable extracted copy at .tau2-src-c3398666/ used to build the adapter),
+# provenance quotes verbatim, correct grounding tier. This is the contract for
+# FINDINGS-VERIFIED.md Finding 2 -- Unenforced Precondition: the docstring at line 613
+# declares "Line status must be Active", the check that would enforce it is commented out at
+# lines 629-630, and the tool mutates state and charges the customer regardless.
+#
+# TelecomDB shape that matters here (src/tau2/domains/telecom/data_model.py at c3398666):
+#   TelecomDB.lines: List[Line]       -- NOT a dict; matched by line_id via a bound comprehension.
+#   TelecomDB.customers: List[Customer] -- matched by customer_id the same way.
+#   TelecomDB.plans: List[Plan]
+#   TelecomDB.bills: List[Bill]       -- Line.status is a str Enum (LineStatus); it serializes to
+#     its plain string value ("Active", "Suspended", ...) under model_dump(mode="json"), which is
+#     what adapters/tau2.py's snapshot() uses -- see adapters/_tau2_worker.py `_cmd_snapshot`.
+#   _apply_one_time_charge (tools.py:414) may create a NEW draft Bill with a uuid4-derived
+#     bill_id when the customer has no open draft bill. That id is call-to-call nondeterministic,
+#     so eff.customer_charged is written as a sum over ALL of the customer's bills' total_due,
+#     pre vs post, rather than naming a specific bill_id -- this holds whether or not a new bill
+#     was created, and does not require volatile-path masking (core/canonical.py) to be stable.
+
+contract_version: "1.0"
+tool: refuel_data
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/telecom/tools.py
+  start_line: 607
+  end_line: 657
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    customer_id: { type: str, effective: true }
+    line_id: { type: str, effective: true }
+    gb_amount: { type: float, effective: true }
+
+preconditions:
+  - id: pre.line_active
+    text: "the line's status must be Active"
+    predicate: >
+      any(
+        l.status == 'Active'
+        for l in pre.lines
+        if l.line_id == args.line_id
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 613
+      quote: "Line status must be Active"
+
+  - id: pre.customer_owns_line
+    text: "the customer must own the line"
+    predicate: >
+      any(
+        args.line_id in c.line_ids
+        for c in pre.customers
+        if c.customer_id == args.customer_id
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 613
+      quote: "Customer owns the line"
+
+effects:
+  - id: eff.data_refueled
+    text: "the target line's data_refueling_gb increases by gb_amount"
+    predicate: >
+      any(
+        any(
+          l2.line_id == args.line_id
+          and l2.data_refueling_gb == l.data_refueling_gb + args.gb_amount
+          for l2 in post.lines
+        )
+        for l in pre.lines
+        if l.line_id == args.line_id
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 614
+      quote: "Adds data to the line"
+
+  - id: eff.customer_charged
+    text: "the customer is charged gb_amount times the line's plan refueling rate"
+    predicate: >
+      any(
+        any(
+          p.plan_id == l.plan_id
+          and (
+            sum(b.total_due for b in post.bills if b.customer_id == args.customer_id)
+            - sum(b.total_due for b in pre.bills if b.customer_id == args.customer_id)
+          ) == args.gb_amount * p.data_refueling_price_per_gb
+          for p in pre.plans
+        )
+        for l in pre.lines
+        if l.line_id == args.line_id
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 614
+      quote: "charges customer based on the plan's refueling rate"
+
+frame:
+  # The frame-path grammar cannot exclude "this one line/customer/bill" from a wildcard (see
+  # spec/GRAMMAR-GAPS.md, first recorded against cancel_reservation.yaml -- the same limitation
+  # applies here). These two are the fully-expressible, always-true substitutes: refuel_data
+  # never touches the plan catalog or device records, so they cost nothing to assert and still
+  # catch an unadvertised side effect landing in either.
+  - id: frame.plans_unchanged
+    path: state.plans
+    text: "refuelling data never modifies the plan catalog"
+    mode: unchanged
+    inferred: true
+
+  - id: frame.devices_unchanged
+    path: state.devices
+    text: "refuelling data never modifies device records"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/telecom/tools.py
+    line: 625
+    quote: "if checks fail"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: false
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/telecom/tools.py
+    line: 654
+    quote: "message"
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+  # per_task rather than "unknown": FINDINGS-VERIFIED.md's reset-scope question was resolved
+  # 2026-08-21 (runner/batch.py:409 -> runner/build.py:393 -> the domain's get_environment(),
+  # which reloads TelecomDB fresh from disk per simulation) after cancel_reservation.yaml was
+  # authored, so that contract still says "unknown"; this one states the resolved answer.
+  # adapters/tau2.py's reset() replicates exactly this reconstruction path -- see
+  # adapters/_tau2_worker.py `_cmd_reset` -- and Gate 1a exercises it directly.
+
+notes: >
+  Finding 2 (FINDINGS-VERIFIED.md): the docstring's Checks: line (613) declares the Active-line
+  precondition; the enforcing branch is present but commented out at lines 629-630
+  ("if target_line.status != LineStatus.ACTIVE: raise ValueError(...)"). The gb_amount > 0 check
+  at line 632 is NOT commented out and still executes, so this is a selective omission, not a
+  wholesale absence of validation -- pre.customer_owns_line above is a real, enforced
+  precondition (raised inside _get_target_line, tools.py:208-224) included for contract
+  completeness; it is expected to CONFORM on every probe. Only pre.line_active is expected to
+  surface Unenforced Precondition when probed with a non-Active line.

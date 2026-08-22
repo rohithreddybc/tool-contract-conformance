@@ -1,0 +1,9 @@
+# Audited benchmark clones — not part of the artifact, pinned by commit in FINDINGS-VERIFIED.md
+repos/
+# Durable source copy used to cross the interpreter boundary
+.tau2-src-*/
+# Environments
+.venv/
+.venv-*/
+__pycache__/
+*.pyc

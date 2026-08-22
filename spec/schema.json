@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/…/tool-contract-conformance/spec/schema.json",
+  "title": "Tool Contract",
+  "description": "Declarative contract for one mutating tool interface in an agentic benchmark. States what the tool ADVERTISES; the checker verifies the implementation and its state transitions against it. Every normative clause must cite the advertised surface it operationalizes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "tool", "benchmark", "commit", "source", "signature"],
+
+  "properties": {
+    "contract_version": {
+      "const": "1.0",
+      "description": "Bumped only on a breaking change to this schema."
+    },
+
+    "tool": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Tool name as the agent sees it in the function-calling interface."
+    },
+
+    "benchmark": { "type": "string", "minLength": 1 },
+
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Pinned commit of the benchmark repository this contract was authored against."
+    },
+
+    "source": { "$ref": "#/$defs/sourceRef" },
+
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["args"],
+      "properties": {
+        "args": {
+          "type": "object",
+          "description": "One entry per declared parameter. Order is irrelevant; names must match the implementation signature exactly.",
+          "additionalProperties": { "$ref": "#/$defs/argSpec" }
+        },
+        "returns": {
+          "type": "string",
+          "description": "Free-text description of the declared return, for the record only. Not checked."
+        }
+      }
+    },
+
+    "preconditions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/clause" },
+      "description": "Conditions the interface declares must hold before the call. Checked in two directions: satisfied preconditions must not block a legal call, and violated preconditions must produce an error signal with no state delta (see on_precondition_violation)."
+    },
+
+    "effects": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/effectClause" },
+      "description": "Postconditions expressed as delta assertions over (pre, post, args, result). These are the state changes the interface advertises."
+    },
+
+    "frame": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/frameClause" },
+      "description": "What the call must NOT change. A frame violation is how Partial Effect and unadvertised side effects are caught. Paths use the frame-path grammar; see spec/PREDICATE-GRAMMAR.md §3."
+    },
+
+    "success_signal": { "$ref": "#/$defs/successSignal" },
+
+    "on_precondition_violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expect"],
+      "description": "What the interface advertises should happen when a precondition does not hold. Absence of this block means the contract makes no claim, and Unenforced Precondition cannot be reported for this tool.",
+      "properties": {
+        "expect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["error_signal", "state_delta"],
+          "properties": {
+            "error_signal": {
+              "type": "boolean",
+              "description": "True if the tool must signal an error (raise or return a failure result)."
+            },
+            "state_delta": {
+              "enum": ["none", "any"],
+              "description": "'none' means the call must be a no-op on state. 'any' means the contract does not constrain the delta."
+            },
+            "error_type": {
+              "type": "string",
+              "description": "Optional declared exception type, e.g. ValueError, when the docstring names one."
+            }
+          }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    },
+
+    "invariants": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/clause" },
+      "description": "Environment-level properties that must hold after any legal call sequence, not just this call. Checked by the sequence prober, not the single-call harness."
+    },
+
+    "reset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["predicate"],
+      "description": "How the benchmark's own reset path is expected to behave. Omit when the benchmark has no reset path; the checker then reports Reset Leak as UNTESTABLE with reason 'no_reset_path' rather than silently skipping it.",
+      "properties": {
+        "predicate": { "$ref": "#/$defs/predicate" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "scope": {
+          "enum": ["per_task", "per_session", "unknown"],
+          "default": "unknown",
+          "description": "The granularity at which the benchmark claims to reset. 'unknown' is honest and is reported as such; do not guess."
+        }
+      }
+    },
+
+    "untestable": {
+      "type": "array",
+      "description": "Clauses deliberately not checked, each with a machine-readable reason. Entries here stay in every denominator the paper reports.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["clause_id", "reason"],
+        "properties": {
+          "clause_id": { "type": "string" },
+          "reason": {
+            "enum": [
+              "no_reset_path",
+              "nondeterministic_env",
+              "unreachable_precondition_state",
+              "requires_network",
+              "no_observable_state",
+              "adapter_unsupported"
+            ]
+          },
+          "note": { "type": "string" }
+        }
+      }
+    },
+
+    "notes": { "type": "string" }
+  },
+
+  "$defs": {
+
+    "advertisedSurface": {
+      "enum": [
+        "docstring",
+        "schema",
+        "prompt_template",
+        "tool_return",
+        "readme",
+        "external_standard",
+        "maintainer_annotation"
+      ],
+      "description": "CLOSED LIST — committed before any contract is authored. Grounding has three tiers, and the tier decides whether a clause enters headline counts.\n\nAGENT-VISIBLE (headline-eligible): docstring, schema, prompt_template, tool_return, readme, external_standard. These are texts the agent is conditioned on. That is what makes maintainer intent irrelevant to the measurement claim: the agent believed the interface, and the evaluator scored the resulting state. 'prompt_template' and 'tool_return' are here because a benchmark's advertised write semantics sometimes live only in the text shown to the agent rather than in a docstring; excluding them would exclude real defects. 'external_standard' covers a tool claiming to implement a named external specification (e.g. FHIR R4 create semantics) and requires the standard to be cited.\n\nMAINTAINER-ANNOTATED (never headline, reported separately): maintainer_annotation. The maintainer recorded the intended semantics in the code — a comment, a log line, a TODO — but the agent never sees it. Materially stronger evidence than an inference we made, materially weaker than something the agent read. Kept as its own tier because collapsing it into 'inferred' would discard information that favours the finding, and promoting it into the agent-visible tier would be the construct-validity error this list exists to prevent.\n\nINFERRED (never headline): no surface at all; set inferred:true on the clause.\n\nA log line is NOT tool_return. See validator check 8."
+    },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "quote"],
+      "description": "Where the advertised semantics being operationalized actually appear. The construct-validity mechanism: a maintainer can dispute inferred intent, but not a quotation from their own interface.",
+      "properties": {
+        "surface": { "$ref": "#/$defs/advertisedSurface" },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim text from the cited surface. The validator checks this substring actually occurs at the cited location when file and line are given."
+        },
+        "standard": {
+          "type": "string",
+          "description": "Required when surface is external_standard: the specification name and clause, e.g. 'FHIR R4 §3.1.0 create'."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "surface": { "const": "external_standard" } }, "required": ["surface"] },
+          "then": { "required": ["standard"] }
+        },
+        {
+          "if": {
+            "properties": { "surface": { "enum": ["docstring", "schema", "tool_return", "prompt_template", "maintainer_annotation"] } },
+            "required": ["surface"]
+          },
+          "then": { "required": ["file", "line"] }
+        }
+      ]
+    },
+
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "start_line", "end_line"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Repository-relative path. For tau2 that is src/tau2/domains/<domain>/tools.py, not domains/..."
+        },
+        "start_line": { "type": "integer", "minimum": 1 },
+        "end_line": { "type": "integer", "minimum": 1 },
+        "note": {
+          "type": "string",
+          "description": "Use when the decorator line matters, e.g. @is_tool(ToolType.WRITE) is itself part of the declared contract."
+        }
+      }
+    },
+
+    "argSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "effective"],
+      "properties": {
+        "type": { "type": "string" },
+        "effective": {
+          "type": "boolean",
+          "description": "True if the interface advertises this argument as influencing the outcome. The Ignored Argument prober varies effective args and requires the post-state or result to depend on them. Set false only for genuinely inert parameters (e.g. a comment field the docstring says is recorded nowhere)."
+        },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "probe_values": {
+          "type": "array",
+          "minItems": 2,
+          "description": "Optional explicit value set for the Ignored Argument prober. Omit to let the prober generate from the declared type."
+        }
+      }
+    },
+
+    "predicate": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A restricted Python expression over the bindings (pre, post, args, result). Evaluated on a whitelisted AST — no attribute access outside snapshot dicts, no imports, no calls except the allowed builtins, and comprehensions require an explicit binder. Full grammar in spec/PREDICATE-GRAMMAR.md."
+    },
+
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "predicate"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(pre|eff|inv|frame)\\.[a-z0-9_]+$",
+          "description": "Stable identifier, prefixed by kind. Cited in findings.jsonl and in the paper."
+        },
+        "text": {
+          "type": "string",
+          "description": "The advertised semantics in prose, verbatim or near-verbatim from the cited surface."
+        },
+        "predicate": { "$ref": "#/$defs/predicate" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "inferred": {
+          "type": "boolean",
+          "default": false,
+          "description": "True when the clause has no advertised-surface grounding. Excluded from all headline counts and reported separately."
+        },
+        "annotators": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Annotator identifiers for the dual-annotated agreement sample."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "anyOf": [
+              { "properties": { "inferred": { "const": false } } },
+              { "not": { "required": ["inferred"] } }
+            ]
+          },
+          "then": { "required": ["provenance"] }
+        }
+      ]
+    },
+
+    "effectClause": {
+      "allOf": [
+        { "$ref": "#/$defs/clause" },
+        {
+          "type": "object",
+          "properties": {
+            "advertised_deferred": {
+              "type": "boolean",
+              "default": false,
+              "description": "True when the interface explicitly advertises that this effect is NOT applied synchronously. Required for cases like tau2 airline/tools.py:689, where the maintainer states the flight database update is expected to lag. A deferred effect is exempt from the success-signal biconditional and must never be reported as Phantom or Partial Effect. Setting this without provenance quoting the deferral is a validator error."
+            }
+          }
+        }
+      ]
+    },
+
+    "frameClause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^frame\\.[a-z0-9_]+$" },
+        "path": {
+          "type": "string",
+          "description": "Frame-path pattern over the canonical snapshot. Grammar: segments joined by '.', where each segment is an identifier, '*' matching any single mapping key, '[]' matching any single sequence index, or '**' matching any depth. Example: state.customers.*.payment_methods. See spec/PREDICATE-GRAMMAR.md §3."
+        },
+        "text": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "inferred": { "type": "boolean", "default": false },
+        "mode": {
+          "enum": ["unchanged", "changed"],
+          "default": "unchanged",
+          "description": "'unchanged' asserts the matched subtree is byte-identical pre and post after canonicalization. 'changed' asserts it must differ, which is occasionally the clearer way to state an advertised effect over a wildcard path."
+        }
+      }
+    },
+
+    "successSignal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["predicate"],
+      "properties": {
+        "predicate": {
+          "$ref": "#/$defs/predicate",
+          "description": "How to read success from the tool's return value, e.g. result.status == 'success', or 'not result.error'."
+        },
+        "biconditional": {
+          "type": "boolean",
+          "default": false,
+          "description": "OPT-IN, never the default. True asserts success <=> all non-deferred effects applied, which is what detects Phantom Effect. It is false by default because legitimate tools violate it: idempotent no-op successes, batch partial-success returns, and advertised-deferred effects. Requires justification when true."
+        },
+        "justification": {
+          "type": "string",
+          "description": "Required when biconditional is true: why the interface licenses reading success as a claim that every effect landed."
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "biconditional": { "const": true } }, "required": ["biconditional"] },
+          "then": { "required": ["justification", "provenance"] }
+        }
+      ]
+    }
+  }
+}

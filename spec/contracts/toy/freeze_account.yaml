@@ -1,0 +1,93 @@
+contract_version: "1.0"
+tool: freeze_account
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 144
+  end_line: 153
+
+signature:
+  args:
+    account_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.account_exists
+    text: "the account must exist"
+    predicate: "args.account_id in pre.accounts"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 146
+      quote: "The account must exist and must not already be frozen."
+
+  - id: pre.not_already_frozen
+    text: "the account must not already be frozen"
+    predicate: "not pre.accounts[args.account_id].frozen"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 146
+      quote: "must not already be frozen"
+
+effects:
+  - id: eff.frozen_set
+    text: "the account becomes frozen"
+    predicate: "post.accounts[args.account_id].frozen == True"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 145
+      quote: "blocking further deposits, withdrawals, and transfers"
+
+frame:
+  # "no account OTHER than account_id is modified" is not expressible (state.accounts.* with
+  # mode:unchanged would also match account_id's own subtree, whose frozen flag legitimately
+  # changes -- see deposit.yaml's frame comment for the same grammar gap). Field-level paths that
+  # hold for EVERY account, including account_id, substitute for it.
+  - id: frame.balances_unchanged
+    path: state.accounts.*.balance
+    text: "freezing never changes any balance"
+    mode: unchanged
+    inferred: true
+  - id: frame.owner_unchanged
+    path: state.accounts.*.owner
+    text: "freezing never changes who owns an account"
+    mode: unchanged
+    inferred: true
+  - id: frame.items_unchanged
+    path: state.items
+    text: "freeze_account never touches items"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "freeze_account never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    freeze_account returns {frozen: true} on the only success path and raises ToyError on every
+    declared failure; no effect is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 145
+    quote: "Freeze `account_id`"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 146
+    quote: "must not already be frozen"
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

@@ -1,0 +1,116 @@
+contract_version: "1.0"
+tool: release_lock
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 217
+  end_line: 236
+
+signature:
+  args:
+    lock_id: { type: str, effective: true }
+    holder: { type: str, effective: true }
+
+preconditions:
+  - id: pre.lock_exists
+    text: "the lock must exist"
+    predicate: "args.lock_id in pre.locks"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 217
+      quote: "Release one level of `lock_id` held by `holder`"
+
+  - id: pre.held_by_holder
+    text: "the lock must currently be held by holder"
+    predicate: "pre.locks[args.lock_id].held_by == args.holder"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 218
+      quote: "The lock must exist, must be held by"
+
+  - id: pre.count_at_least_one
+    text: "count must be at least 1"
+    predicate: "pre.locks[args.lock_id].count >= 1"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 219
+      quote: "its count must be at least 1"
+
+effects:
+  - id: eff.count_decremented
+    text: "count decreases by exactly 1"
+    predicate: "post.locks[args.lock_id].count == pre.locks[args.lock_id].count - 1"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 219
+      quote: "Count decreases by 1"
+
+  - id: eff.held_by_cleared_when_count_zero
+    text: "when count reaches 0 the lock becomes unheld (held_by is cleared) -- the compensating write for acquire_lock's held_by=holder"
+    predicate: >
+      (post.locks[args.lock_id].count == 0 and post.locks[args.lock_id].held_by == None)
+      or (post.locks[args.lock_id].count > 0 and post.locks[args.lock_id].held_by == args.holder)
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 220
+      quote: "when count reaches 0 the lock becomes unheld (held_by is cleared)"
+
+frame:
+  - id: frame.accounts_unchanged
+    path: state.accounts
+    text: "release_lock never writes to accounts"
+    mode: unchanged
+    inferred: true
+  - id: frame.items_unchanged
+    path: state.items
+    text: "release_lock never writes to items"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    release_lock returns the updated (held_by, count) pair on the only success path and raises
+    ToyError on every declared failure; no effect is advertised as deferred. This is the
+    compensating half of acquire_lock and is the contract that must catch an M-INVAR mutant
+    that deletes the `held_by = None` clear-on-zero write.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 217
+    quote: "Release one level of `lock_id` held by `holder`"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 218
+    quote: "The lock must exist, must be held by"
+
+invariants:
+  - id: inv.count_nonnegative
+    text: "lock count never goes negative"
+    predicate: "all(post.locks[l].count >= 0 for l in post.locks)"
+    inferred: true
+  - id: inv.held_iff_count_positive
+    text: "a lock is held exactly when its count is positive"
+    predicate: >
+      all(
+        (post.locks[l].held_by == None) == (post.locks[l].count == 0)
+        for l in post.locks
+      )
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

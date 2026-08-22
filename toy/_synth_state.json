@@ -1,0 +1,17 @@
+{
+  "snapshot": {
+    "accounts": {
+      "x": {"owner": "x", "balance": 1.0, "frozen": true}
+    },
+    "items": {
+      "x": {"qty": 1, "reserved": 1, "tags": ["x"]}
+    },
+    "locks": {
+      "x": {"held_by": "x", "count": 1}
+    },
+    "audit_log": [
+      {"seq": 1, "action": "x", "item_id": "x", "qty": 1, "account_id": "x"}
+    ]
+  },
+  "result": {"account_id": "x", "balance": 1.0}
+}

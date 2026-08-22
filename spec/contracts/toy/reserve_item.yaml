@@ -1,0 +1,133 @@
+contract_version: "1.0"
+tool: reserve_item
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 166
+  end_line: 187
+
+signature:
+  args:
+    item_id: { type: str, effective: true }
+    qty: { type: int, effective: true }
+    account_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.item_exists
+    text: "the item must exist"
+    predicate: "args.item_id in pre.items"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 167
+      quote: "The item and the account"
+
+  - id: pre.account_exists
+    text: "the account must exist"
+    predicate: "args.account_id in pre.accounts"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 167
+      quote: "The item and the account"
+
+  - id: pre.qty_positive
+    text: "qty must be positive"
+    predicate: "args.qty > 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 168
+      quote: "`qty` must be positive"
+
+  - id: pre.sufficient_available
+    text: "the item's available quantity must be at least qty"
+    predicate: "pre.items[args.item_id].qty - pre.items[args.item_id].reserved >= args.qty"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 169
+      quote: "must be at least `qty`"
+
+effects:
+  - id: eff.reserved_increased
+    text: "the item's reserved count increases by qty"
+    predicate: "post.items[args.item_id].reserved == pre.items[args.item_id].reserved + args.qty"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 169
+      quote: "the item's reserved count increases by"
+
+  - id: eff.audit_entry_appended
+    text: "an audit log entry recording the reservation is appended"
+    predicate: >
+      len(post.audit_log) == len(pre.audit_log) + 1
+      and post.audit_log[len(pre.audit_log)].action == 'reserve'
+      and post.audit_log[len(pre.audit_log)].item_id == args.item_id
+      and post.audit_log[len(pre.audit_log)].qty == args.qty
+      and post.audit_log[len(pre.audit_log)].account_id == args.account_id
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 170
+      quote: "an audit log entry recording the reservation is appended"
+
+frame:
+  - id: frame.qty_unchanged
+    path: state.items.*.qty
+    text: "reserving never changes an item's total qty"
+    mode: unchanged
+    inferred: true
+  - id: frame.tags_unchanged
+    path: state.items.*.tags
+    text: "reserving never changes an item's tags"
+    mode: unchanged
+    inferred: true
+  - id: frame.accounts_unchanged
+    path: state.accounts
+    text: "reserve_item never writes to accounts"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "reserve_item never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    reserve_item returns the updated reserved count on the only success path and raises
+    ToyError on every declared failure; no effect is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 166
+    quote: "Reserve `qty` units of `item_id`"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 167
+    quote: "The item and the account"
+
+invariants:
+  - id: inv.reserved_within_qty
+    text: "reserved never exceeds total qty for any item"
+    predicate: "all(post.items[i].reserved <= post.items[i].qty for i in post.items)"
+    inferred: true
+  - id: inv.reserved_nonnegative
+    text: "reserved never goes negative for any item"
+    predicate: "all(post.items[i].reserved >= 0 for i in post.items)"
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

@@ -1,0 +1,139 @@
+contract_version: "1.0"
+tool: resize_inventory
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 238
+  end_line: 264
+
+signature:
+  args:
+    item_id: { type: str, effective: true }
+    delta: { type: int, effective: true }
+    mode: { type: str, effective: true, probe_values: ["add", "remove", "set"] }
+
+preconditions:
+  - id: pre.item_exists
+    text: "the item must exist"
+    predicate: "args.item_id in pre.items"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 244
+      quote: "The item must exist"
+
+  - id: pre.mode_valid
+    text: "mode must be one of 'add', 'remove', or 'set'"
+    predicate: "args.mode in ('add', 'remove', 'set')"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 239
+      quote: "`mode` must be one of 'add',"
+
+  - id: pre.delta_nonnegative
+    text: "delta must be non-negative in every mode"
+    predicate: "args.delta >= 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 243
+      quote: "`delta` must be non-negative in every mode"
+
+  - id: pre.remove_stays_above_reserved
+    text: "in 'remove' mode, the result must stay at or above the item's reserved count"
+    predicate: >
+      args.mode != 'remove'
+      or pre.items[args.item_id].qty - args.delta >= pre.items[args.item_id].reserved
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 241
+      quote: "requires the result stay at or above the item's reserved count"
+
+  - id: pre.set_stays_above_reserved
+    text: "in 'set' mode, delta must be at least the reserved count"
+    predicate: >
+      args.mode != 'set'
+      or args.delta >= pre.items[args.item_id].reserved
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 242
+      quote: "likewise requires `delta` be at least the reserved count"
+
+effects:
+  - id: eff.qty_updated_per_mode
+    text: "'add' increases qty by delta; 'remove' decreases qty by delta; 'set' sets qty to delta"
+    predicate: >
+      post.items[args.item_id].qty == (
+        pre.items[args.item_id].qty + args.delta if args.mode == 'add'
+        else pre.items[args.item_id].qty - args.delta if args.mode == 'remove'
+        else args.delta
+      )
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 240
+      quote: "'add' increases qty by `delta`; 'remove' decreases qty by `delta`"
+
+frame:
+  - id: frame.reserved_unchanged
+    path: state.items.*.reserved
+    text: "resize_inventory never changes any item's reserved count"
+    mode: unchanged
+    inferred: true
+  - id: frame.tags_unchanged
+    path: state.items.*.tags
+    text: "resize_inventory never changes any item's tags"
+    mode: unchanged
+    inferred: true
+  - id: frame.accounts_unchanged
+    path: state.accounts
+    text: "resize_inventory never writes to accounts"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "resize_inventory never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    resize_inventory returns the updated item on the only success path and raises ToyError on
+    every declared failure; no effect is advertised as deferred. Three argument-conditioned
+    branches all funnel through the same single return, so the biconditional reading is exactly
+    as strong here as for a single-branch tool.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 243
+    quote: "Returns the updated item"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 244
+    quote: "The item must exist"
+
+invariants:
+  - id: inv.qty_nonnegative
+    text: "qty never goes negative for any item"
+    predicate: "all(post.items[i].qty >= 0 for i in post.items)"
+    inferred: true
+  - id: inv.reserved_within_qty
+    text: "reserved never exceeds total qty for any item"
+    predicate: "all(post.items[i].reserved <= post.items[i].qty for i in post.items)"
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

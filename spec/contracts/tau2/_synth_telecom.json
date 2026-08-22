@@ -1,0 +1,11 @@
+{
+  "_comment": "Synthetic TelecomDB-shaped snapshot for spec/validate.py check 5 (every predicate evaluates without error against a synthetic snapshot). Deliberately empty lists: refuel_data.yaml's predicates are bound comprehensions filtered by args.line_id/args.customer_id == 'x' (check5's arg synthesis for a str-typed arg), so an empty topology makes every comprehension yield zero matches -- any(...) resolves to False, which check5 treats as a pass. False is a legitimate outcome; only a raised PredicateError (a genuine path failure) is a check5 failure. See spec/PREDICATE-GRAMMAR.md sec 2.3.",
+  "snapshot": {
+    "lines": [],
+    "customers": [],
+    "plans": [],
+    "bills": [],
+    "devices": []
+  },
+  "result": {}
+}

@@ -1,0 +1,118 @@
+contract_version: "1.0"
+tool: release_item
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 189
+  end_line: 202
+
+signature:
+  args:
+    item_id: { type: str, effective: true }
+    qty: { type: int, effective: true }
+
+preconditions:
+  - id: pre.item_exists
+    text: "the item must exist"
+    predicate: "args.item_id in pre.items"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 191
+      quote: "The item must exist"
+
+  - id: pre.qty_positive
+    text: "qty must be positive"
+    predicate: "args.qty > 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 191
+      quote: "`qty` must be positive"
+
+  - id: pre.sufficient_reserved
+    text: "the item's reserved count must be at least qty"
+    predicate: "pre.items[args.item_id].reserved >= args.qty"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 192
+      quote: "reserved count must be at"
+
+effects:
+  - id: eff.reserved_decreased
+    text: "the item's reserved count decreases by qty"
+    predicate: "post.items[args.item_id].reserved == pre.items[args.item_id].reserved - args.qty"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 192
+      quote: "reserved decreases by `qty`"
+
+  - id: eff.audit_entry_appended
+    text: "an audit log entry is appended"
+    predicate: >
+      len(post.audit_log) == len(pre.audit_log) + 1
+      and post.audit_log[len(pre.audit_log)].action == 'release'
+      and post.audit_log[len(pre.audit_log)].item_id == args.item_id
+      and post.audit_log[len(pre.audit_log)].qty == args.qty
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 192
+      quote: "an audit log entry is appended"
+
+frame:
+  - id: frame.qty_unchanged
+    path: state.items.*.qty
+    text: "releasing never changes an item's total qty"
+    mode: unchanged
+    inferred: true
+  - id: frame.tags_unchanged
+    path: state.items.*.tags
+    text: "releasing never changes an item's tags"
+    mode: unchanged
+    inferred: true
+  - id: frame.accounts_unchanged
+    path: state.accounts
+    text: "release_item never writes to accounts"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "release_item never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    release_item returns the updated reserved count on the only success path and raises
+    ToyError on every declared failure; no effect is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 189
+    quote: "Release `qty` previously reserved units"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 191
+    quote: "The item must exist"
+
+invariants:
+  - id: inv.reserved_nonnegative
+    text: "reserved never goes negative for any item"
+    predicate: "all(post.items[i].reserved >= 0 for i in post.items)"
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

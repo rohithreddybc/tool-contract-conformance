@@ -1,0 +1,111 @@
+contract_version: "1.0"
+tool: deposit
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 85
+  end_line: 97
+
+signature:
+  args:
+    account_id: { type: str, effective: true }
+    amount: { type: float, effective: true }
+
+preconditions:
+  - id: pre.account_exists
+    text: "the account must exist"
+    predicate: "args.account_id in pre.accounts"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 86
+      quote: "The account must exist and must not be frozen"
+
+  - id: pre.account_not_frozen
+    text: "the account must not be frozen"
+    predicate: "not pre.accounts[args.account_id].frozen"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 86
+      quote: "The account must exist and must not be frozen"
+
+  - id: pre.amount_positive
+    text: "amount must be positive"
+    predicate: "args.amount > 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 87
+      quote: "`amount` must be positive"
+
+effects:
+  - id: eff.balance_increased
+    text: "the account's balance increases by exactly amount"
+    predicate: "post.accounts[args.account_id].balance == pre.accounts[args.account_id].balance + args.amount"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 87
+      quote: "the account's balance increases by exactly"
+
+frame:
+  # "no account OTHER than account_id is modified" cannot be expressed under the current frame
+  # grammar -- state.accounts.* with mode:unchanged would also match account_id's own subtree,
+  # which legitimately changes, contradicting eff.balance_increased. Same gap documented in
+  # spec/GRAMMAR-GAPS.md for cancel_reservation.yaml. Substituted with field-level paths that are
+  # true for EVERY account, including account_id, plus cross-subtree paths deposit never touches.
+  - id: frame.owner_unchanged
+    path: state.accounts.*.owner
+    text: "deposit never changes who owns an account"
+    mode: unchanged
+    inferred: true
+  - id: frame.frozen_flag_unchanged
+    path: state.accounts.*.frozen
+    text: "deposit never changes any account's frozen flag"
+    mode: unchanged
+    inferred: true
+  - id: frame.items_unchanged
+    path: state.items
+    text: "deposit never touches items"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "deposit never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    deposit returns the updated account on the only success path and raises ToyError on every
+    declared failure; no effect is advertised as deferred, so a returned account is the
+    interface's only signal that the balance update was applied.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 88
+    quote: "the updated account is returned"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 86
+    quote: "The account must exist and must not be frozen"
+
+invariants:
+  - id: inv.balance_nonnegative
+    text: "no account balance ever goes negative"
+    predicate: "all(post.accounts[a].balance >= 0 for a in post.accounts)"
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

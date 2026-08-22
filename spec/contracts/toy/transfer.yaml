@@ -1,0 +1,158 @@
+contract_version: "1.0"
+tool: transfer
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 115
+  end_line: 142
+
+signature:
+  args:
+    from_account: { type: str, effective: true }
+    to_account: { type: str, effective: true }
+    amount: { type: float, effective: true }
+
+preconditions:
+  - id: pre.from_exists
+    text: "from_account must exist"
+    predicate: "args.from_account in pre.accounts"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 116
+      quote: "Both accounts must exist and"
+
+  - id: pre.to_exists
+    text: "to_account must exist"
+    predicate: "args.to_account in pre.accounts"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 116
+      quote: "Both accounts must exist and"
+
+  - id: pre.accounts_differ
+    text: "from_account and to_account must differ"
+    predicate: "args.from_account != args.to_account"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 117
+      quote: "the two account ids must differ"
+
+  - id: pre.from_not_frozen
+    text: "from_account must not be frozen"
+    predicate: "not pre.accounts[args.from_account].frozen"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 116
+      quote: "must not be frozen, the two account ids"
+
+  - id: pre.to_not_frozen
+    text: "to_account must not be frozen"
+    predicate: "not pre.accounts[args.to_account].frozen"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 116
+      quote: "must not be frozen, the two account ids"
+
+  - id: pre.amount_positive
+    text: "amount must be positive"
+    predicate: "args.amount > 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 117
+      quote: "`amount` must be positive, and"
+
+  - id: pre.sufficient_balance
+    text: "from_account must hold a balance of at least amount"
+    predicate: "pre.accounts[args.from_account].balance >= args.amount"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 118
+      quote: "must hold a balance of at least `amount`"
+
+effects:
+  - id: eff.from_balance_decreased
+    text: "from_account's balance decreases by amount"
+    predicate: "post.accounts[args.from_account].balance == pre.accounts[args.from_account].balance - args.amount"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 118
+      quote: "`from_account`'s"
+
+  - id: eff.to_balance_increased
+    text: "to_account's balance increases by the same amount"
+    predicate: "post.accounts[args.to_account].balance == pre.accounts[args.to_account].balance + args.amount"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 119
+      quote: "`to_account`'s balance increases by the same amount"
+
+frame:
+  # See deposit.yaml's frame comment: "no OTHER account modified" is not expressible (the
+  # wildcard would also match from_account/to_account's own, legitimately-changing, subtrees).
+  - id: frame.owner_unchanged
+    path: state.accounts.*.owner
+    text: "transfer never changes who owns an account"
+    mode: unchanged
+    inferred: true
+  - id: frame.frozen_flag_unchanged
+    path: state.accounts.*.frozen
+    text: "transfer never changes any account's frozen flag"
+    mode: unchanged
+    inferred: true
+  - id: frame.items_unchanged
+    path: state.items
+    text: "transfer never touches items"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "transfer never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    transfer returns a confirmation object on the only success path and raises ToyError on
+    every declared failure, applying both halves of the transfer atomically; no effect is
+    advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 115
+    quote: "Transfer `amount` from `from_account` to `to_account`"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 116
+    quote: "Both accounts must exist and"
+
+invariants:
+  - id: inv.balance_nonnegative
+    text: "no account balance ever goes negative"
+    predicate: "all(post.accounts[a].balance >= 0 for a in post.accounts)"
+    inferred: true
+  - id: inv.total_balance_conserved
+    text: "transfer conserves the sum of every account balance"
+    predicate: "sum(post.accounts[a].balance for a in post.accounts) == sum(pre.accounts[a].balance for a in pre.accounts)"
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

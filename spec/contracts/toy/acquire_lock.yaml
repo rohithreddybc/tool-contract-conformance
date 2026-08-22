@@ -1,0 +1,105 @@
+contract_version: "1.0"
+tool: acquire_lock
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 204
+  end_line: 215
+
+signature:
+  args:
+    lock_id: { type: str, effective: true }
+    holder: { type: str, effective: true }
+
+preconditions:
+  - id: pre.lock_exists
+    text: "the lock must exist"
+    predicate: "args.lock_id in pre.locks"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 204
+      quote: "Acquire `lock_id` for `holder`"
+
+  - id: pre.not_held_by_other
+    text: "the lock must not be held by a different holder"
+    predicate: >
+      pre.locks[args.lock_id].held_by == None
+      or pre.locks[args.lock_id].held_by == args.holder
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 207
+      quote: "Acquiring a lock held by a different holder is rejected"
+
+effects:
+  - id: eff.held_by_set
+    text: "the lock becomes held by holder"
+    predicate: "post.locks[args.lock_id].held_by == args.holder"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 205
+      quote: "it becomes held by"
+
+  - id: eff.count_incremented
+    text: "count increases by exactly 1"
+    predicate: "post.locks[args.lock_id].count == pre.locks[args.lock_id].count + 1"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 206
+      quote: "count increases by 1"
+
+frame:
+  - id: frame.accounts_unchanged
+    path: state.accounts
+    text: "acquire_lock never writes to accounts"
+    mode: unchanged
+    inferred: true
+  - id: frame.items_unchanged
+    path: state.items
+    text: "acquire_lock never writes to items"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    acquire_lock returns the updated (held_by, count) pair on the only success path and raises
+    ToyError on every declared failure; no effect is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 204
+    quote: "Acquire `lock_id` for `holder`"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 207
+    quote: "Acquiring a lock held by a different holder is rejected"
+
+invariants:
+  - id: inv.count_nonnegative
+    text: "lock count never goes negative"
+    predicate: "all(post.locks[l].count >= 0 for l in post.locks)"
+    inferred: true
+  - id: inv.held_iff_count_positive
+    text: "a lock is held exactly when its count is positive"
+    predicate: >
+      all(
+        (post.locks[l].held_by == None) == (post.locks[l].count == 0)
+        for l in post.locks
+      )
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task

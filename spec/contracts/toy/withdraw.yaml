@@ -1,0 +1,116 @@
+contract_version: "1.0"
+tool: withdraw
+benchmark: toy
+commit: "0000000"
+source:
+  file: toy/bank.py
+  start_line: 99
+  end_line: 113
+
+signature:
+  args:
+    account_id: { type: str, effective: true }
+    amount: { type: float, effective: true }
+
+preconditions:
+  - id: pre.account_exists
+    text: "the account must exist"
+    predicate: "args.account_id in pre.accounts"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 100
+      quote: "The account must exist, must not be frozen"
+
+  - id: pre.account_not_frozen
+    text: "the account must not be frozen"
+    predicate: "not pre.accounts[args.account_id].frozen"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 100
+      quote: "The account must exist, must not be frozen"
+
+  - id: pre.amount_positive
+    text: "amount must be positive"
+    predicate: "args.amount > 0"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 101
+      quote: "`amount` must be positive"
+
+  - id: pre.sufficient_balance
+    text: "the account must hold a balance of at least amount"
+    predicate: "pre.accounts[args.account_id].balance >= args.amount"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 101
+      quote: "must hold a balance of at least `amount`"
+
+effects:
+  - id: eff.balance_decreased
+    text: "the account's balance decreases by exactly amount"
+    predicate: "post.accounts[args.account_id].balance == pre.accounts[args.account_id].balance - args.amount"
+    provenance:
+      surface: docstring
+      file: toy/bank.py
+      line: 102
+      quote: "account's balance decreases by exactly"
+
+frame:
+  # See deposit.yaml's frame comment: "no OTHER account modified" is not expressible (the
+  # wildcard would also match account_id's own, legitimately-changing, subtree).
+  - id: frame.owner_unchanged
+    path: state.accounts.*.owner
+    text: "withdraw never changes who owns an account"
+    mode: unchanged
+    inferred: true
+  - id: frame.frozen_flag_unchanged
+    path: state.accounts.*.frozen
+    text: "withdraw never changes any account's frozen flag"
+    mode: unchanged
+    inferred: true
+  - id: frame.items_unchanged
+    path: state.items
+    text: "withdraw never touches items"
+    mode: unchanged
+    inferred: true
+  - id: frame.locks_unchanged
+    path: state.locks
+    text: "withdraw never touches locks"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    withdraw returns the updated account on the only success path and raises ToyError on every
+    declared failure; no effect is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 102
+    quote: "the updated account is returned"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+  provenance:
+    surface: docstring
+    file: toy/bank.py
+    line: 100
+    quote: "The account must exist, must not be frozen"
+
+invariants:
+  - id: inv.balance_nonnegative
+    text: "no account balance ever goes negative"
+    predicate: "all(post.accounts[a].balance >= 0 for a in post.accounts)"
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
