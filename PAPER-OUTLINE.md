@@ -76,6 +76,16 @@ Four paragraphs, one per cluster:
 | Contracts for agent runtime | ToolGate, Agent Behavioral Contracts | `GATE.md` §5 bullet 3 — the contract is their trusted input and our object under test |
 | Contract inference and API oracles (SE) | ConTract, IcePICK, AGORA+, jContractor, Jass, frame specs, Segura, RESTler | `GATE.md` §5 bullet 4 — same technique family, different SUT; in production a fault costs an outage, in a benchmark it costs a number nobody can tell is wrong |
 
+**The published-number link, established 2026-08-21 — this is the sentence the paper is built to earn.**
+
+MedAgentBench's own paper (arXiv:2501.14654; also NEJM AI vol. 2 iss. 9, DOI 10.1056/AIdbp2500144) reports **"Action SR"** — write-task success rate — for all 11 evaluated models in its Table 3, ranging 54.00% to 71.33%, with two models at 0.00%. The file carrying Finding 1 has been touched by exactly one commit in its history (2025-01-22) and is unchanged at our pinned commit. The paper's own §2.4.1 describes "rule-based sanity checks to verify the correctness of the payload of POST requests" — which is precisely the transcript-reconstruction mechanism Finding 4 documents.
+
+So: **those eleven published write-task success rates were produced under an implementation where no write occurs, and graded by reconstructing the intended write from the agent's own message text.** Checkable, specific, and it names a table.
+
+Two honesty constraints on how this is stated. The NEJM AI version is paywalled and its table was not independently read — cite the arXiv table, which was. And the claim is *not* that the numbers are wrong: they faithfully measure whether the agent emitted a well-formed request. The claim is that they do not measure what "Action Success Rate" is taken to mean by anyone reading a clinical-agent leaderboard.
+
+For tau2-bench the version range and a live public leaderboard are established, but **no causal defect-to-number link is claimed here** — that requires the task-level analysis which is §IV's own job, and asserting it from outside would be exactly the overreach X8 and X9 were written to prevent.
+
 **Finding 4 must be framed as a cross-layer finding, not a tool-layer one. This is a positioning correction, not a presentation preference.**
 
 The paper's central figure says: prior audits patrol the evaluator layer, we audit the tool layer nobody reads. Finding 4 is an **evaluator-layer** finding — a grader whose oracle is the agent's transcript. BenchGuard's `EVAL-MISMATCH` ("eval checks something different from what the specification requests") and Tool-Veritas's reward-basis mismatch plausibly cover its *class*, even though neither found this instance. Presenting it as tool-layer-gap territory scores an overclaim against our own layer diagram, and a reviewer who knows those taxonomies will make exactly that hit.
@@ -229,6 +239,14 @@ References (IEEE numeric, ~35 entries), Data Availability (Zenodo DOI), Ethics, 
 
 ---
 
+## Format reality, verified against the CFP 2026-08-21 — read before touching the budget below
+
+Checked directly at `bigdataieee.org/BigData2026/calls/special-data-mining/` and the main CFP. Three corrections, one of them structural:
+
+1. **10 pages IEEE two-column, with references counted inside the limit.** The budget below already assumed this; it holds.
+2. **No appendix is allowed.** This breaks two things the plan relies on: §VIII's patch diffs were to be "diffed in the appendix," and the Tier 2 permutation test was to live "in the appendix only." Both must move into the body or into the deposited artifact. Recommendation: patches go to the artifact with a one-line pointer; the permutation test is dropped rather than relocated, since `analysis_plan.md` §7 already commits to no hypothesis tests and the appendix was its only escape hatch.
+3. **No CRediT, funding, ethics, data-availability or AI-disclosure requirement appears anywhere on the site.** The 0.75 pages budgeted for back matter can largely be reclaimed. Treat this as absence of evidence rather than proof — the camera-ready portal may add fields — so reclaim the space for §VII but keep a few lines in reserve.
+
 ## Page budget summary
 
 | § | Section | Pages |
@@ -301,7 +319,7 @@ Each placeholder carries the script that must produce it. The numbers-audit scri
 | X3 | "N benchmarks audited", N ≥ 4 | Only tau2 is a confirmed dynamic environment. MedAgentBench is static-only. Benchmarks 3-4 are unstarted spikes. | Do not write N until after the Sep 6 kill gate. Draft the abstract with N as a token |
 | ~~X4~~ | ~~BenchGuard is COLM 2026~~ | **RESOLVED 2026-08-21, TRUE.** Verified on the official COLM 2026 accepted-papers page — exact title and author match among 856 entries. Not yet Scopus-indexed; COLM proceedings lag. The other four (Tool-Veritas, ABA, ToolGate, SafeAudit) are confirmed **preprint-only** — 0 Scopus hits by title, no journal-ref on arXiv. | Cite BenchGuard as COLM 2026. Cite the other four as preprints, explicitly. Four corrections to already-printed rows landed in `REFERENCES.md` — see below |
 | X5 | Cross-benchmark mutation transfer | MedAgentBench has no site for 5 of 6 operators — no guards, no argument-conditioned branching, no paired writes, no reset routine | Delete the transfer claim. Report cross-*domain* transfer within tau2, which is real |
-| X6 | Our tau2 findings are new | The ABC checklist (arXiv:2507.02825) reports a defect in tau-bench. Theirs reads as a grading-script defect — empty responses counted as success — and ours are tool-implementation defects, but this has not been checked against their actual text | **Read their tau-bench finding before §VI is drafted.** If it overlaps either of ours, cite and defer rather than claim novelty. This is the one prior-work hit that touches our own evidence |
+| ~~X6~~ | ~~Our tau2 findings are new~~ | **RESOLVED 2026-08-21. No overlap — disposal, not deferral.** ABC audited the *original* tau-bench (Yao et al., arXiv:2406.12045, repo `sierra-research/tau-bench`), not tau2-bench. Four converging proofs: it writes "τ-bench" throughout and never "τ²"; its Table 3 tags the design "Substring Matching, State Matching", which is tau-bench's mechanism, not tau2-bench's assertion/DB-check design; its Table 2 sources the entry to a Feb-2025 announcement, inside its stated collection window of Jan 2024–Mar 2025; and tau2-bench's first commit and paper both postdate that window (2025-06). Their defect (Table 9, checks O.b.2/O.b.3/O.g.3) is empty ground truth and gameable substring matching — a grading-rubric flaw. Ours are tool-implementation defects. `git log -S` confirms both our findings' code has been unchanged since tau2-bench's first commit | Cite ABC as adjacent work on a different artifact and a different layer. One sentence. Claim novelty without hedging |
 | X7 | Annotator B is independent | Not yet named | Settle before dual annotation begins. If B is the co-author, the paper writes "second annotator", never "independent" |
 | X8 | At-risk counts are comparable across benchmarks | **They are not.** tau2 airline grades by whole-database hash, so 50/50 tasks are "at risk" by construction; tau2 telecom grades by per-task assertions and gives 1135/2285. The first number measures the evaluator's coarseness, the second measures the defect's reach | **Numbers-audit rule:** no at-risk figure may be printed without its basis tag (`whole_state_hash` / `collection_only` / `exact_field`). Never pool across bases. A whole-state-hash 100% is not a finding |
 | X9 | Experiment frame ⊆ at-risk population | **False, proven mechanically.** `experiment_frame_subset_of_at_risk = False` for AgentDojo Finding 5 — argument-specific defects make the two frames overlap, not nest | §IV states them as overlapping populations answering different questions, and reports the intersection. See `REVIEW-RESPONSE.md` W6 |
