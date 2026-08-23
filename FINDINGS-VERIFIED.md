@@ -21,6 +21,24 @@ The instance count is 8. **It is not the headline number**, because the project'
 
 **7 unique benchmark-class cells, 8 instances, 4 of the six tool-layer classes field-observed.** Four of the eight instances are Ignored Argument — a reviewer will compress the count this way whether or not we do, so the paper leads with the compressed number and reports instances alongside it.
 
+### The headline number is 5, not 7 — decided 2026-08-21 when the draft forced the arithmetic
+
+Seven cells exist, but two cannot carry a headline, and the paper states this before a reviewer derives it:
+
+| Benchmark | Cell | Headline-eligible? |
+|---|---|---|
+| MedAgentBench | Phantom Effect | **Yes** — grounded in the prompt template, the tool return, and the FHIR standard |
+| MedAgentBench | Ungrounded Oracle | No — an evaluator-layer property, not one of the six tool-layer classes |
+| tau2-bench | Unenforced Precondition | **Yes** — docstring, agent-visible |
+| tau2-bench | Partial Effect | No — `maintainer_annotation` grounding, excluded by our own tiering rule |
+| AgentDojo | Ignored Argument | **Yes** |
+| AgentDojo | Phantom Effect | **Yes** |
+| MM-ToolSandbox | Ignored Argument | **Yes** |
+
+**5 headline-eligible tool-layer cells across 4 benchmarks**, plus one maintainer-annotated cell reported separately, plus one evaluator-layer result that is the paper's strongest single finding and is not a tool-layer class at all.
+
+This is a real reduction from the number previously quoted and it is the correct one. A headline of 7 holds only until someone asks which seven, at which point two fall over and the entire count reads as inflated. Five that survive inspection beat seven that do not, and five across four benchmarks still clears the kill gate on its own terms. Every number in the abstract must be the one that survives a reviewer opening the table.
+
 **Invariant Break and Reset Leak remain mutation-only**, with no field instance anywhere. Table I must mark them so. Note this improved during the audit: Ignored Argument was mutation-only until AgentDojo and MM-ToolSandbox were added, which is an argument for breadth over depth in the remaining time.
 
 Verification date: 2026-08-21. All three re-verified from fresh clones at the pinned commits. Every line number in the original claim is correct. No claim required amendment.

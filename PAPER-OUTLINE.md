@@ -278,6 +278,16 @@ Workshop deadlines are not listed on the index page. **Check them before Sep 20*
 
 **Asset order.** The MedAgentBench published-number link **leads** — it is the hook and the proof the problem costs something. The cross-layer mutual-consistency result **carries the intellectual claim**: single-layer audits are structurally blind to cross-layer consistency defects by construction. That is the novelty that survives the ConTract/IcePICK concession. The framework comes **third**, as the instrument that makes the audit systematic — never as the contribution. Within it, score-at-risk gets full billing and the checker gets least.
 
+### §II is over budget — the cut, decided 2026-08-21
+
+The drafted §II runs 1,611 words against a 1.25-page budget and cannot hold eight disposals plus the published-number link plus the cross-layer paragraph. Cut in this order, and no further:
+
+1. **Compress the SE-lineage paragraph to two sentences.** ConTract, IcePICK and AGORA+ need the concession stated once — the checking technique is not new, the target and the consequence are — not a paragraph of comparison. The concession is what buys credibility; the elaboration is not.
+2. **Shorten the ABC-checklist disposal to two sentences.** The version pinning that closed X6 is decisive and belongs in the sentence, but the four converging proofs belong in the artifact, not the paper.
+3. **Do not cut any of the eight disposals themselves.** Each answers a specific reviewer who knows a specific paper. Dropping one saves forty words and loses the reviewer it was written for.
+
+What breaks if this is not enough: the published-number link moves to §I, where it already partly lives. It must not move to §IX, which is too late to do positioning work.
+
 ### Abstract rule, given that §VIII may null
 
 The abstract promises: the compressed count (7 benchmark-class cells across 4 benchmarks), the MedAgentBench construct-validity result, score-at-risk bounds with basis tags, and validated detection. **It promises no verdict flips.** Flips are a bonus in §VIII if they materialize; if the pre-registered null lands, the abstract never wrote a cheque the paper cannot cash.

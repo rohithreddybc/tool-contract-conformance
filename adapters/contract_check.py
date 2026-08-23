@@ -25,9 +25,37 @@ call:
 
 Both return `ClauseVerdict`s from core/verdict.py and raise nothing tool-specific -- the two
 Gate 1b tests differ only in which contract and which args they pass in.
+
+check_effects' IGNORED_ARGUMENT tagging (added for the AgentDojo/MM-ToolSandbox adapters, whose
+field-observed defects are predominantly this class -- FINDINGS-VERIFIED.md Findings 5, 6, 7, 8)
+-----------------------------------------------------------------------------------------------
+tau2's two Gate 1b findings are shaped as "an effect didn't happen" (Partial Effect) and "a
+precondition wasn't enforced" (Unenforced Precondition). Findings 5/6/7/8 are differently shaped:
+"an argument's own value never reaches state" -- e.g. `post...recurring == args.recurring`
+failing precisely because `args.recurring` was truthiness-guarded out of the write path
+(`update_scheduled_transaction`, banking_client.py:144). That shape was always expressible as an
+ordinary effect clause (nothing about the schema or the predicate grammar needed to change --
+`args` is already a first-class binding, PREDICATE-GRAMMAR.md sec 1), but `check_effects` always
+tagged a violation PARTIAL_EFFECT, which would mislabel exactly the clauses this project's own
+taxonomy calls Ignored Argument. `_effective_arg_value_uses` (below) decides the tag generically,
+from the predicate's own AST via core/predicates.compile_predicate -- never by pattern-matching
+the predicate string or by a tool/clause-id special case -- so this stays a tool-agnostic
+checker, unchanged in spirit from the rest of this module.
+
+The rule: a clause is tagged IGNORED_ARGUMENT (instead of the PARTIAL_EFFECT default) iff its
+predicate contains an `==`/`!=` comparison where one side IS, or is a shallow +/-/*/-arithmetic
+combination of, an `args.<name>` reference for some `<name>` the contract's own `signature.args`
+declares `effective: true`. This deliberately does NOT fire when `args.<name>` is used only as a
+Subscript KEY selecting which record to inspect -- `pre.reservations[args.reservation_id].cabin`
+never trips it, because `args.reservation_id` there is a selector, not a value the interface
+claims to have written. Checked against `spec/contracts/tau2/cancel_reservation.yaml`'s
+`eff.seats_released` (uses `args.reservation_id` only as a selector, several layers of Subscript
+deep) and `refuel_data.yaml`'s `eff.data_refueled` (uses `args.gb_amount` as a value, inside a
+`+`) before being trusted here -- see tests/test_contract_check.py.
 """
 from __future__ import annotations
 
+import ast
 from typing import Any, Optional
 
 from core.canonical import CanonicalConfig, diff
@@ -36,6 +64,38 @@ from core.predicates import PathError, PredicateTypeError, compile_predicate, ev
 from core.verdict import ClauseVerdict, DefectClass, Verdict, Witness
 
 __all__ = ["to_result_binding", "check_effects", "check_precondition_enforcement"]
+
+
+def _effective_arg_value_uses(predicate_src: str, effective_names: frozenset) -> frozenset:
+    """Names in `effective_names` that appear as a VALUE operand of an ==/!= comparison inside
+    `predicate_src` -- see module docstring section above for the selector-vs-value distinction
+    and why it matters. Returns the empty frozenset if none do (or if `effective_names` is
+    empty, cheaply short-circuited by the caller)."""
+    if not effective_names:
+        return frozenset()
+
+    def value_names(node: ast.AST) -> set:
+        # Deliberately shallow: descends through +/-/*/-/unary only, and only recognizes the
+        # exact post-rewrite shape `args.<name>` produces (Subscript(Name('args'), Constant)).
+        # Does NOT descend into an arbitrary Subscript's `.slice` or `.value` -- that is exactly
+        # what keeps a selector use (`pre.foo[args.bar]`) from being misread as a value use.
+        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and node.value.id == "args":
+            if isinstance(node.slice, ast.Constant):
+                return {node.slice.value}
+            return set()
+        if isinstance(node, ast.BinOp):
+            return value_names(node.left) | value_names(node.right)
+        if isinstance(node, ast.UnaryOp):
+            return value_names(node.operand)
+        return set()
+
+    compiled = compile_predicate(predicate_src)
+    found: set = set()
+    for node in ast.walk(compiled.tree):
+        if isinstance(node, ast.Compare) and any(isinstance(op, (ast.Eq, ast.NotEq)) for op in node.ops):
+            for side in (node.left, *node.comparators):
+                found |= value_names(side)
+    return frozenset(found) & effective_names
 
 
 def to_result_binding(raw: Any, success: bool, error: Optional[str]) -> Any:
@@ -106,8 +166,22 @@ def check_effects(
     since Phantom Effect is specifically a claim about the success signal's biconditional
     reading and this contract never made that claim.
     """
+    effective_names = frozenset(name for name, spec in contract.signature.args.items() if spec.effective)
     verdicts = [
-        _clause_verdict(ec.id, ec.predicate, pre, post, args, result, on_false=DefectClass.PARTIAL_EFFECT, cfg=cfg)
+        _clause_verdict(
+            ec.id,
+            ec.predicate,
+            pre,
+            post,
+            args,
+            result,
+            on_false=(
+                DefectClass.IGNORED_ARGUMENT
+                if _effective_arg_value_uses(ec.predicate, effective_names)
+                else DefectClass.PARTIAL_EFFECT
+            ),
+            cfg=cfg,
+        )
         for ec in contract.effects
     ]
 
