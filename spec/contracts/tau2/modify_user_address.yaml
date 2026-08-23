@@ -1,0 +1,87 @@
+# modify_user_address, tau2-bench retail, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/retail/tools.py`.
+
+contract_version: "1.0"
+tool: modify_user_address
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/retail/tools.py
+  start_line: 624
+  end_line: 661
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    user_id: { type: str, effective: true }
+    address1: { type: str, effective: true }
+    address2: { type: str, effective: true }
+    city: { type: str, effective: true }
+    state: { type: str, effective: true }
+    country: { type: str, effective: true }
+    zip: { type: str, effective: true }
+
+preconditions:
+  - id: pre.user_exists
+    text: "the user must exist"
+    predicate: "args.user_id in pre.users"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 638
+      quote: "user_id: The user id, such as 'sara_doe_496'."
+
+effects:
+  - id: eff.address_updated
+    text: "the user's default address is set to the requested address"
+    predicate: >
+      post.users[args.user_id].address.city == args.city
+      and post.users[args.user_id].address.zip == args.zip
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 635
+      quote: "Modify the default address of a user."
+
+frame:
+  - id: frame.orders_unchanged
+    path: state.orders
+    text: "modifying a user's default address never touches any order"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/retail/tools.py
+    line: 650
+    quote: "ValueError: If the user is not found."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The only raise (user not found, propagated from _get_user) precedes the single mutating
+    statement (user.address = ..., lines 653-660); there is no raise after it. No effect on this
+    tool is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/retail/tools.py
+    line: 635
+    quote: "Modify the default address of a user."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: no docstring-vs-body divergence found. Unlike modify_pending_order_
+  address, this tool changes a user PROFILE default, which retail/policy.md never claims
+  propagates to existing orders -- consistent with frame.orders_unchanged above, and the
+  strongest sibling contrast in the batch for showing the checker distinguishes "this order's
+  address" from "this user's default address" as genuinely separate, independently-advertised
+  effects.

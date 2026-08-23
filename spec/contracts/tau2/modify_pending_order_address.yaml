@@ -1,0 +1,85 @@
+# modify_pending_order_address, tau2-bench retail, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/retail/tools.py`.
+
+contract_version: "1.0"
+tool: modify_pending_order_address
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/retail/tools.py
+  start_line: 410
+  end_line: 452
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    order_id: { type: str, effective: true }
+    address1: { type: str, effective: true }
+    address2: { type: str, effective: true }
+    city: { type: str, effective: true }
+    state: { type: str, effective: true }
+    country: { type: str, effective: true }
+    zip: { type: str, effective: true }
+
+preconditions:
+  - id: pre.order_pending
+    text: "the order must be pending"
+    predicate: "pre.orders[args.order_id].status == 'pending'"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/retail/tools.py
+      line: 441
+      quote: "Non-pending order cannot be modified"
+
+effects:
+  - id: eff.address_updated
+    text: "the order's shipping address is set to the requested address"
+    predicate: >
+      post.orders[args.order_id].address.city == args.city
+      and post.orders[args.order_id].address.zip == args.zip
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 421
+      quote: "Modify the shipping address of a pending order."
+
+frame:
+  - id: frame.items_unchanged
+    path: state.orders.*.items
+    text: "modifying the shipping address never touches order items"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/retail/tools.py
+    line: 441
+    quote: "Non-pending order cannot be modified"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The single raise (line 441) precedes the only mutating statement (order.address = ...,
+    lines 444-451); there is no raise after it. No effect on this tool is advertised as
+    deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/retail/tools.py
+    line: 421
+    quote: "Modify the shipping address of a pending order."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: no docstring-vs-body divergence found. address2 is stored verbatim
+  even when the empty string (docstring line 426: "address2: The second line of the address,
+  such as 'Apt 1' or ''.") -- the empty-string case is explicitly advertised, so there is no
+  truthiness-guard risk here (the field is never tested for truthiness, only assigned).

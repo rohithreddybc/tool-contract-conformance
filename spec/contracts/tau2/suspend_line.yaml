@@ -1,0 +1,101 @@
+# suspend_line, tau2-bench telecom, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/telecom/tools.py`.
+# TelecomDB.lines/customers are List[...], not Dict[...] -- matched by id via a bound
+# comprehension, same pattern as spec/contracts/tau2/refuel_data.yaml.
+
+contract_version: "1.0"
+tool: suspend_line
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/telecom/tools.py
+  start_line: 261
+  end_line: 295
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    customer_id: { type: str, effective: true }
+    line_id: { type: str, effective: true }
+    reason: { type: str, effective: true }
+
+preconditions:
+  - id: pre.line_active
+    text: "the line's status must be Active"
+    predicate: "any(l.status == 'Active' for l in pre.lines if l.line_id == args.line_id)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 284
+      quote: "Line must be active to suspend"
+
+  - id: pre.customer_owns_line
+    text: "the customer must own the line"
+    predicate: "any(args.line_id in c.line_ids for c in pre.customers if c.customer_id == args.customer_id)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 224
+      quote: "not found for customer"
+
+effects:
+  - id: eff.line_suspended
+    text: "the line's status becomes Suspended and its suspension start date is recorded"
+    predicate: >
+      any(
+        l2.line_id == args.line_id
+        and l2.status == 'Suspended'
+        and l2.suspension_start_date != None
+        for l2 in post.lines
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 268
+      quote: "Logic: Sets line status to Suspended, records suspension_start_date."
+
+frame:
+  - id: frame.bills_unchanged
+    path: state.bills
+    text: "suspending a line never modifies billing records"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/telecom/tools.py
+    line: 284
+    quote: "Line must be active to suspend"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The one enforced precondition raise (line 284) precedes the only mutating statements
+    (lines 286-287); there is no raise after them. No effect on this tool is advertised as
+    deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/telecom/tools.py
+    line: 268
+    quote: "Logic: Sets line status to Suspended, records suspension_start_date."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  CANDIDATE FINDING (high confidence, Finding-2 shape -- docstring advertises a check the body
+  never performs): the docstring's summary line reads "Suspends a specific line (max 6 months)."
+  (tools.py:266), but the function body (lines 281-295) never reads, stores, or enforces any
+  duration cap -- there is no suspension-length argument, no "max_suspension" field on Line
+  (data_model.py:69-103 has only suspension_start_date, no end/expiry date), and resume_line
+  (this batch's next contract) never checks elapsed time either. A line can be suspended
+  indefinitely with no code path that ever revisits the "max 6 months" claim. This is exactly
+  Finding 2's shape (an advertised check the implementation never performs) and is reported here
+  as a candidate for manual confirmation, not entered into FINDINGS-VERIFIED.md directly.

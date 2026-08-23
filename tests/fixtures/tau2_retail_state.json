@@ -1,0 +1,62 @@
+{
+  "snapshot": {
+    "products": {
+      "x": {
+        "name": "x",
+        "product_id": "x",
+        "variants": {
+          "x": { "item_id": "x", "options": { "x": "x" }, "available": true, "price": 1 }
+        }
+      }
+    },
+    "users": {
+      "x": {
+        "user_id": "x",
+        "name": { "first_name": "x", "last_name": "x" },
+        "address": {
+          "address1": "x",
+          "address2": "x",
+          "city": "x",
+          "country": "x",
+          "state": "x",
+          "zip": "x"
+        },
+        "email": "x",
+        "payment_methods": {
+          "x": { "source": "gift_card", "id": "x", "balance": 1 }
+        },
+        "orders": ["x"]
+      }
+    },
+    "orders": {
+      "x": {
+        "order_id": "x",
+        "user_id": "x",
+        "address": {
+          "address1": "x",
+          "address2": "x",
+          "city": "x",
+          "country": "x",
+          "state": "x",
+          "zip": "x"
+        },
+        "items": [
+          { "name": "x", "product_id": "x", "item_id": "x", "price": 1, "options": { "x": "x" } }
+        ],
+        "status": "pending",
+        "fulfillments": [],
+        "payment_history": [
+          { "transaction_type": "payment", "amount": 1, "payment_method_id": "x" }
+        ],
+        "cancel_reason": null,
+        "exchange_items": null,
+        "exchange_new_items": null,
+        "exchange_payment_method_id": null,
+        "exchange_price_difference": null,
+        "return_items": null,
+        "return_payment_method_id": null
+      }
+    }
+  },
+  "result": {}
+}

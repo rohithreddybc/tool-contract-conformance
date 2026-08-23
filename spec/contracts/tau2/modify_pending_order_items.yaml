@@ -1,0 +1,89 @@
+# modify_pending_order_items, tau2-bench retail, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/retail/tools.py`.
+
+contract_version: "1.0"
+tool: modify_pending_order_items
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/retail/tools.py
+  start_line: 454
+  end_line: 542
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    order_id: { type: str, effective: true }
+    item_ids: { type: "List[str]", effective: true }
+    new_item_ids: { type: "List[str]", effective: true }
+    payment_method_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.order_pending
+    text: "the order must be pending"
+    predicate: "pre.orders[args.order_id].status == 'pending'"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/retail/tools.py
+      line: 483
+      quote: "Non-pending order cannot be modified"
+
+effects:
+  - id: eff.status_item_modified
+    text: >
+      a successful call is a one-time action that leaves the order in the "items modified"
+      pending state, per the agent-facing description of this being a single, irreversible step
+    predicate: "post.orders[args.order_id].status == 'pending (item modified)'"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 462
+      quote: "For a pending order, this function can only be called once."
+
+frame:
+  - id: frame.address_unchanged
+    path: state.orders.*.address
+    text: "modifying order items never touches the shipping address"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/retail/tools.py
+    line: 483
+    quote: "Non-pending order cannot be modified"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Every raise (non-pending order, missing/duplicate item ids, id equal to its own replacement,
+    unavailable new item, insufficient gift-card balance -- lines 483-518) occurs before the
+    payment and item-swap block at lines 521-540; no raise is reachable after it. No effect on
+    this tool is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/retail/tools.py
+    line: 462
+    quote: "For a pending order, this function can only be called once."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan (low-confidence, cosmetic): retail/policy.md's "Modify items" section
+  (policy.md:110) advertises the post-call status as literally 'pending (items modifed)'
+  (plural "items", and "modifed" misspelled) while the code sets the OrderStatus-enum-correct
+  value "pending (item modified)" (singular, correctly spelled -- data_model.py:126). This is a
+  cosmetic mismatch between the agent-facing prose and the actual field value, not a semantic
+  divergence: retail/data_model.py's OrderStatus Literal defines only the singular,
+  correctly-spelled string, so the policy document's phrasing is what is wrong, not the tool.
+  Flagged as a minor, informational candidate finding rather than a core one -- it does not fit
+  any of the four shapes the task brief calls out, and no agent behavior turns on the literal
+  spelling of a status string it never compares against.

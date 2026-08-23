@@ -1,0 +1,90 @@
+# update_reservation_baggages, tau2-bench airline, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/airline/tools.py`.
+
+contract_version: "1.0"
+tool: update_reservation_baggages
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 547
+  end_line: 589
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    reservation_id: { type: str, effective: true }
+    total_baggages: { type: int, effective: true }
+    nonfree_baggages: { type: int, effective: true }
+    payment_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.reservation_exists
+    text: "the reservation must exist"
+    predicate: "args.reservation_id in pre.reservations"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 559
+      quote: "reservation_id: The reservation ID, such as 'ZFA04Y'"
+
+effects:
+  - id: eff.baggages_updated
+    text: "the reservation's total and non-free baggage counts are set to the requested values"
+    predicate: >
+      post.reservations[args.reservation_id].total_baggages == args.total_baggages
+      and post.reservations[args.reservation_id].nonfree_baggages == args.nonfree_baggages
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 556
+      quote: "Update the baggage information of a reservation."
+
+frame:
+  - id: frame.flights_unchanged
+    path: state.flights
+    text: "updating baggage information never touches flight inventory"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 568
+    quote: "ValueError: If the reservation is not found."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    _payment_for_update (called at line 581) raises on every declared payment failure before it
+    performs its own gift-card deduction (tools.py:162-176: all three checks precede the
+    balance mutation), and update_reservation_baggages itself raises nowhere after that call
+    returns. The total_baggages/nonfree_baggages assignment (lines 586-587) is therefore always
+    reached once a non-error return is possible, so success and full effect application are
+    coincident. No effect on this tool is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 556
+    quote: "Update the baggage information of a reservation."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: the fee is charged only on an INCREASE in nonfree_baggages
+  ("50 * max(0, nonfree_baggages - reservation.nonfree_baggages)", line 578) -- lowering
+  nonfree_baggages is silently free and does not credit any prior payment. Neither the
+  docstring nor airline/policy.md's "Change baggage and insurance" section (which says only
+  "The user can add but not remove checked bags") advertises a refund for a decrease, so this is
+  not a divergence -- it is consistent with the policy's own no-removal framing -- but the
+  underlying value asymmetry (raise max(0, delta) charges increases, never credits decreases)
+  is worth a maintainer note if the policy is ever loosened to allow bag removal. Not entered as
+  a candidate finding: nothing agent-visible is contradicted.

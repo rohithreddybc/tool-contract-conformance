@@ -1,0 +1,95 @@
+# return_delivered_order_items, tau2-bench retail, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/retail/tools.py`.
+
+contract_version: "1.0"
+tool: return_delivered_order_items
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/retail/tools.py
+  start_line: 663
+  end_line: 714
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    order_id: { type: str, effective: true }
+    item_ids: { type: "List[str]", effective: true }
+    payment_method_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.order_delivered
+    text: "the order must be delivered"
+    predicate: "pre.orders[args.order_id].status == 'delivered'"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/retail/tools.py
+      line: 691
+      quote: "Non-delivered order cannot be returned"
+
+effects:
+  - id: eff.status_return_requested
+    text: "the order status becomes 'return requested'"
+    predicate: "post.orders[args.order_id].status == 'return requested'"
+    provenance:
+      surface: prompt_template
+      file: data/tau2/domains/retail/policy.md
+      line: 126
+      quote: "the order status will be changed to 'return requested'"
+
+  - id: eff.return_payment_method_recorded
+    text: "the order records which payment method will receive the refund"
+    predicate: "post.orders[args.order_id].return_payment_method_id == args.payment_method_id"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 678
+      quote: "payment_method_id: The payment method id to pay or receive refund for the item price difference, such as 'gift_card_0000000' or 'credit_card_0000000'."
+
+frame:
+  - id: frame.items_unchanged
+    path: state.orders.*.items
+    text: >
+      a return request never removes items from the order or applies a refund at call time --
+      both are advertised as happening after the customer physically returns the item
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/retail/tools.py
+    line: 691
+    quote: "Non-delivered order cannot be returned"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Every raise (non-delivered order, payment method not original-or-gift-card, missing item
+    ids -- lines 691-707) occurs before the mutation block at lines 710-712 (status,
+    return_items, return_payment_method_id); no raise is reachable after it. No effect on this
+    tool is advertised as deferred -- the recorded return-request fields ARE the whole
+    advertised effect of a successful call.
+  provenance:
+    surface: prompt_template
+    file: data/tau2/domains/retail/policy.md
+    line: 126
+    quote: "the order status will be changed to 'return requested'"
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  TRUE NEGATIVE (reported per task brief, not a finding), same shape as this file's sibling
+  exchange_delivered_order_items.yaml: no item is removed from order.items and no refund is
+  applied at call time, but retail/policy.md's "Return delivered order" section states this
+  outcome explicitly: "After user confirmation, the order status will be changed to 'return
+  requested', and the user will receive an email regarding how to return items." (policy.md:126)
+  -- the deferral to a later, out-of-band process (the customer must physically return the
+  item before any refund is possible) is advertised, not hidden.

@@ -1,0 +1,91 @@
+# cancel_pending_order, tau2-bench retail, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/retail/tools.py`.
+
+contract_version: "1.0"
+tool: cancel_pending_order
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/retail/tools.py
+  start_line: 158
+  end_line: 205
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    order_id: { type: str, effective: true }
+    reason: { type: str, effective: true }
+
+preconditions:
+  - id: pre.order_pending
+    text: "the order must be pending"
+    predicate: "pre.orders[args.order_id].status == 'pending'"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/retail/tools.py
+      line: 178
+      quote: "Non-pending order cannot be cancelled"
+
+effects:
+  - id: eff.status_cancelled
+    text: "the order status becomes cancelled"
+    predicate: "post.orders[args.order_id].status == 'cancelled'"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 163
+      quote: "the order status will be changed to 'cancelled' and the payment will be refunded."
+
+  - id: eff.cancel_reason_recorded
+    text: "the order records the cancellation reason"
+    predicate: "post.orders[args.order_id].cancel_reason == args.reason"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 170
+      quote: "reason: The reason for cancellation, which should be either 'no longer needed' or 'ordered by mistake'."
+
+frame:
+  - id: frame.products_unchanged
+    path: state.products
+    text: "cancelling an order never modifies the product catalog"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/retail/tools.py
+    line: 178
+    quote: "Non-pending order cannot be cancelled"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Both raises (non-pending order at line 178, invalid reason at line 182) occur before the
+    refund/status-mutation block (lines 185-203); there is no raise after it. A non-error return
+    is therefore the interface's only signal that the whole cancellation -- gift-card refund
+    where applicable, status, cancel_reason, and payment_history -- was applied. No effect on
+    this tool is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/retail/tools.py
+    line: 163
+    quote: "the order status will be changed to 'cancelled' and the payment will be refunded."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: no docstring-vs-body divergence found. retail/policy.md's "Cancel
+  pending order" section ("the total will be refunded via the original payment method
+  immediately if it is gift card, otherwise in 5 to 7 business days") matches the body exactly
+  -- GiftCard.balance is credited synchronously (lines 196-198); any other payment source is
+  left to a real-world refund cycle the DB does not model, which the policy text itself
+  advertises rather than hides. True negative, not a finding.

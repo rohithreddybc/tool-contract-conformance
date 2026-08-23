@@ -1,0 +1,88 @@
+# send_certificate, tau2-bench airline, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/airline/tools.py`.
+
+contract_version: "1.0"
+tool: send_certificate
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 487
+  end_line: 514
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    user_id: { type: str, effective: true }
+    amount: { type: int, effective: true }
+
+preconditions:
+  - id: pre.user_exists
+    text: "the user must exist"
+    predicate: "args.user_id in pre.users"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 493
+      quote: "user_id: The ID of the user to book the reservation, such as 'sara_doe_496'"
+
+effects:
+  - id: eff.certificate_added
+    text: "a certificate payment method for the requested amount is added to the user's profile"
+    predicate: >
+      any(
+        post.users[args.user_id].payment_methods[k].source == 'certificate'
+        and post.users[args.user_id].payment_methods[k].amount == args.amount
+        for k in post.users[args.user_id].payment_methods
+      )
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/airline/tools.py
+      line: 513
+      quote: "added to user {user_id} with amount {amount}."
+
+frame:
+  - id: frame.reservations_unchanged
+    path: state.reservations
+    text: "sending a certificate never touches any reservation"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 500
+    quote: "ValueError: If the user is not found."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The only two return paths are the success message immediately after the certificate is
+    added to the user's payment_methods (line 512-513) and the "Too many certificates" raise
+    (line 514), which is reachable only when the loop finds no free certificate_N slot and
+    therefore never executed the mutating branch. There is no path that returns without having
+    just performed the add, and no path that mutates and then raises. No effect on this tool is
+    advertised as deferred.
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/airline/tools.py
+    line: 513
+    quote: "added to user {user_id} with amount {amount}."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: the docstring's "Be careful!" (line 490) and the "assume at most 3
+  cases per task" comment (line 504, maintainer_annotation, not agent-visible) both flag the
+  fixed 3-slot certificate_1..3 allocation as a known modeling limit, not a defect -- a 4th
+  send_certificate call on the same user raises "Too many certificates" with no partial state
+  change, which is the correctly-atomic, advertised failure mode. True negative, not a finding.
+  No docstring-vs-body divergence found.

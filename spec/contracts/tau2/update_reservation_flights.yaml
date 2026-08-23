@@ -1,0 +1,111 @@
+# update_reservation_flights, tau2-bench airline, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/airline/tools.py`.
+#
+# This is the contract for the airline/tools.py:689 TRUE NEGATIVE named in the task brief: the
+# comment "Do not make flight database update here, assume it takes time to be updated" is a
+# maintainer-annotated, deliberate non-effect on state.flights. It is encoded below as a PASSING
+# frame clause (state.flights unchanged), not as an advertised_deferred effect -- the deferral
+# comment contains none of spec/validate.py's DEFERRAL_WORDS ("defer/async/lag/later/eventually/
+# pending/not implemented/not applied"), so grounding it as advertised_deferred would fail check
+# 6's word match. A frame clause asserting no change has no such requirement and is a strictly
+# more precise encoding of what the comment actually claims (nothing changes here, not
+# something-changes-later).
+
+contract_version: "1.0"
+tool: update_reservation_flights
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 591
+  end_line: 690
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    reservation_id: { type: str, effective: true }
+    cabin: { type: str, effective: true }
+    flights: { type: "List[FlightInfo]", effective: true }
+    payment_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.reservation_exists
+    text: "the reservation must exist"
+    predicate: "args.reservation_id in pre.reservations"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 604
+      quote: "reservation_id: The reservation ID, such as 'ZFA04Y'."
+
+effects:
+  - id: eff.cabin_updated
+    text: "the reservation's cabin class is set to the requested cabin"
+    predicate: "post.reservations[args.reservation_id].cabin == args.cabin"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 605
+      quote: "cabin: The cabin class of the reservation"
+
+frame:
+  - id: frame.flights_table_unchanged
+    path: state.flights
+    text: >
+      updating a reservation's flights does not update the flight database's seat inventory --
+      the maintainer notes this is deliberately deferred rather than applied synchronously
+    mode: unchanged
+    provenance:
+      surface: maintainer_annotation
+      file: src/tau2/domains/airline/tools.py
+      line: 689
+      quote: "Do not make flight database update here, assume it takes time to be updated"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 613
+    quote: "ValueError: If the reservation is not found."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Every raise in the per-flight loop (lines 653-662) and inside _payment_for_update
+    (tools.py:162-176, called at line 681) occurs before the reservation.flights /
+    reservation.cabin assignment at lines 686-687, and no raise is reachable afterward. The
+    frame.flights_table_unchanged clause above covers the one effect this tool advertises it
+    does NOT apply synchronously (the flight database's seat counts); it is a frame assertion,
+    not a listed effect, so it does not need advertised_deferred and does not participate in
+    this biconditional at all -- the biconditional only governs eff.cabin_updated, which is
+    unconditionally applied on every non-error return.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 600
+    quote: "Update the flight information of a reservation."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  TRUE NEGATIVE (reported per task brief, not a finding): the flight-inventory non-update at
+  line 689 is exactly the case airline/policy.md:113 also advertises at the business-rule level
+  -- "The API does not check these for the agent, so the agent must make sure the rules apply
+  before calling the API!" (Modify flight section). Both the flights-table deferral (code
+  comment) and the non-enforcement of change-flights business rules (policy.md) are advertised
+  gaps, not silent divergences, and the contract above is built to CONFORM on both rather than
+  flag them.
+
+  Candidate-finding scan: no docstring-vs-body divergence found beyond the already-known,
+  advertised deferral above. update_reservation_flights and cancel_reservation are the two
+  airline tools that touch reservation.flights without ever touching Flight.dates[*]
+  .available_seats; cancel_reservation's identical gap (Finding 3, FINDINGS-VERIFIED.md) is
+  NOT advertised anywhere agent-visible, which is exactly the asymmetry that makes one a true
+  negative and the other a confirmed finding.

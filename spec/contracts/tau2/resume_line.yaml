@@ -1,0 +1,103 @@
+# resume_line, tau2-bench telecom, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/telecom/tools.py`.
+
+contract_version: "1.0"
+tool: resume_line
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/telecom/tools.py
+  start_line: 297
+  end_line: 331
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    customer_id: { type: str, effective: true }
+    line_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.line_suspended_or_pending
+    text: "the line's status must be Suspended or Pending Activation"
+    predicate: >
+      any(
+        l.status in ['Suspended', 'Pending Activation']
+        for l in pre.lines
+        if l.line_id == args.line_id
+      )
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 320
+      quote: "Line must be suspended to resume"
+
+  - id: pre.customer_owns_line
+    text: "the customer must own the line"
+    predicate: "any(args.line_id in c.line_ids for c in pre.customers if c.customer_id == args.customer_id)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 224
+      quote: "not found for customer"
+
+effects:
+  - id: eff.line_resumed
+    text: "the line's status becomes Active and its suspension start date is cleared"
+    predicate: >
+      any(
+        l2.line_id == args.line_id
+        and l2.status == 'Active'
+        and l2.suspension_start_date == None
+        for l2 in post.lines
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 302
+      quote: "Logic: Sets line status to Active, clears suspension_start_date."
+
+frame:
+  - id: frame.bills_unchanged
+    path: state.bills
+    text: "resuming a line never modifies billing records"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/telecom/tools.py
+    line: 320
+    quote: "Line must be suspended to resume"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The one enforced precondition raise (line 320) precedes the only mutating statements
+    (lines 322-323); there is no raise after them. No effect on this tool is advertised as
+    deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/telecom/tools.py
+    line: 302
+    quote: "Logic: Sets line status to Active, clears suspension_start_date."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  TRUE NEGATIVE: resume_line accepts a line in either Suspended or "Pending Activation" status
+  (docstring line 301, matching main_policy.md's four-state line-status list, main_policy.md:58)
+  -- this is a deliberately wider precondition than suspend_line's single-state Active check,
+  not an omission, and the contract's pre.line_suspended_or_pending clause reflects the exact
+  two-state union the docstring names.
+
+  Candidate-finding scan: resume_line does not re-check or re-derive the "max 6 months" claim
+  from suspend_line's docstring (see suspend_line.yaml's notes) -- consistent with that claim
+  never being enforced anywhere, not a new divergence local to this tool.

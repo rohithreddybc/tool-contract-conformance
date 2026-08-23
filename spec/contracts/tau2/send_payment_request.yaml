@@ -1,0 +1,97 @@
+# send_payment_request, tau2-bench telecom, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/telecom/tools.py`.
+
+contract_version: "1.0"
+tool: send_payment_request
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/telecom/tools.py
+  start_line: 360
+  end_line: 393
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    customer_id: { type: str, effective: true }
+    bill_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.no_bill_awaiting_payment
+    text: "no other bill for this customer may already be awaiting payment"
+    predicate: "not any(b.customer_id == args.customer_id and b.status == 'Awaiting Payment' for b in pre.bills)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 388
+      quote: "A bill is already awaiting payment for this customer"
+
+  - id: pre.bill_belongs_to_customer
+    text: "the bill must belong to the customer"
+    predicate: "any(args.bill_id in c.bill_ids for c in pre.customers if c.customer_id == args.customer_id)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 390
+      quote: "not found for customer"
+
+effects:
+  - id: eff.bill_awaiting_payment
+    text: "the bill's status becomes Awaiting Payment"
+    predicate: "any(b2.bill_id == args.bill_id and b2.status == 'Awaiting Payment' for b2 in post.bills)"
+    provenance:
+      surface: prompt_template
+      file: data/tau2/domains/telecom/main_policy.md
+      line: 108
+      quote: "This will change the status of the bill to AWAITING PAYMENT."
+
+frame:
+  - id: frame.lines_unchanged
+    path: state.lines
+    text: "sending a payment request never modifies any line"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/telecom/tools.py
+    line: 388
+    quote: "A bill is already awaiting payment for this customer"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Every raise (customer not found at line 382, another bill already awaiting payment at line
+    388, bill not found for customer at line 390) occurs before the single mutating statement
+    (bill.status = BillStatus.AWAITING_PAYMENT, line 392); there is no raise after it. No effect
+    on this tool is advertised as deferred.
+  provenance:
+    surface: prompt_template
+    file: data/tau2/domains/telecom/main_policy.md
+    line: 108
+    quote: "This will change the status of the bill to AWAITING PAYMENT."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  TRUE NEGATIVE (reported per task brief, not a finding), and an unusually strong instance of
+  it: send_payment_request's own docstring states "Warning: This method does not check if the
+  bill is already PAID. Always check the bill status before calling this method."
+  (tools.py:369-370), AND main_policy.md independently and separately states the same
+  non-enforcement at the prompt-template level: "The send payement request tool will not check
+  if the bill is overdue. You should always check that the bill is overdue before sending a
+  payment request." (main_policy.md:117, sic on "payement"). Both agent-visible surfaces
+  disclaim a check the code does not perform, at two different granularities (PAID-status in the
+  docstring, overdue-status in the policy) -- deliberately not encoded as a precondition clause
+  here, since encoding it would misrepresent the interface's own claim. This is exactly the
+  "detector that knows when not to fire" case the task brief asks to be reported for SS V,
+  doubly so because the non-enforcement is advertised on two independent agent-visible surfaces
+  rather than one.

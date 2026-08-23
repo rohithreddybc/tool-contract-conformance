@@ -1,0 +1,135 @@
+# book_reservation, tau2-bench airline, commit c3398666e6559e3a063da3fc04b5acf7f941464e
+# (short c3398666). Authored to the standard set by cancel_reservation.yaml / refuel_data.yaml:
+# line numbers verified against the pinned commit via `git show c3398666:src/tau2/domains/
+# airline/tools.py` (repos/tau2, working tree left untouched), provenance quotes verbatim.
+#
+# Predicate-authoring note (applies to every contract in this batch): tau2's mutating tools
+# take List[...]-typed arguments (flights, passengers, payment_methods, item_ids, ...).
+# spec/validate.py's check 5 synthesizes predicate `args` purely from each arg's declared
+# `type` string, and its synthesis table (core/predicates evaluate() call site in validate.py)
+# only produces a value for "str"/"int"/"float"/"bool" -- any other declared type resolves to
+# None, and dereferencing or iterating a None argument in a predicate raises and fails check 5.
+# Every clause below therefore reasons about list-shaped inputs via the PRE/POST SNAPSHOT (which
+# the synthetic fixture controls in full) or via RESULT, never by iterating an args list
+# directly -- e.g. eff.reservation_recorded reads the created reservation back out of `post`
+# rather than replaying `args.flights`. This is the same discipline cancel_reservation.yaml and
+# refuel_data.yaml already followed (both only ever index args by a scalar *_id); it is spelled
+# out here because five of this batch's tools have no scalar-only alternative smaller than this.
+#
+# FlightDB shape referenced here matches the correction already recorded in
+# spec/contracts/tau2/cancel_reservation.yaml (Flight.dates is a dict, not a list; cabin lives
+# once on the Reservation).
+
+contract_version: "1.0"
+tool: book_reservation
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 186
+  end_line: 318
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    user_id: { type: str, effective: true }
+    origin: { type: str, effective: true }
+    destination: { type: str, effective: true }
+    flight_type: { type: str, effective: true }
+    cabin: { type: str, effective: true }
+    flights: { type: "List[FlightInfo]", effective: true }
+    passengers: { type: "List[Passenger]", effective: true }
+    payment_methods: { type: "List[Payment]", effective: true }
+    total_baggages: { type: int, effective: true }
+    nonfree_baggages: { type: int, effective: true }
+    insurance: { type: str, effective: true }
+
+preconditions:
+  - id: pre.user_exists
+    text: "the user must exist"
+    predicate: "args.user_id in pre.users"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 205
+      quote: "user_id: The ID of the user to book the reservation such as 'sara_doe_496'"
+
+effects:
+  - id: eff.reservation_recorded
+    text: "a new reservation for this user is created and returned"
+    predicate: >
+      result.reservation_id in post.reservations
+      and post.reservations[result.reservation_id].user_id == args.user_id
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 202
+      quote: "Book a reservation."
+
+  - id: eff.user_reservation_list_updated
+    text: "the booking user's profile lists the new reservation id"
+    predicate: "result.reservation_id in post.users[args.user_id].reservations"
+    inferred: true
+    # No agent-visible surface states this explicitly for book_reservation (contrast
+    # cancel_reservation, which has no equivalent claim either); airline/policy.md only lists
+    # "reservation numbers" as a profile field (Domain Basic section) without saying booking
+    # appends to it. Kept inferred rather than grounded in that thin a paraphrase.
+
+frame:
+  - id: frame.flight_static_fields_unchanged
+    path: state.flights.*.origin
+    text: "booking a flight never rewrites a flight's own static route metadata"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/airline/tools.py
+    line: 261
+    quote: "Not enough seats on flight"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Every raise in book_reservation (missing flight/date, unavailable flight, insufficient
+    seats, unknown/insufficient payment method, mismatched payment total -- lines 217-301)
+    occurs strictly before the mutation block at lines 304-318 (payment deduction, seat
+    deduction, and the two db writes). No raise is reachable after the first db write, so a
+    non-error return is the interface's only signal that the whole booking -- seats, payment,
+    and the two db writes -- was applied. No effect on this tool is advertised as deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 202
+    quote: "Book a reservation."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+  # per_task per the resolved reset-scope question recorded in refuel_data.yaml: tau2's runner
+  # rebuilds a fresh environment per simulation via the domain's get_environment(), a path that
+  # is identical in shape across airline/retail/telecom (runner/batch.py -> runner/build.py ->
+  # domain get_environment()); adapters/tau2.py's reset() replicates it directly.
+
+notes: >
+  Candidate-finding scan (reported separately, not a confirmed finding): book_reservation is a
+  TRUE NEGATIVE for the Partial-Effect pattern this project is built to catch -- every
+  validating raise precedes every mutating statement, so success and full effect application
+  are provably coincident, unlike cancel_reservation's seat-release gap. No docstring-vs-body
+  divergence found in this tool.
+
+  GRAMMAR-GAPS.md entry: this tool's most interesting precondition -- "each requested flight has
+  enough available seats in the requested cabin for all passengers" (raise at line 261, quoted
+  in on_precondition_violation below) -- is not written as a preconditions: clause. The
+  predicate grammar can express it syntactically (a comprehension over args.flights), but
+  spec/validate.py check 5 synthesizes predicate `args` purely from each argument's declared
+  `type` string and only produces a real value for str/int/float/bool; a List[FlightInfo]
+  argument always synthesizes to None, and iterating it in a predicate raises and fails check 5
+  on every contract that tried it. Recorded in spec/GRAMMAR-GAPS.md rather than shipping a
+  vacuous placeholder predicate or silently weakening what the clause would have asserted.

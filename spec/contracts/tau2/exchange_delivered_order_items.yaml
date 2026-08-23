@@ -1,0 +1,106 @@
+# exchange_delivered_order_items, tau2-bench retail, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/retail/tools.py`.
+
+contract_version: "1.0"
+tool: exchange_delivered_order_items
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/retail/tools.py
+  start_line: 207
+  end_line: 284
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    order_id: { type: str, effective: true }
+    item_ids: { type: "List[str]", effective: true }
+    new_item_ids: { type: "List[str]", effective: true }
+    payment_method_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.order_delivered
+    text: "the order must be delivered"
+    predicate: "pre.orders[args.order_id].status == 'delivered'"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/retail/tools.py
+      line: 241
+      quote: "Non-delivered order cannot be exchanged"
+
+effects:
+  - id: eff.status_exchange_requested
+    text: "the order status becomes 'exchange requested'"
+    predicate: "post.orders[args.order_id].status == 'exchange requested'"
+    provenance:
+      surface: prompt_template
+      file: data/tau2/domains/retail/policy.md
+      line: 136
+      quote: "the order status will be changed to 'exchange requested'"
+
+  - id: eff.exchange_payment_method_recorded
+    text: "the order records which payment method will pay or receive the exchange price difference"
+    predicate: "post.orders[args.order_id].exchange_payment_method_id == args.payment_method_id"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/retail/tools.py
+      line: 225
+      quote: "payment_method_id: The payment method id to pay or receive refund for the item price difference,"
+
+frame:
+  - id: frame.items_unchanged
+    path: state.orders.*.items
+    text: >
+      an exchange request never swaps the order's items or applies the price difference at call
+      time -- both are advertised as happening after the customer physically returns the item
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/retail/tools.py
+    line: 241
+    quote: "Non-delivered order cannot be exchanged"
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Every raise (non-delivered order, missing/duplicate item ids, unavailable new item,
+    insufficient gift-card balance -- lines 241-275) occurs before the mutation block at lines
+    278-282 (status, exchange_items, exchange_new_items, exchange_payment_method_id,
+    exchange_price_difference); no raise is reachable after it. No effect on this tool is
+    advertised as deferred -- the recorded exchange fields ARE the whole advertised effect of a
+    successful call; the physical item swap and payment settlement are advertised as a separate,
+    later process (see frame.items_unchanged above and the notes below).
+  provenance:
+    surface: prompt_template
+    file: data/tau2/domains/retail/policy.md
+    line: 136
+    quote: "the order status will be changed to 'exchange requested'"
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  TRUE NEGATIVE (reported per task brief, not a finding): exchange_delivered_order_items reads
+  the requested items, validates them, computes exchange_price_difference, and checks gift-card
+  balance sufficiency -- but never mutates order.items and never mutates any payment method's
+  balance, unlike its pending-order sibling modify_pending_order_items (which performs the item
+  swap and the gift-card balance update synchronously, tools.py:521-539). This looks at first
+  read like Finding-2/3-shaped asymmetry (one direction writes, the paired direction only
+  validates), but retail/policy.md's "Exchange delivered order" section states the outcome
+  explicitly and completely: "After user confirmation, the order status will be changed to
+  'exchange requested', and the user will receive an email regarding how to return items. There
+  is no need to place a new order." (policy.md:136) -- the deferral to a later, out-of-band
+  process is advertised, not hidden. The asymmetry with modify_pending_order_items is real and
+  intentional: a pending order has not shipped, so its items can be swapped immediately; a
+  delivered order's items are in the customer's possession and cannot be swapped until they are
+  physically returned. return_delivered_order_items (this file's sibling contract) has the
+  identical shape for the same reason.

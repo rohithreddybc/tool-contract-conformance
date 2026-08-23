@@ -1,0 +1,83 @@
+# disable_roaming, tau2-bench telecom, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/telecom/tools.py`.
+
+contract_version: "1.0"
+tool: disable_roaming
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/telecom/tools.py
+  start_line: 565
+  end_line: 589
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    customer_id: { type: str, effective: true }
+    line_id: { type: str, effective: true }
+
+preconditions:
+  - id: pre.customer_owns_line
+    text: "the customer must own the line"
+    predicate: "any(args.line_id in c.line_ids for c in pre.customers if c.customer_id == args.customer_id)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 224
+      quote: "not found for customer"
+
+effects:
+  - id: eff.roaming_disabled
+    text: "the line's roaming is disabled"
+    predicate: "any(l2.line_id == args.line_id and l2.roaming_enabled == False for l2 in post.lines)"
+    provenance:
+      surface: tool_return
+      file: src/tau2/domains/telecom/tools.py
+      line: 589
+      quote: "Roaming disabled successfully"
+
+frame:
+  - id: frame.data_usage_unchanged
+    path: state.lines.*.data_used_gb
+    text: "disabling roaming never changes recorded data usage"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/telecom/tools.py
+    line: 578
+    quote: "ValueError: If customer or line not found."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    Both return paths -- the early "already disabled" no-op (line 583) and the normal path
+    (lines 585-589) -- leave roaming_enabled == False; there is no path where the call succeeds
+    without that being the case, and the idempotent early return does not break the
+    biconditional because eff.roaming_disabled asserts a final STATE, not a state DELTA. No
+    effect on this tool is advertised as deferred.
+  provenance:
+    surface: tool_return
+    file: src/tau2/domains/telecom/tools.py
+    line: 589
+    quote: "Roaming disabled successfully"
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: no docstring-vs-body divergence found. Unlike enable_roaming
+  (tools.py:540, declared `-> Dict[str, Any]` but always returns str), disable_roaming's
+  declared return type `-> str` (tools.py:566) matches its actual return values exactly -- the
+  two tools are otherwise structurally identical (same guard shape, same idempotent early
+  return), which makes the type-annotation mismatch on enable_roaming specifically a local
+  inconsistency between two adjacent, near-identical functions rather than a project-wide
+  convention.

@@ -1,0 +1,95 @@
+# update_reservation_passengers, tau2-bench airline, commit c3398666e6559e3a063da3fc04b5acf7f941464e.
+# Line numbers verified via `git show c3398666:src/tau2/domains/airline/tools.py`.
+
+contract_version: "1.0"
+tool: update_reservation_passengers
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 692
+  end_line: 718
+  note: "start_line is the @is_tool(ToolType.WRITE) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    reservation_id: { type: str, effective: true }
+    passengers: { type: "List[Passenger]", effective: true }
+
+preconditions:
+  - id: pre.reservation_exists
+    text: "the reservation must exist"
+    predicate: "args.reservation_id in pre.reservations"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 700
+      quote: "reservation_id: The reservation ID, such as 'ZFA04Y'."
+
+effects:
+  # Both effects below deliberately compare only pre/post/result, never args.passengers --
+  # args.passengers is List[Passenger]-typed and check 5 synthesizes list-typed args to None
+  # (see book_reservation.yaml's header note and spec/GRAMMAR-GAPS.md). Framing the passenger-
+  # count precondition as a pre/post effect rather than a pre/args precondition sidesteps that
+  # limitation without weakening what is actually checked: the docstring's "number of passengers
+  # does not match" raise is precisely "the count is invariant across a successful call."
+  - id: eff.passenger_count_preserved
+    text: "a successful call never changes the number of passengers on the reservation"
+    predicate: >
+      len(post.reservations[args.reservation_id].passengers)
+      == len(pre.reservations[args.reservation_id].passengers)
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 708
+      quote: "ValueError: If the number of passengers does not match."
+
+  - id: eff.result_matches_state
+    text: "the returned reservation's passenger list matches what is stored in state"
+    predicate: "post.reservations[args.reservation_id].passengers == result.passengers"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 704
+      quote: "The updated reservation."
+
+frame:
+  - id: frame.flights_unchanged
+    path: state.flights
+    text: "updating passenger information never touches flight inventory"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 708
+    quote: "ValueError: If the number of passengers does not match."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The only raise (line 716, on a passenger-count mismatch) precedes the single mutating
+    statement (reservation.passengers = deepcopy(passengers), line 717); there is no raise
+    after it and no other mutation in the function. No effect on this tool is advertised as
+    deferred.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 697
+    quote: "Update the passenger information of a reservation."
+
+reset:
+  predicate: "post == pre"
+  scope: per_task
+
+notes: >
+  Candidate-finding scan: no docstring-vs-body divergence found. The docstring's declared
+  Raises: list (reservation not found, passenger count mismatch) is exactly what the body
+  enforces -- no third condition, no commented-out check.

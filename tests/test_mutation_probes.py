@@ -149,10 +149,58 @@ class TestSeparationFromCheckerProbes(unittest.TestCase):
         self.assertNotIn("adapters.contract_check", imported_modules)
         self.assertFalse(any(m.startswith("dynamic") for m in imported_modules if m))
 
-    def test_dynamic_probes_module_does_not_exist_yet(self):
-        # If this ever fails, the separation this module's docstring warns about needs a human
-        # decision, not a silent pass -- see mutation/probes.py's module docstring.
-        self.assertFalse((Path(__file__).resolve().parent.parent / "dynamic" / "probes.py").exists())
+    def test_the_two_probe_generators_share_no_generation_logic(self):
+        """detector_analysis_plan.md sec 4.3 is only measurable if these two stay separate.
+
+        The escape decomposition distinguishes a clause gap (no contract clause covers the changed
+        behaviour) from a probe gap (a clause covers it, but the checker's probes never drove the
+        tool into the exposing state). If one probe set both screened equivalence and drove the
+        checker, every probe gap would be invisible by construction and the decomposition would
+        silently collapse into a two-way split.
+
+        This test replaces an earlier one that asserted dynamic/probes.py did not exist. That was a
+        tripwire for a module that had not been written yet; it fired when the module landed, which
+        is what it was for. The obligation it was standing in for is the separation itself, so that
+        is what is now pinned -- in both directions.
+        """
+        import ast
+
+        import dynamic.probes as checker_probes
+        import mutation.probes as equivalence_probes
+
+        def imported_modules(module) -> set:
+            tree = ast.parse(Path(module.__file__).read_text(encoding="utf-8"))
+            direct = {
+                alias.name
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Import)
+                for alias in node.names
+            }
+            froms = {
+                node.module
+                for node in ast.walk(tree)
+                if isinstance(node, ast.ImportFrom) and node.module
+            }
+            return {m for m in direct | froms if m}
+
+        equivalence_imports = imported_modules(equivalence_probes)
+        checker_imports = imported_modules(checker_probes)
+
+        self.assertFalse(
+            any(m.startswith("dynamic") for m in equivalence_imports),
+            "the equivalence corpus must not draw on the checker's probe generator",
+        )
+        self.assertFalse(
+            any(m.startswith("mutation") for m in checker_imports),
+            "the checker's probes must not draw on the equivalence corpus",
+        )
+
+        # Sharing core primitives is fine and expected; sharing generation logic is not.
+        shared = equivalence_imports & checker_imports
+        self.assertTrue(
+            shared <= {"core.model", "core.predicates", "__future__", "dataclasses", "typing"},
+            f"unexpected shared dependency between the two probe generators: {shared}",
+        )
 
 
 if __name__ == "__main__":

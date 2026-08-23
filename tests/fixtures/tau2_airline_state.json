@@ -1,0 +1,72 @@
+{
+  "snapshot": {
+    "flights": {
+      "x": {
+        "flight_number": "x",
+        "origin": "x",
+        "destination": "x",
+        "scheduled_departure_time_est": "x",
+        "scheduled_arrival_time_est": "x",
+        "dates": {
+          "x": {
+            "status": "available",
+            "available_seats": { "business": 1, "economy": 1, "basic_economy": 1 },
+            "prices": { "business": 1, "economy": 1, "basic_economy": 1 }
+          }
+        }
+      }
+    },
+    "users": {
+      "x": {
+        "user_id": "x",
+        "name": { "first_name": "x", "last_name": "x" },
+        "address": {
+          "address1": "x",
+          "address2": null,
+          "city": "x",
+          "country": "x",
+          "state": "x",
+          "zip": "x"
+        },
+        "email": "x",
+        "dob": "x",
+        "payment_methods": {
+          "x": { "source": "gift_card", "id": "x", "amount": 1 }
+        },
+        "saved_passengers": [],
+        "membership": "regular",
+        "reservations": ["x"]
+      }
+    },
+    "reservations": {
+      "x": {
+        "reservation_id": "x",
+        "user_id": "x",
+        "origin": "x",
+        "destination": "x",
+        "flight_type": "one_way",
+        "cabin": "economy",
+        "flights": [
+          { "flight_number": "x", "origin": "x", "destination": "x", "date": "x", "price": 1 }
+        ],
+        "passengers": [
+          { "first_name": "x", "last_name": "x", "dob": "x" }
+        ],
+        "payment_history": [
+          { "payment_id": "x", "amount": 1 }
+        ],
+        "created_at": "x",
+        "total_baggages": 1,
+        "nonfree_baggages": 1,
+        "insurance": "no",
+        "status": null
+      }
+    }
+  },
+  "result": {
+    "reservation_id": "x",
+    "passengers": [
+      { "first_name": "x", "last_name": "x", "dob": "x" }
+    ]
+  }
+}
