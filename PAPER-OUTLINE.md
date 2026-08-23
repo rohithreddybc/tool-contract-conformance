@@ -249,7 +249,22 @@ Every alternative is worse on acceptance, which is the stated priority. SE venue
 
 **Citations come from the preprint, not the proceedings.** This literature reads arXiv within weeks. The venue buys the acceptance line; the preprint and artifact buy the reach. That makes same-week release a commitment, not an option.
 
-**One hour, before the abstract is drafted:** scan the BigData 2026 special-session index and switch only if a session explicitly names LLM evaluation or benchmarking. Same conference, same format, near-zero switching cost. One hour, then stop.
+**Session scan completed 2026-08-21. Decision unchanged: Intelligent Data Mining.**
+
+Eight special sessions exist. Exactly one names benchmarking — Federated Learning on Big Data, whose topic list includes "Evaluation metrics and benchmarking for federated learning systems." That is a keyword match, not a fit match; this paper has nothing to do with federated learning, and submitting there would draw reviewers who would rightly ask why it is in their session. IDM's "LLMs" and "IoT, Autonomous Systems and Agents" remain the closest genuine hooks. No switch.
+
+**The scan did find a better backstop than ML on Big Data.** Four workshops fit this paper's topic far more precisely than any special session:
+
+| Workshop | Why it fits |
+|---|---|
+| Software Engineering for Agentic AI (SE4AgenticAI) | Reviewers who would recognise ConTract and IcePICK, and read a contract-conformance argument on its merits |
+| Building Trustworthy AI Pipelines: Verification, Provenance, and Reproducibility | Names all three of our methodological pillars in its title |
+| Benchmarking, Performance Tuning and Optimization for Big Data and Big Models (BPOD), 9th | Names benchmarking directly |
+| Agentic AI for Big Data (AAI-BD) | Topical, newer, likely broad |
+
+The trade is prestige for fit: a workshop paper is in the proceedings and indexed, but carries less weight than a special-session paper. Given that acceptance is the stated priority and the author has no acceptances yet, **the revised fallback order is: IDM (Sep 27) → SE4AgenticAI or Trustworthy AI Pipelines → ML on Big Data (Sep 30).** ML on Big Data drops to third; it was only ever a deadline hedge, and a workshop whose reviewers understand the contribution beats a session that merely accepts a different-shaped paper.
+
+Workshop deadlines are not listed on the index page. **Check them before Sep 20**, because a workshop deadline earlier than Sep 27 would change the ordering.
 
 ### Framing
 
