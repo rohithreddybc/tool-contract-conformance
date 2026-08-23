@@ -65,6 +65,21 @@ No hit — from either pass — forces a narrowing of the core claim — the int
 | — (background, not a hit) | WS | "Quantifying construct validity in large language model evaluations" (arXiv:2602.15532); "Beyond Static Leaderboards: Predictive Validity for the Evaluation of LLM Agents" (arXiv:2606.19704) | Statistical/latent-factor and predictive-validity methods for benchmark score interpretation | Purely inferential-statistical approaches to benchmark validity — the opposite methodological choice from this project's deliberate avoidance of inferential statistics (per the author's rejection history) | Optional contrast citation only, framed as "the statistical alternative we deliberately did not take" |
 | — (background, not a hit) | CO | "AI Agents That Matter" (Kapoor, Vaithilingam et al., TMLR 2024, arXiv:2407.01502, 174 citations); "Understanding and Characterizing Mock Assertions in Unit Tests" (Zhu et al., ACM PACMSE 2025, DOI 10.1145/3715741) | The former is a widely-cited general critique of agent-benchmark evaluation practice (cost, overfitting, shortcuts) with no tool-contract angle. The latter is an empirical SE study finding mock assertions are needed because ordinary test assertions cannot observe certain side effects | Neither forces anything, but both are the kind of paper a reviewer expects to see: the former because of its citation weight in agent-benchmark critique generally, the latter because it independently supports our premise that side effects need dedicated verification beyond a call's return value | Optional background citations only — Kapoor et al. in the general related-work paragraph on agent benchmark critique; Zhu et al. as a one-line SE-methods precedent for why phantom/partial effects are invisible to naive testing |
 
+## Gap sweep — citation keys (added 2026-08-23)
+
+The eight gap-sweep works above (table rows 1, 2, 7, 8, 9 x2, 10, 11) are cited in `paper/main.md` by key but had no keyed bibliography row. Rows below give each a row in the same format as the tables above; "Source" carries forward the original discovery method (WS/CO) from the Gap sweep table, plus AX for the direct arXiv-page author/venue check done for this pass (2026-08-23).
+
+| Key | Title | Authors | Year | Venue | Source | DOI |
+|---|---|---|---|---|---|---|
+| constructvalidity25 | Measuring what Matters: Construct Validity in Large Language Model Benchmarks | Bean, Kearns, Romanou, et al. (42 authors) | 2025 | Self-listed as NeurIPS 2025 Datasets & Benchmarks Track (Gap sweep row 1); **not yet Scopus/publisher-confirmed** | WS, AX | 10.48550/arxiv.2511.04703 |
+| faulttaxonomy26 | Characterizing Faults in Agentic AI: A Taxonomy of Types, Symptoms, and Root Causes | Shah, Morovati, Rahman, Khomh | 2026 | arXiv cs.SE, preprint — venue not yet confirmed | WS, AX | 10.48550/arxiv.2603.06847 |
+| liveclawbench26 | LiveClawBench: Benchmarking LLM Agents on Complex, Real-World Assistant Tasks | Long, Du, Xu, et al. (14 authors) | 2026 | arXiv, preprint — venue not yet confirmed | CO, AX | 10.48550/arxiv.2604.13072 |
+| toolfuzz25 | ToolFuzz — Automated Agent Tool Testing | Milev, Balunović, Baader, Vechev | 2025 | arXiv, preprint — venue not yet confirmed | CO, AX | 10.48550/arxiv.2503.04479 |
+| contract2tool26 | Contract2Tool: Learning Preconditions and Effects for Reliable Tool-Augmented LLM Agents | Babu, Iyer | 2026 | arXiv, preprint — venue not yet confirmed | CO, AX | 10.48550/arxiv.2606.07904 |
+| contractbench26 | ContractBench: Can LLM Agents Preserve Observation Contracts? | Wang, He, Wang, Xing, De, Chen | 2026 | arXiv, preprint — venue not yet confirmed | CO, AX | 10.48550/arxiv.2605.17281 |
+| abcchecklist25 | Establishing Best Practices for Building Rigorous Agentic Benchmarks (Agentic Benchmark Checklist) | Zhu, Jin, Pruksachatkun, et al. (25 authors) | 2025 | arXiv cs.LG, preprint — venue not yet confirmed | CO, AX | 10.48550/arxiv.2507.02825 |
+| contractguard26 | The Gate Is Only as Honest as Its Contracts: ContractGuard for the Contract Layer of Risk-Aware Causal Gating | Iyer, Babu | 2026 | arXiv, preprint — venue not yet confirmed | CO, AX | 10.48550/arxiv.2606.18550 |
+
 ## Artifacts under audit
 
 | Key | Repo | Commit | Source |
@@ -80,6 +95,15 @@ No hit — from either pass — forces a narrowing of the core claim — the int
 | tau2bench25 | $\tau^2$-Bench: Evaluating Conversational Agents in a Dual-Control Environment | Barres, Dong, Ray, Si, Narasimhan | 2025-06-09 (v1, no later version) | arXiv cs.AI, preprint — **the audited artifact's own paper**; source table quoted in `EXTERNAL-VERIFICATION.md` Task 2 (Fig. 3, §4.2) | AX, direct PDF read | https://arxiv.org/abs/2506.07982 |
 | medagentbench25 | MedAgentBench: A Realistic Virtual EHR Environment to Benchmark Medical LLM Agents | Jiang, Black, Geng, Park, Zou, Ng, Chen | 2025-01-24 (v1); v2 2025-02-12 | arXiv cs.LG preprint; **peer-reviewed as** "MedAgentBench: A Virtual EHR Environment to Benchmark Medical LLM Agents," NEJM AI, Vol. 2, Issue 9, published 2025-08-14 | AX (direct PDF read, Table 3 quoted), WS (NEJM AI bibliographic details; full text paywalled, 403 on direct fetch) | https://arxiv.org/abs/2501.14654 ; DOI 10.1056/AIdbp2500144 |
 | taubenchcom_leaderboard | taubench.com — live τ²-bench / τ³-bench leaderboard | Sierra | accessed 2026-08-22 | Not a citable paper — a live, continuously-updated public leaderboard linked directly from the audited repo's README at the pinned commit | direct fetch | https://taubench.com |
+
+## AgentDojo and MM-ToolSandbox papers (added 2026-08-23, verified via Consensus 2026-08-21)
+
+Two more audited-artifact papers, keyed to match `paper/main.md`'s [agentdojo24] and [mmtoolsandbox26] citations (currently marked `(*)` there, not yet logged here before this pass).
+
+| Key | Title | Authors | Year | Venue | Source | URL/DOI |
+|---|---|---|---|---|---|---|
+| agentdojo24 | AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents | Debenedetti, Zhang, Balunović, Beurer-Kellner, Fischer, Tramèr | 2024 | **CONFIRMED via Scopus (2026-08-23):** "Advances in Neural Information Processing Systems", vol. 37, 2024, conference paper, exact title/author match, 63 citations. Scopus does not tag NeurIPS sub-tracks, so the specific "Datasets and Benchmarks Track" claim is not independently distinguished from the main proceedings — the parent venue (NeurIPS 2024) is confirmed, the track label is not | CO, SC | arXiv:2406.13352, DOI 10.48550/arxiv.2406.13352 |
+| mmtoolsandbox26 | MM-ToolSandBox: A Unified Framework for Evaluating Visual Tool-Calling Agents | Ma, Feng, Metz, Lu, Verma, Dehghan | 2026 | arXiv, preprint — no Comments/Journal-ref acceptance claim on the abstract page; matches the audited `apple/ml-mmtoolsandbox` repo; not yet Scopus/publisher-confirmed | CO | arXiv:2607.11818, DOI 10.48550/arxiv.2607.11818 |
 
 ## Consensus usage note
 

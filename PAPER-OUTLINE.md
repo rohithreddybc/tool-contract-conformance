@@ -78,7 +78,11 @@ Four paragraphs, one per cluster:
 
 **The published-number link, established 2026-08-21 — this is the sentence the paper is built to earn.**
 
-MedAgentBench's own paper (arXiv:2501.14654; also NEJM AI vol. 2 iss. 9, DOI 10.1056/AIdbp2500144) reports **"Action SR"** — write-task success rate — for all 11 evaluated models in its Table 3, ranging 54.00% to 71.33%, with two models at 0.00%. The file carrying Finding 1 has been touched by exactly one commit in its history (2025-01-22) and is unchanged at our pinned commit. The paper's own §2.4.1 describes "rule-based sanity checks to verify the correctness of the payload of POST requests" — which is precisely the transcript-reconstruction mechanism Finding 4 documents.
+MedAgentBench's own paper (arXiv:2501.14654; also NEJM AI vol. 2 iss. 9, DOI 10.1056/AIdbp2500144) reports **"Action SR"** — write-task success rate — for all 11 evaluated models in its Table 3.
+
+**Corrected 2026-08-21. The canonical figures are: Action SR ranges 0.00% to 71.33% across 11 models, best is Gemini-1.5 Pro at 71.33%, two models score 0.00%.** An earlier version of this block said "ranging 54.00% to 71.33%", which is false — four models fall below 54.00% (53.33, 48.67, 42.67, 42.67) and two are at 0.00%. The drafting pass caught the contradiction against the real table. Print the corrected range and nothing else; a reviewer checks this in one click.
+
+**The stronger hook, and use it:** the paper's own abstract headlines **69.67% overall SR** for Claude 3.5 Sonnet v2. Overall SR is a weighted blend of Query SR and Action SR, so the number the benchmark leads with inherits the construct-validity problem for its write half. That is better than any figure we could quote from a table, because it is the number the authors chose to foreground. The file carrying Finding 1 has been touched by exactly one commit in its history (2025-01-22) and is unchanged at our pinned commit. The paper's own §2.4.1 describes "rule-based sanity checks to verify the correctness of the payload of POST requests" — which is precisely the transcript-reconstruction mechanism Finding 4 documents.
 
 So: **those eleven published write-task success rates were produced under an implementation where no write occurs, and graded by reconstructing the intended write from the agent's own message text.** Checkable, specific, and it names a table.
 
