@@ -1,0 +1,55 @@
+# create_file, AgentDojo v1 workspace suite, commit 089ed468cf3ed0322acc66b0211f26d9d90dbf60.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for; covers the workspace suite (the
+# other three AgentDojo contracts cover banking/slack/travel), and the one-hop-delegate pattern
+# (create_file's own body just returns cloud_drive.create_file(filename, content), a method
+# defined on CloudDrive in the SAME module -- adapters/_agentdojo_worker.py's phase-2 rule).
+
+contract_version: "1.0"
+tool: create_file
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/cloud_drive_client.py
+  start_line: 80
+  end_line: 90
+
+signature:
+  args:
+    filename: { type: str, effective: true }
+    content: { type: str, effective: true }
+
+effects:
+  - id: eff.file_created
+    text: "a new file with the caller-supplied filename and content is added to the cloud drive"
+    predicate: >
+      any(
+        post.cloud_drive.files[k].filename == args.filename
+        and post.cloud_drive.files[k].content == args.content
+        for k in post.cloud_drive.files
+      )
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/cloud_drive_client.py
+      line: 85
+      quote: "Create a new file in the cloud drive."
+
+frame:
+  - id: frame.account_email_unchanged
+    path: state.cloud_drive.account_email
+    text: "creating a file never changes the drive's own account email"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: false
+
+notes: >
+  Not known to be broken; included to keep the AgentDojo mutation corpus non-circular and to
+  cover the workspace suite, and the one-hop plain-method delegate pattern
+  adapters/_agentdojo_worker.py's enumeration rule (module docstring, phase 2) specifically
+  exists to trace. `k` ranges over post.cloud_drive.files' own KEYS (a dict keyed by
+  auto-generated file id), per PREDICATE-GRAMMAR.md sec 2.2's "for x in <path> iterates ... a
+  mapping's keys" rule -- the id itself is nondeterministic (CloudDrive._get_next_id) and
+  deliberately never compared.

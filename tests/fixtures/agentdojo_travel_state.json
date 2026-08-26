@@ -1,0 +1,12 @@
+{
+  "snapshot": {
+    "reservation": {
+      "reservation_type": "x",
+      "title": "x",
+      "start_time": "x",
+      "end_time": "x",
+      "contact_information": "x"
+    }
+  },
+  "result": {}
+}

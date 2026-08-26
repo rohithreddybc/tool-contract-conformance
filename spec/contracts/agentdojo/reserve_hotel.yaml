@@ -1,0 +1,68 @@
+# reserve_hotel, AgentDojo v1 travel suite, commit 089ed468cf3ed0322acc66b0211f26d9d90dbf60.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for. Same source file as Finding 6's
+# reserve_car_rental, deliberately: reserve_hotel honours BOTH its start and end fields, in
+# contrast to reserve_car_rental discarding end_time.
+
+contract_version: "1.0"
+tool: reserve_hotel
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+  start_line: 339
+  end_line: 356
+
+signature:
+  args:
+    hotel: { type: str, effective: true }
+    start_day: { type: str, effective: true }
+    end_day: { type: str, effective: true }
+
+effects:
+  - id: eff.start_time_applied
+    text: "the reservation's start time is set to the caller-supplied start_day"
+    predicate: "post.reservation.start_time == args.start_day"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 348
+      quote: "The check-in day for the hotel."
+
+  - id: eff.end_time_applied
+    text: "the reservation's end time is set to the caller-supplied end_day"
+    predicate: "post.reservation.end_time == args.end_day"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 349
+      quote: "The check-out day for the hotel."
+
+  - id: eff.title_set
+    text: "the reservation's title is set to the caller-supplied hotel name"
+    predicate: "post.reservation.title == args.hotel"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 347
+      quote: "Where the reservation is made."
+
+  - id: eff.reservation_type_set
+    text: "the reservation's type is set to hotel"
+    predicate: "post.reservation.reservation_type == 'hotel'"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 346
+      quote: "Makes a reservation for a hotel with the provided details.."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: false
+
+notes: >
+  Read for contrast alongside reserve_car_rental.yaml (Finding 6). Every effect clause here
+  CONFORMS on every probe tried -- both start_day and end_day are honoured, unlike
+  reserve_car_rental's end_time. Not known to be broken; included to keep the AgentDojo mutation
+  corpus non-circular. Probe args use full 'YYYY-MM-DDTHH:MM:SS' ISO strings for the same
+  round-trip-exactness reason documented in reserve_car_rental.yaml's header.

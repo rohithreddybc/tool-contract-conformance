@@ -1,0 +1,8 @@
+{
+  "snapshot": {
+    "boundary_calls": [
+      { "tool": "x", "kwargs": { "transaction_id": 1, "page_index": 1, "page_limit": 1, "sort_by": "x" } }
+    ]
+  },
+  "result": {}
+}

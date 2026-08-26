@@ -1,0 +1,11 @@
+{
+  "snapshot": {
+    "cloud_drive": {
+      "account_email": "x@x.com",
+      "files": {
+        "1": { "filename": "x", "content": "x", "size": 1, "owner": "x@x.com", "last_modified": "x", "id_": "1" }
+      }
+    }
+  },
+  "result": {}
+}

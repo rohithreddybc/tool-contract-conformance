@@ -1,0 +1,90 @@
+# venmo_social, MM-ToolSandbox mini dispatch tier, commit 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363.
+# scenario_id "venmo_boundary" -- see adapters/mmtoolsandbox.py's module docstring. Contract for
+# FINDINGS-VERIFIED.md Finding 7 -- Ignored Argument: `sort_by` is declared in the signature
+# (line 370) and documented twice (lines 388, 405), but the comment/list branch (lines 464-470)
+# never adds it to the forwarded kwargs -- its two siblings in the SAME branch, page_index and
+# page_limit, both are.
+#
+# WHAT "state" MEANS FOR THIS SCENARIO. AppWorld itself is unreachable (LFS quota exceeded,
+# FINDINGS-VERIFIED.md), so this adapter cannot observe anything past the one line MM-ToolSandbox
+# itself controls before handing off: `_get(name)(**kwargs)`. adapters/_mmtoolsandbox_worker.py
+# patches that seam with a recording stub (repos/MMTOOLSANDBOX-SPIKE.md's own verification
+# method); snapshot() for "venmo_boundary" returns `{"boundary_calls": [...]}`, one
+# `{"tool": <name>, "kwargs": <forwarded kwargs>}` entry per call -- real, observable,
+# agent-adjacent state (it is exactly what would be sent across the wire to AppWorld), not a
+# synthetic fixture. Every clause below asserts only over post.boundary_calls, never over
+# anything inside AppWorld.
+
+contract_version: "1.0"
+tool: venmo_social
+benchmark: mm-toolsandbox
+commit: 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
+source:
+  file: mmtoolsandbox/tools/mini/venmo.py
+  start_line: 340
+  end_line: 486
+  note: "start_line is the @register_as_tool(...) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    domain: { type: str, effective: false }
+    action: { type: str, effective: false }
+    transaction_id: { type: int, effective: true }
+    page_index: { type: int, effective: true }
+    page_limit: { type: int, effective: true }
+    sort_by: { type: str, effective: true }
+
+effects:
+  - id: eff.transaction_id_forwarded
+    text: "the comment/list call forwards the caller-supplied transaction_id to the underlying tool call"
+    predicate: >
+      any(
+        'transaction_id' in c.kwargs and c.kwargs.transaction_id == args.transaction_id
+        for c in post.boundary_calls
+      )
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 402
+      quote: "Transaction ID (for comment create/list)."
+
+  - id: eff.page_index_forwarded
+    text: "the comment/list call forwards the caller-supplied page_index to the underlying tool call"
+    predicate: >
+      any(
+        'page_index' in c.kwargs and c.kwargs.page_index == args.page_index
+        for c in post.boundary_calls
+      )
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 397
+      quote: "Page index for pagination."
+
+  - id: eff.sort_by_forwarded
+    text: "the comment/list call forwards the caller-supplied sort_by to the underlying tool call"
+    predicate: >
+      any(
+        'sort_by' in c.kwargs and c.kwargs.sort_by == args.sort_by
+        for c in post.boundary_calls
+      )
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 405
+      quote: "Sort attribute with +/- prefix (for comment list)."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: false
+
+notes: >
+  FINDINGS-VERIFIED.md Finding 7. Probing domain="comment", action="list" with transaction_id,
+  page_index, page_limit and sort_by all supplied: eff.transaction_id_forwarded and
+  eff.page_index_forwarded CONFORM (the sibling optional parameter IS forwarded, matching the
+  finding's own "the omission is not a general absence of optional-parameter handling" framing).
+  eff.sort_by_forwarded VIOLATES, tagged IGNORED_ARGUMENT by adapters/contract_check.py's
+  _effective_arg_value_uses rule (args.sort_by is a VALUE operand of the == comparison inside the
+  'sort_by' in c.kwargs and ... clause). dynamic/harness.py's check_ignored_argument
+  independently confirms the same verdict from post-state (boundary-call-log) invariance across
+  two fresh-env calls that vary only sort_by.

@@ -182,12 +182,18 @@ def harvest_snapshot_pool(snapshot: Any) -> tuple:
     like `args.reservation_id in pre.reservations`, a dict-key existence check) and every scalar
     leaf VALUE the snapshot holds, deduplicated, first-seen order preserved.
 
-    `links`: list[(owner_key, owner_value, member_value)] -- for every dict record that carries
-    both an id-like scalar field (`_id_like_fields`) and a same-record list-of-scalars field
-    elsewhere, one tuple per (owner field, that record's own value for it, each list element).
-    This is the relational-shape signal `_joint_combinations` uses to keep two dependent
-    arguments (an owner id and a member id it lists) consistent when sampling -- e.g. a tau2
-    telecom Customer's `customer_id` alongside its `line_ids`.
+    `links`: list[(owner_key, owner_value, member_field, member_value)] -- for every dict record
+    that carries both an id-like scalar field (`_id_like_fields`) and a same-record
+    list-of-scalars field elsewhere, one tuple per (owner field, that record's own value for it,
+    the NAME of the list field the member came from, each list element). This is the
+    relational-shape signal `_joint_combinations` uses to keep two dependent arguments (an owner
+    id and a member id it lists) consistent when sampling -- e.g. a tau2 telecom Customer's
+    `customer_id` alongside its `line_ids`. `member_field` is carried through (not just the
+    value) because a record can carry MORE THAN ONE same-owner list-of-scalars field -- a tau2
+    telecom Customer has both `line_ids` and `bill_ids` -- and conflating them by owner alone
+    would let a probe pair an argument like `line_id` with a value harvested from the sibling
+    `bill_ids` field just because both are plain strings; `_linked_owner_and_member` uses
+    `member_field` to disambiguate by name, not merely by type.
 
     `collections`: dict[enclosing_key_name, list[value]] -- the SAME id-keyed-collection keys as
     `pools["str"]`, but kept separate per the dict key they were found under (e.g. `"accounts"`
@@ -227,7 +233,7 @@ def harvest_snapshot_pool(snapshot: Any) -> tuple:
                 if isinstance(v, list) and v and all(_type_name(e) is not None for e in v):
                     for owner_key, owner_value in id_fields.items():
                         for member_value in v:
-                            links.append((owner_key, owner_value, member_value))
+                            links.append((owner_key, owner_value, k, member_value))
                 _walk(v, k)
             return
         if isinstance(node, list):
@@ -290,30 +296,71 @@ def _argument_pool(name: str, spec: ArgSpec, pools: dict, collections: dict, n: 
     return values
 
 
+def _field_concept(field_name: str) -> str:
+    """Concept root of a harvested list-FIELD name (e.g. 'line_ids' -> 'line'), via the same
+    singularize/strip-role-prefix/strip-trailing-_id pipeline `_concept_root`/`_singularize`
+    apply to ARGUMENT names -- so a field and an argument naming the same concept resolve to the
+    same root and can be matched by name, not merely by shared scalar type."""
+    return _concept_root(_singularize(field_name))
+
+
 def _linked_owner_and_member(contract: Contract, links: list) -> tuple:
-    """If exactly one argument's name exactly matches some link's owner_key, AND exactly one
-    OTHER argument shares the declared type of that link's member values, return
-    (owner_arg_name, member_arg_name) so `_joint_combinations` can sample the pair jointly.
-    Otherwise (no match, or an ambiguous match) return (None, None) -- a wrong guess would be
-    worse than no linkage, so this only ever commits to an unambiguous pairing."""
+    """If exactly one argument's name exactly matches some link's owner_key, find the ONE
+    sibling list-field of that owner (there can be several, e.g. a Customer's `line_ids` AND
+    `bill_ids`) whose name-concept unambiguously matches exactly one OTHER argument, and return
+    (owner_arg_name, member_arg_name, member_field_name) so `_joint_combinations` can sample the
+    pair jointly, drawing only from links sourced from THAT field. Otherwise (no owner match, no
+    field-name match, or an ambiguous match) return (None, None, None) -- a wrong guess is worse
+    than no linkage, so this only ever commits to an unambiguous pairing.
+
+    Matching by field NAME first (not just by scalar type, which the first version of this
+    function used) matters because two sibling list fields of the same owner are very often the
+    same scalar type (two lists of strings) -- type alone cannot tell a `line_ids` value from a
+    `bill_ids` value, and picking the wrong one silently manufactures a joint sample that looks
+    valid (a real owner, a real list member) but pairs an argument with a value from the wrong
+    relation entirely (probing `refuel_data`'s `line_id` with a harvested `bill_id`, for tau2
+    telecom's Customer -- found empirically: it made the search for a genuinely-owned, non-Active
+    line effectively unreachable, since the "violating" combo it settled on failed for the wrong
+    reason -- `line_id` not found at all -- rather than the declared reason -- an inactive line)."""
     if not links:
-        return None, None
-    owner_keys = {k for k, _, _ in links}
+        return None, None, None
+    owner_keys = {k for k, _, _, _ in links}
     arg_names = list(contract.signature.args)
     owner_candidates = [a for a in arg_names if a in owner_keys]
     if len(owner_candidates) != 1:
-        return None, None
+        return None, None, None
     owner_arg = owner_candidates[0]
-    member_examples = [mv for (k, _, mv) in links if k == owner_arg]
-    if not member_examples:
-        return None, None
-    member_type = _type_name(member_examples[0])
-    member_candidates = [
-        a for a in arg_names if a != owner_arg and contract.signature.args[a].type == member_type
-    ]
-    if len(member_candidates) != 1:
-        return None, None
-    return owner_arg, member_candidates[0]
+
+    fields_for_owner = {field for (k, _, field, _) in links if k == owner_arg}
+    by_field_name_match: dict = {}
+    for field in fields_for_owner:
+        concept = _field_concept(field)
+        matches = [a for a in arg_names if a != owner_arg and _singularize(_concept_root(a)) == concept]
+        if len(matches) == 1:
+            by_field_name_match[field] = matches[0]
+
+    if len(by_field_name_match) == 1:
+        (field, member_arg), = by_field_name_match.items()
+        return owner_arg, member_arg, field
+
+    # No unambiguous name match (zero fields matched, or more than one field each claimed a
+    # distinct argument -- e.g. both `line_ids`->`line_id` and some other field matched some
+    # other argument, in which case each pair is already handled by its own iteration and
+    # committing to the type-only rule below would be a guess). Fall back to the old,
+    # type-only rule ONLY when there is a single list field for this owner in the first
+    # place -- so there is nothing left to disambiguate and the fallback cannot silently pick
+    # the wrong sibling field.
+    if len(fields_for_owner) == 1 and not by_field_name_match:
+        field = next(iter(fields_for_owner))
+        member_examples = [mv for (k, _, f, mv) in links if k == owner_arg and f == field]
+        member_type = _type_name(member_examples[0])
+        member_candidates = [
+            a for a in arg_names if a != owner_arg and contract.signature.args[a].type == member_type
+        ]
+        if len(member_candidates) == 1:
+            return owner_arg, member_candidates[0], field
+
+    return None, None, None
 
 
 def _joint_combinations(contract: Contract, pre: Any, *, seed: int, k: int) -> list:
@@ -325,11 +372,16 @@ def _joint_combinations(contract: Contract, pre: Any, *, seed: int, k: int) -> l
     from the harvested links so the two stay relationally consistent (contrast
     mutation/probes.py's per-parameter sweep, which never couples two parameters). Exact
     duplicate assignments are collapsed, order preserved."""
-    pools, links = harvest_snapshot_pool(pre)
+    pools, links, collections = harvest_snapshot_pool(pre)
     arg_names = list(contract.signature.args)
-    arg_pools = {name: _argument_pool(spec, pools, n=_DEFAULT_POOL_SIZE) for name, spec in contract.signature.args.items()}
-    owner_arg, member_arg = _linked_owner_and_member(contract, links)
-    pair_pool = [(ov, mv) for (k_, ov, mv) in links if k_ == owner_arg] if owner_arg else []
+    arg_pools = {
+        name: _argument_pool(name, spec, pools, collections, n=_DEFAULT_POOL_SIZE)
+        for name, spec in contract.signature.args.items()
+    }
+    owner_arg, member_arg, member_field = _linked_owner_and_member(contract, links)
+    pair_pool = (
+        [(ov, mv) for (k_, ov, f, mv) in links if k_ == owner_arg and f == member_field] if owner_arg else []
+    )
 
     rng = random.Random(seed)
 
@@ -450,12 +502,12 @@ def generate_ignored_argument_probes(
     else:
         base = _joint_combinations(contract, pre, seed=seed, k=1)[0]
 
-    pools, _links = harvest_snapshot_pool(pre)
+    pools, _links, collections = harvest_snapshot_pool(pre)
     result: dict = {}
     for name, spec in contract.signature.args.items():
         if not spec.effective:
             continue
-        pool = _argument_pool(spec, pools, n=max(n_values, 2))
+        pool = _argument_pool(name, spec, pools, collections, n=max(n_values, 2))
         variants: list = []
         seen_values: list = []
         for i, v in enumerate(pool):

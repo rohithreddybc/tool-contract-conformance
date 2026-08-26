@@ -1,0 +1,112 @@
+# update_scheduled_transaction, AgentDojo v1 banking suite, commit
+# 089ed468cf3ed0322acc66b0211f26d9d90dbf60. This is the contract for FINDINGS-VERIFIED.md
+# Finding 5 -- Ignored Argument (plus Phantom Effect on the success signal): the docstring
+# advertises `amount` and `recurring` as ordinary optional parameters (lines 129, 132), but the
+# body guards each assignment with Python truthiness (`if amount:`, `if recurring:`) rather than
+# `is not None` -- so `recurring=False` and `amount=0` are both silently discarded while the tool
+# still returns an unconditional success message.
+#
+# BankAccount shape that matters here (repos/agentdojo/src/agentdojo/default_suites/v1/tools/
+# banking_client.py at 089ed468c): bank_account.scheduled_transactions: list[Transaction],
+# matched by `t.id`. The top-level snapshot key for the banking suite's environment is
+# `bank_account` (confirmed empirically: AgentDojoAdapter.fresh_env("banking") ->
+# snapshot().keys() == ['bank_account', 'filesystem', 'user_account']).
+
+contract_version: "1.0"
+tool: update_scheduled_transaction
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/banking_client.py
+  start_line: 115
+  end_line: 151
+
+signature:
+  args:
+    id: { type: int, effective: false }
+    recipient: { type: str, effective: true }
+    amount: { type: float, effective: true }
+    subject: { type: str, effective: true }
+    date: { type: str, effective: true }
+    recurring: { type: bool, effective: true }
+
+preconditions:
+  - id: pre.transaction_exists
+    text: "the transaction id must exist among the account's scheduled transactions"
+    predicate: >
+      any(t.id == args.id for t in pre.bank_account.scheduled_transactions)
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 127
+      quote: "ID of the transaction (mandatory)"
+
+effects:
+  - id: eff.recurring_propagated
+    text: "the transaction's recurring flag is updated to the caller-supplied value"
+    predicate: >
+      args.recurring == None or any(
+        t.id == args.id and t.recurring == args.recurring
+        for t in post.bank_account.scheduled_transactions
+      )
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 132
+      quote: "Is the transaction recurring (optional)"
+
+  - id: eff.amount_propagated
+    text: "the transaction's amount is updated to the caller-supplied value"
+    predicate: >
+      args.amount == None or any(
+        t.id == args.id and t.amount == args.amount
+        for t in post.bank_account.scheduled_transactions
+      )
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 129
+      quote: "Amount of the transaction (optional)"
+
+frame:
+  - id: frame.iban_unchanged
+    path: state.bank_account.iban
+    text: "updating a scheduled transaction never changes the account's own IBAN"
+    mode: unchanged
+    inferred: true
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/banking_client.py
+    line: 147
+    quote: "not found."
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The tool returns exactly one message, unconditionally, whenever the transaction id exists
+    (lines 149-151), and raises before any mutation otherwise (line 147). It never reports
+    partial success and never advertises any effect as deferred, so a returned success message
+    is the interface's only signal that every field the caller supplied was actually applied.
+  provenance:
+    surface: docstring
+    file: src/agentdojo/default_suites/v1/tools/banking_client.py
+    line: 125
+    quote: "Update a scheduled transaction."
+
+notes: >
+  FINDINGS-VERIFIED.md Finding 5. Probing with recurring=False alone (amount left unset, i.e.
+  None) trips only eff.recurring_propagated, tagged IGNORED_ARGUMENT by
+  adapters/contract_check.py's _effective_arg_value_uses rule (the predicate compares
+  t.recurring against args.recurring as a VALUE, not a selector). Probing with recurring=False
+  AND amount=0 together trips BOTH effect clauses at once; because success_signal.biconditional
+  is true and every testable effect clause violates, check_effects re-tags both VIOLATES
+  verdicts PHANTOM_EFFECT instead -- reproducing the finding's own "Ignored Argument, plus
+  Phantom Effect on the success signal" characterization from two separate probes against the
+  SAME contract, never from a tool-specific assertion.

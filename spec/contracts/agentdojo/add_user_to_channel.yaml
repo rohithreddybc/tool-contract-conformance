@@ -1,0 +1,68 @@
+# add_user_to_channel, AgentDojo v1 slack suite, commit 089ed468cf3ed0322acc66b0211f26d9d90dbf60.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for. Same source file as Finding 8's
+# invite_user_to_slack, deliberately.
+
+contract_version: "1.0"
+tool: add_user_to_channel
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/slack.py
+  start_line: 30
+  end_line: 40
+
+signature:
+  args:
+    user: { type: str, effective: true }
+    channel: { type: str, effective: true }
+
+preconditions:
+  - id: pre.user_exists
+    text: "the user must already be a Slack member"
+    predicate: "args.user in pre.slack.users"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/slack.py
+      line: 33
+      quote: "The user to add to the channel."
+
+  - id: pre.channel_exists
+    text: "the channel must already exist"
+    predicate: "args.channel in pre.slack.channels"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/slack.py
+      line: 34
+      quote: "The channel to add the user to."
+
+effects:
+  - id: eff.channel_added
+    text: "the channel is added to the user's own channel list"
+    predicate: "args.channel in post.slack.user_channels[args.user]"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/slack.py
+      line: 31
+      quote: "Add a user to a given channel."
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/slack.py
+    line: 37
+    quote: "not found in the users list"
+
+success_signal:
+  predicate: "result == None or 'error' not in result"
+  biconditional: false
+
+notes: >
+  Both preconditions are genuinely enforced (raises before any mutation, lines 36-39); the
+  probe-based check_precondition_enforcement path is expected to CONFORMS on this tool, in
+  contrast to refuel_data.yaml's pre.line_active. Not known to be broken; included to keep the
+  AgentDojo mutation corpus non-circular.

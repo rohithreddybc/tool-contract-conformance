@@ -1,0 +1,15 @@
+{
+  "snapshot": {
+    "bank_account": {
+      "iban": "x",
+      "balance": 1.0,
+      "transactions": [
+        { "id": 1, "sender": "x", "recipient": "x", "amount": 1.0, "subject": "x", "date": "x", "recurring": true }
+      ],
+      "scheduled_transactions": [
+        { "id": 1, "sender": "x", "recipient": "x", "amount": 1.0, "subject": "x", "date": "x", "recurring": true }
+      ]
+    }
+  },
+  "result": {}
+}

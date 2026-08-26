@@ -1,0 +1,14 @@
+{
+  "snapshot": {
+    "REMINDER": [
+      { "reminder_id": "x", "content": "x", "reminder_datetime": "x", "latitude": 1.0, "longitude": 1.0, "creation_datetime": "x" }
+    ],
+    "CALENDARS": [
+      { "calendar_id": "x", "title": "x" }
+    ],
+    "SETTING": [
+      { "wifi": true, "cellular": true, "low_battery_mode": true, "location_service": true }
+    ]
+  },
+  "result": {}
+}

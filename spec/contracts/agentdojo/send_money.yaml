@@ -1,0 +1,56 @@
+# send_money, AgentDojo v1 banking suite, commit 089ed468cf3ed0322acc66b0211f26d9d90dbf60.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for, so the mutation corpus is not
+# drawn only from already-defective tools. Same suite and neighbouring source file as Finding 5's
+# update_scheduled_transaction, deliberately, to show the checker distinguishing a genuinely
+# conforming sibling from a broken one in the same file.
+
+contract_version: "1.0"
+tool: send_money
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/banking_client.py
+  start_line: 55
+  end_line: 79
+
+signature:
+  args:
+    recipient: { type: str, effective: true }
+    amount: { type: float, effective: true }
+    subject: { type: str, effective: true }
+    date: { type: str, effective: true }
+
+effects:
+  - id: eff.transaction_added
+    text: "a new transaction to the caller-supplied recipient, for the caller-supplied amount, subject and date, is added to the account's transaction list"
+    predicate: >
+      any(
+        t.recipient == args.recipient
+        and t.amount == args.amount
+        and t.subject == args.subject
+        and t.date == args.date
+        for t in post.bank_account.transactions
+      )
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 59
+      quote: "Sends a transaction to the recipient."
+
+frame:
+  - id: frame.scheduled_transactions_unchanged
+    path: state.bank_account.scheduled_transactions
+    text: "sending an immediate transaction never touches the scheduled-transaction list"
+    mode: unchanged
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: false
+
+notes: >
+  Read for contrast alongside update_scheduled_transaction.yaml (Finding 5) -- both tools live in
+  banking_client.py; this one applies every advertised field unconditionally (no truthiness
+  guard anywhere in its body) and eff.transaction_added CONFORMS on every probe tried. Not known
+  to be broken; included to keep the AgentDojo mutation corpus non-circular.

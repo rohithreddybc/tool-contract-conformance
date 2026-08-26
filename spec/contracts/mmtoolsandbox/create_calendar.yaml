@@ -1,0 +1,37 @@
+# create_calendar, MM-ToolSandbox tool_sandbox tier, commit 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for. scenario_id "tool_sandbox".
+
+contract_version: "1.0"
+tool: create_calendar
+benchmark: mm-toolsandbox
+commit: 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
+source:
+  file: mmtoolsandbox/tools/tool_sandbox/calendar.py
+  start_line: 53
+  end_line: 78
+  note: "start_line is the @register_as_tool(...) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    title: { type: str, effective: true }
+
+effects:
+  - id: eff.calendar_created
+    text: "a new calendar with the caller-supplied title is added"
+    predicate: "any(c.title == args.title for c in post.CALENDARS)"
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/tool_sandbox/calendar.py
+      line: 67
+      quote: "Title summarizing the new calendar."
+
+frame:
+  - id: frame.calendar_events_unchanged
+    path: state.CALENDAR_EVENTS
+    text: "creating a calendar never creates or touches any calendar event"
+    mode: unchanged
+    inferred: true
+
+notes: >
+  Not known to be broken; included to keep the MM-ToolSandbox mutation corpus non-circular.

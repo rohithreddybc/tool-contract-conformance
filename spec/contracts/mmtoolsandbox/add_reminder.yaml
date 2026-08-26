@@ -1,0 +1,63 @@
+# add_reminder, MM-ToolSandbox tool_sandbox tier, commit 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for. scenario_id "tool_sandbox".
+#
+# REMINDER namespace snapshot shape: a LIST of row dicts (ExecutionContext.to_dict()['_dbs'] ->
+# {namespace: database.to_dicts()}), so post.REMINDER is iterated directly (a sequence), not via
+# dict keys -- see adapters/_mmtoolsandbox_worker.py's _cmd_snapshot.
+
+contract_version: "1.0"
+tool: add_reminder
+benchmark: mm-toolsandbox
+commit: 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
+source:
+  file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+  start_line: 53
+  end_line: 103
+  note: "start_line is the @register_as_tool(...) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    content: { type: str, effective: true }
+    reminder_datetime: { type: str, effective: true }
+    latitude: { type: float, effective: true }
+    longitude: { type: float, effective: true }
+
+effects:
+  - id: eff.reminder_added
+    text: "a new reminder with the caller-supplied content and reminder_datetime is added"
+    predicate: >
+      any(
+        r.content == args.content and r.reminder_datetime == args.reminder_datetime
+        for r in post.REMINDER
+      )
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+      line: 71
+      quote: "When the user wants to be reminded."
+
+  - id: eff.latitude_propagated
+    text: "the reminder's latitude is set to the caller-supplied value, including 0.0"
+    predicate: >
+      args.latitude == None or any(
+        r.content == args.content
+        and r.reminder_datetime == args.reminder_datetime
+        and r.latitude == args.latitude
+        for r in post.REMINDER
+      )
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+      line: 72
+      quote: "Latitude of the location associated with this reminder"
+
+notes: >
+  Not known to be broken; included to keep the MM-ToolSandbox mutation corpus non-circular.
+  eff.latitude_propagated is a deliberate true-negative check: `latitude` is written directly
+  into the row dict with no truthiness guard (reminder.py:98, `"latitude": latitude`), so probing
+  with latitude=0.0 -- the exact falsy-value shape that breaks AgentDojo's
+  update_scheduled_transaction -- CONFORMS here. repos/MMTOOLSANDBOX-SPIKE.md's own automated
+  sweep separately confirmed this pattern generally does not reproduce in this codebase's
+  tool_sandbox tier; this contract exercises that claim through the framework rather than by
+  hand.

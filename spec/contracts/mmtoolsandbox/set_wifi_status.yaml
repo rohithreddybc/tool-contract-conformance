@@ -1,0 +1,77 @@
+# set_wifi_status, MM-ToolSandbox tool_sandbox tier, commit 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363.
+# NOT a finding-bearing tool -- one of the "roughly four more mutating tools per benchmark that
+# are not known to be broken" CLAUDE.md's build spec calls for. scenario_id "tool_sandbox".
+# Exercises the phase-2 one-hop delegate rule (set_wifi_status's own body has no direct
+# add_to_database/update_database/remove_from_database call; it delegates to the plain
+# module-level helper set_boolean_settings, in the SAME module -- adapters/_mmtoolsandbox_worker.py
+# module docstring, "PHASE 2").
+#
+# SETTING namespace shape: a single-row table (one boolean column per setting), confirmed by
+# reading get_boolean_settings/set_boolean_settings (setting.py:19-67, `setting_database[
+# setting_name][0]`), so post.SETTING is a list with exactly one row, indexed post.SETTING[0].
+
+contract_version: "1.0"
+tool: set_wifi_status
+benchmark: mm-toolsandbox
+commit: 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
+source:
+  file: mmtoolsandbox/tools/tool_sandbox/setting.py
+  start_line: 196
+  end_line: 217
+  note: "start_line is the @register_as_tool(...) decorator -- itself part of the declared contract."
+
+signature:
+  args:
+    "on": { type: bool, effective: true }
+
+preconditions:
+  - id: pre.state_actually_changes
+    text: "wifi must not already be in the requested state"
+    predicate: "pre.SETTING[0].wifi != args.on"
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/tool_sandbox/setting.py
+      line: 210
+      quote: "If wifi is already turned on / off"
+
+  - id: pre.not_low_battery_when_turning_on
+    text: "wifi cannot be turned on while low battery mode is active"
+    predicate: "args.on == False or pre.SETTING[0].low_battery_mode == False"
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/tool_sandbox/setting.py
+      line: 211
+      quote: "If low battery mode is on, in which case we are not allowed to turn on wifi"
+
+effects:
+  - id: eff.wifi_set
+    text: "wifi is set to the caller-supplied on/off value"
+    predicate: "post.SETTING[0].wifi == args.on"
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/tool_sandbox/setting.py
+      line: 207
+      quote: "If we want to turn on wifi"
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: PermissionError
+  provenance:
+    surface: tool_return
+    file: mmtoolsandbox/tools/tool_sandbox/setting.py
+    line: 216
+    quote: "Wifi cannot be turned on in low battery mode"
+
+success_signal:
+  predicate: "result == None or 'error' not in result"
+  biconditional: false
+
+notes: >
+  Both preconditions are genuinely enforced (set_boolean_settings raises before any
+  update_database call, setting.py:37-44; set_wifi_status's own low-battery guard raises before
+  even calling set_boolean_settings, lines 215-216) -- expected CONFORMS on the
+  check_precondition_enforcement path, in contrast to refuel_data.yaml's pre.line_active. Not
+  known to be broken; included to keep the MM-ToolSandbox mutation corpus non-circular and to
+  exercise the phase-2 delegate rule.

@@ -1,0 +1,91 @@
+# reserve_car_rental, AgentDojo v1 travel suite, commit 089ed468cf3ed0322acc66b0211f26d9d90dbf60.
+# Contract for FINDINGS-VERIFIED.md Finding 6 -- Ignored Argument: `end_time` is declared (line
+# 387), documented (line 393), and echoed verbatim into the success message (line 400), but the
+# body writes `start_time` into BOTH `reservation.start_time` and `reservation.end_time` (lines
+# 398-399) -- `end_time` never reaches state at all.
+#
+# The travel suite's environment top-level snapshot key for the single active reservation is
+# `reservation` (confirmed empirically: AgentDojoAdapter.fresh_env("travel") ->
+# snapshot().keys() includes 'reservation', matching repos/AGENTDOJO-SPIKE.md sec 7's own smoke
+# test output). Reservation.start_time/end_time are `datetime.datetime` fields; pydantic's
+# model_dump(mode="json") serializes them via .isoformat(). Probe args below use a full
+# 'YYYY-MM-DDTHH:MM:SS' ISO string (not the docstring's looser 'YYYY-MM-DD HH:MM') specifically
+# so datetime.fromisoformat(...).isoformat() round-trips back to the EXACT same string --
+# avoiding a format-string mismatch that has nothing to do with the defect under test (the
+# predicate grammar has no date-parsing function to normalize formats before comparing).
+
+contract_version: "1.0"
+tool: reserve_car_rental
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+  start_line: 382
+  end_line: 400
+
+signature:
+  args:
+    company: { type: str, effective: true }
+    start_time: { type: str, effective: true }
+    end_time: { type: str, effective: true }
+
+effects:
+  - id: eff.start_time_applied
+    text: "the reservation's start time is set to the caller-supplied start_time"
+    predicate: "post.reservation.start_time == args.start_time"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 392
+      quote: "The reservation starting time."
+
+  - id: eff.end_time_applied
+    text: "the reservation's end time is set to the caller-supplied end_time"
+    predicate: "post.reservation.end_time == args.end_time"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 393
+      quote: "The reservation end time."
+
+  - id: eff.title_set
+    text: "the reservation's title is set to the caller-supplied company"
+    predicate: "post.reservation.title == args.company"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 391
+      quote: "Where the reservation is made."
+
+  - id: eff.reservation_type_set
+    text: "the reservation's type is set to car"
+    predicate: "post.reservation.reservation_type == 'car'"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 389
+      quote: "Makes a reservation for a car rental with the provided details."
+
+frame:
+  - id: frame.contact_information_changes
+    path: state.reservation.contact_information
+    text: "reserving a car rental does update the reservation's contact information from the user record (a real, advertised side effect, not part of this finding)"
+    mode: changed
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: false
+
+notes: >
+  FINDINGS-VERIFIED.md Finding 6. eff.start_time_applied and eff.title_set and
+  eff.reservation_type_set CONFORM on any successful call. eff.end_time_applied VIOLATES, tagged
+  IGNORED_ARGUMENT by adapters/contract_check.py's _effective_arg_value_uses rule (args.end_time
+  appears as a VALUE operand of the == comparison, not a selector). dynamic/harness.py's own
+  check_ignored_argument -- revised specifically because of this finding, per that module's
+  docstring -- independently confirms the same verdict from POST-STATE INVARIANCE across two
+  fresh-env calls that vary only end_time (start_time/company held fixed): the resulting
+  reservation.end_time is identical both times, and the returned message text is NOT (it echoes
+  the caller's end_time verbatim), which is exactly the "aggravating_signal:
+  result_disagrees_with_state" case that module was built to report without blocking on the
+  varying result.

@@ -1,0 +1,12 @@
+{
+  "snapshot": {
+    "slack": {
+      "users": ["x"],
+      "channels": ["x"],
+      "user_channels": { "x": ["x"] },
+      "user_inbox": { "x": [] },
+      "channel_inbox": { "x": [] }
+    }
+  },
+  "result": {}
+}

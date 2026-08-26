@@ -1,0 +1,74 @@
+# invite_user_to_slack, AgentDojo v1 slack suite, commit 089ed468cf3ed0322acc66b0211f26d9d90dbf60.
+# Contract for FINDINGS-VERIFIED.md Finding 8 -- Ignored Argument: `user_email` is a REQUIRED
+# parameter (no default), documented as "The user email where invite should be sent" (line 97),
+# and never referenced anywhere in the function body (lines 99-103) -- no invite is sent, by
+# email or otherwise.
+#
+# WHY THIS CONTRACT HAS NO EFFECT CLAUSE FOR user_email. Unlike Finding 5/6 (a field the state
+# genuinely carries -- recurring, end_time -- that the tool fails to propagate), the Slack model
+# (slack.py's Slack pydantic class) has NO email-tracking field anywhere: users, channels,
+# user_channels, user_inbox, channel_inbox. There is no state path an effect predicate could name
+# to assert "user_email was applied" even in principle, so an effect clause cannot express this
+# finding -- the checker's OWN Ignored Argument prober (dynamic/harness.py's
+# check_ignored_argument, decided on post-state invariance across calls that vary only
+# user_email) is the mechanism that catches it, and it is the only one that can: two fresh-env
+# calls with the SAME `user` and two DIFFERENT `user_email` values produce byte-identical
+# post-states, which is exactly the M-IGNARG definition. eff.user_added below is included as the
+# contrast clause (the OTHER required argument, `user`, genuinely is applied) -- the same "some
+# arguments matter, this one demonstrably does not" pattern FINDINGS-VERIFIED.md draws between
+# Finding 5's update_user_info contrast case.
+
+contract_version: "1.0"
+tool: invite_user_to_slack
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/slack.py
+  start_line: 93
+  end_line: 103
+
+signature:
+  args:
+    user: { type: str, effective: true }
+    user_email: { type: str, effective: true }
+
+preconditions:
+  - id: pre.user_not_already_present
+    text: "the invited user must not already be a Slack member"
+    predicate: "args.user not in pre.slack.users"
+    inferred: true
+
+effects:
+  - id: eff.user_added
+    text: "the invited user is added to the Slack workspace's user list"
+    predicate: "args.user in post.slack.users"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/slack.py
+      line: 94
+      quote: "Invites a user to the Slack workspace."
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/slack.py
+    line: 100
+    quote: "already in the users list"
+
+success_signal:
+  predicate: "result == None or 'error' not in result"
+  biconditional: false
+
+notes: >
+  FINDINGS-VERIFIED.md Finding 8. eff.user_added CONFORMS on any successful call -- `user`
+  genuinely reaches state. `user_email` has no state counterpart to write an effect clause
+  against, so this finding is rediscovered exclusively via dynamic/harness.py's
+  check_ignored_argument: two fresh-env calls with args {user: "Dora", user_email: "<value>"},
+  differing only in user_email, produce identical post-states (post.slack.users,
+  post.slack.user_inbox, post.slack.user_channels all unaffected by which user_email was
+  supplied) -> VIOLATES, defect_class IGNORED_ARGUMENT, no tool-specific assertion beyond the
+  clause id `arg.user_email` and the generic verdict/defect_class fields.
