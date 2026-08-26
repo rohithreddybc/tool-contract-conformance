@@ -20,8 +20,13 @@ Rohith Reddy, Wenbin Zhang
 
 <!-- PLACEHOLDER — drafted last, after report/render.py tables exist.
 Committed shape (PAPER-OUTLINE.md, abstract rule):
-  - leads with the compressed count: 7 unique benchmark-class cells across 4 benchmarks,
-    8 instances reported alongside;
+  - leads with the count that survives inspection: 5 HEADLINE-ELIGIBLE tool-layer cells
+    across 4 benchmarks. Superseded 2026-08-21: an earlier version of this block said 7 cells.
+    Two of the seven cannot carry a headline — tau2's Partial Effect is maintainer_annotation
+    grounded and excluded by our own tiering rule, and MedAgentBench's Ungrounded Oracle is an
+    evaluator-layer property, not one of the six tool-layer classes. Both are reported, adjacent
+    and labelled, never folded into the headline. 8 instances reported alongside.
+    A 7 survives only until a reviewer asks which seven. See FINDINGS-VERIFIED.md;
   - states the MedAgentBench construct-validity result (write-path no-op + transcript-grounded
     grader; measured quantity is emitted-request well-formedness) — NEVER names NEJM AI here;
   - promises score-at-risk bounds with their basis tags [N2: analysis/score_at_risk.py];
@@ -31,7 +36,8 @@ Committed shape (PAPER-OUTLINE.md, abstract rule):
     in experiments/analysis_plan.md);
   - benchmark count N filled last [N11: per ARCHITECTURE-FINAL.md §9 risk 3].
 Two variants exist per REVIEW-RESPONSE.md Journal-Fit W2 (N=2 floor, N=4 target); the
-Sep 6 kill gate outcome (cleared 2026-08-21: 8 findings across 4 environments) selects the target variant. -->
+Sep 6 kill gate outcome (cleared 2026-08-21: 8 instances across 4 environments, 5 of them
+headline-eligible) selects the target variant. -->
 
 **Keywords** — agentic benchmarks, tool calling, measurement validity, design by contract, conformance testing, data quality. <!-- finalize with abstract -->
 
@@ -128,7 +134,7 @@ Four of the six classes are field-observed in shipped benchmarks (§IX). **Invar
 
 Three consequences follow. First, tau2-bench's own maintainers already draw this line. At `airline/tools.py:689` they advertise a deferred flight-database update in the surface the behavior is visible from, and the checker correctly does not flag it. At line 367 they merely log that seat release is not implemented, in a warning the agent never sees, and the checker flags it. The distinction between disclosed and undisclosed divergence is theirs before it is ours. Second, either side of a divergence may be repaired. A maintainer who replies that the docstring was aspirational and fixes the docstring has restored conformance exactly as completely as one who fixes the code, and §IX counts such a response as a resolved finding. This converts the audit from an accusation into a specification of what disclosure would make a simulation honest. Third, the advertised surface is the right baseline even against the position that a benchmark is a formal game owing fidelity only to itself, because the agent's behavior is the measured quantity and that behavior is conditioned on the interface text. A divergence corrupts the measurement upstream of any oracle, whether or not a grader reads the affected field. And internal consistency between what the agent is told and what the grader rewards itself requires interface–implementation conformance.
 
-**One evaluator-layer property, kept outside the taxonomy.** MedAgentBench's write graders exhibit a property we name Ungrounded Oracle: the evaluator's oracle for a state change reads the actor's claim rather than the state. It is field-observed and it is load-bearing in §II, but it is not a seventh class. The six classes are typed over `(pre, post, args, result)` at the tool boundary, while oracle grounding is typed over grader source code, a different object checked by a different procedure. §IV emits it as a per-task classification of the benchmark's evaluator rather than as a row in Table I.
+**One evaluator-layer property, kept outside the taxonomy.** MedAgentBench's write graders exhibit a property we name Ungrounded Oracle: the evaluator's oracle for a state change reads the actor's claim rather than the state. It is field-observed and load-bearing in §II, but it is not a seventh class. The six classes are typed over `(pre, post, args, result)` at the tool boundary, while oracle grounding is typed over grader source code, a different object checked by a different procedure. §IV emits it as a per-task classification of the benchmark's evaluator rather than as a row in Table I.
 
 ---
 
