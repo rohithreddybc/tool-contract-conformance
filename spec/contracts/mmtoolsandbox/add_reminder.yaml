@@ -5,6 +5,13 @@
 # REMINDER namespace snapshot shape: a LIST of row dicts (ExecutionContext.to_dict()['_dbs'] ->
 # {namespace: database.to_dicts()}), so post.REMINDER is iterated directly (a sequence), not via
 # dict keys -- see adapters/_mmtoolsandbox_worker.py's _cmd_snapshot.
+#
+# reminder_datetime carries explicit `probe_values`: add_reminder validates it with
+# `_validate_reminder_datetime` -> `validate_iso_8601_date_time_str` (reminder.py), which rejects
+# anything that isn't a real ISO 8601 datetime string. The tool_sandbox scenario's fresh-env
+# snapshot has no REMINDER rows to harvest a date-shaped string from, so without a declared value
+# dynamic/probes.py's generic search falls back to its synthetic placeholder
+# ("__dynamic_probe_absent__") and every probe raises before the tool's effect code runs.
 
 contract_version: "1.0"
 tool: add_reminder
@@ -19,7 +26,7 @@ source:
 signature:
   args:
     content: { type: str, effective: true }
-    reminder_datetime: { type: str, effective: true }
+    reminder_datetime: { type: str, effective: true, probe_values: ["2026-04-17T10:00:00+00:00", "2026-05-02T08:30:00+00:00"] }
     latitude: { type: float, effective: true }
     longitude: { type: float, effective: true }
 

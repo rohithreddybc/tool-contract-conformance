@@ -13,6 +13,21 @@
 # so datetime.fromisoformat(...).isoformat() round-trips back to the EXACT same string --
 # avoiding a format-string mismatch that has nothing to do with the defect under test (the
 # predicate grammar has no date-parsing function to normalize formats before comparing).
+#
+# start_time/end_time carry explicit `probe_values` (schema.json argSpec, same field
+# spec/contracts/toy/resize_inventory.yaml's `mode` already uses to pin a string argument to its
+# valid literal values) for the reason named above, not a new one: dynamic/probes.py's generic
+# snapshot-harvesting search has no notion of "this string must be ISO-datetime-shaped", so
+# without a declared value it draws from the travel suite's live snapshot pool (names, emails,
+# titles -- none of them date-parseable) or its own synthetic fallback
+# ("__dynamic_probe_absent__"), and every resulting call raises inside
+# `datetime.datetime.fromisoformat(start_time)` before the tool's effect code ever runs -- a
+# 100% probe-generation failure, not a genuine UNTESTABLE finding about the tool. Declaring two
+# concrete, round-trip-exact ISO strings per argument here is exactly the workaround this file's
+# own header already prescribed by hand; it is now wired into the field the schema provides for
+# it instead of only being prose.
+
+
 
 contract_version: "1.0"
 tool: reserve_car_rental
@@ -26,8 +41,8 @@ source:
 signature:
   args:
     company: { type: str, effective: true }
-    start_time: { type: str, effective: true }
-    end_time: { type: str, effective: true }
+    start_time: { type: str, effective: true, probe_values: ["2024-05-01T10:00:00", "2024-05-03T14:30:00"] }
+    end_time: { type: str, effective: true, probe_values: ["2024-05-01T12:00:00", "2024-05-04T09:15:00"] }
 
 effects:
   - id: eff.start_time_applied

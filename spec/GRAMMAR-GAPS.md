@@ -98,3 +98,43 @@ Neither exists today. This is a validate.py/tooling gap, not a spec/schema.json 
 PREDICATE-GRAMMAR.md one, so it does not need a contract-version bump to fix -- but per
 CLAUDE.md, spec/validate.py itself is not to be modified as part of this batch, so the fix is
 left for a follow-up rather than applied here.
+
+## `arg.<name>` clause ids can never land above INFERRED tier under the shipped AgentDojo/
+## MM-ToolSandbox contracts, even when the argument is genuinely docstring-documented
+
+Found while wiring `core.model.headline_tier()` through `dynamic/harness.py` (the two adapters'
+contracts, plus the check-8 threading). Not a schema or grammar limitation -- `ArgSpec` already
+carries an optional `provenance` field (schema.json argSpec $defs, `core/model.py`'s `ArgSpec`
+dataclass) -- but none of the 12 AgentDojo/MM-ToolSandbox contracts' `signature.args.<name>`
+entries populate it, for any argument, anywhere. `dynamic/harness.py`'s `check_ignored_argument`
+reports its verdict against a synthetic `arg.<name>` clause id (there is no Clause object for an
+argument in `Contract.all_clauses()` at all -- see `dynamic/harness.py`'s `_ArgAsClause` shim),
+and `headline_tier()`'s own rule is unconditional: `provenance is None` -> `INFERRED`, regardless
+of how well-documented the argument actually is in the tool's docstring.
+
+Concretely: `invite_user_to_slack.yaml`'s `user_email` (FINDINGS-VERIFIED.md Finding 8) IS
+documented ("The user email where invite should be sent", per that contract's own header
+comment) but carries no `signature.args.user_email.provenance` block, so its `arg.user_email`
+VIOLATES verdict is permanently `INFERRED` tier -- and, because this finding has NO state path an
+effect clause could assert over (the contract's own notes explain why: the Slack model has no
+email-tracking field at all), `arg.user_email` is the ONLY clause this finding can ever be
+reported against. Finding 8 is therefore structurally unable to reach headline-eligibility under
+the current contracts, regardless of how the check-8/repo-root wiring is done -- not because the
+evidence is weak, but because no `signature.args` entry in the shipped batch was ever given a
+provenance quote to grade.
+
+`reserve_car_rental.yaml`'s `end_time` (Finding 6) and `venmo_social.yaml`'s `sort_by` (Finding 7)
+do not hit this same wall only because each ALSO has a same-named effect clause
+(`eff.end_time_applied`, `eff.sort_by_forwarded`) carrying its own docstring provenance -- so
+those two findings are headline-eligible via the effect-clause route even though their own
+`arg.*` verdict is `INFERRED` for the identical reason `user_email`'s is.
+
+This was not fixed by adding `signature.args.<name>.provenance` retroactively to the 12 shipped
+contracts: those contracts are described as already authored and validating with zero skips, and
+backfilling provenance on them now, in the same change that wires up headline_tier, would be
+indistinguishable from tuning a contract to hit a tier -- exactly what CLAUDE.md's "do not weaken
+a clause to make a finding appear" guards against, even though provenance is additive rather than
+a weakening. Recorded here instead, as a real result about this contract batch's completeness:
+`Contract.signature.args[...].provenance` needs to be populated as a matter of course whenever an
+argument's own documentation is the ONLY grounds for a future finding that has no effect-clause
+counterpart, or that finding cannot be headline-eligible no matter how faithfully check 8 is run.

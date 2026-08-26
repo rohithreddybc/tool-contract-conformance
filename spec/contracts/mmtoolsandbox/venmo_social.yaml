@@ -14,6 +14,19 @@
 # agent-adjacent state (it is exactly what would be sent across the wire to AppWorld), not a
 # synthetic fixture. Every clause below asserts only over post.boundary_calls, never over
 # anything inside AppWorld.
+#
+# `domain`/`action` carry explicit `probe_values` pinning them to "comment"/"list" -- the ONE
+# branch (venmo.py:464-470) this contract's clauses assert over. The venmo_boundary scenario's
+# fresh-env snapshot is `{"boundary_calls": []}`, so dynamic/probes.py's generic
+# snapshot-harvesting search has nothing to harvest these two `Literal[...]`-typed strings from
+# and falls back to its own synthetic placeholder ("__dynamic_probe_absent__") for both,
+# which trips `raise ValueError(f"Unknown domain: ...")` on every single probe -- a 100%
+# probe-generation failure with no bearing on Finding 7. `sort_by` also carries two concrete
+# probe_values (rather than relying on the same absent-string fallback) purely so
+# dynamic/harness.py's own `check_ignored_argument` has two DISTINCT successful-call values to
+# compare, independently corroborating the effect-clause verdict below via post-state
+# (boundary-call-log) invariance -- the redundant-detection pattern
+# reserve_car_rental.yaml/update_scheduled_transaction.yaml already exercise for Findings 5/6.
 
 contract_version: "1.0"
 tool: venmo_social
@@ -27,12 +40,12 @@ source:
 
 signature:
   args:
-    domain: { type: str, effective: false }
-    action: { type: str, effective: false }
+    domain: { type: str, effective: false, probe_values: ["comment", "friend"] }
+    action: { type: str, effective: false, probe_values: ["list", "show"] }
     transaction_id: { type: int, effective: true }
     page_index: { type: int, effective: true }
     page_limit: { type: int, effective: true }
-    sort_by: { type: str, effective: true }
+    sort_by: { type: str, effective: true, probe_values: ["-date", "+amount"] }
 
 effects:
   - id: eff.transaction_id_forwarded

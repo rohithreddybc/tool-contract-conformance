@@ -32,13 +32,21 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
+from adapters.agentdojo import AgentDojoAdapter, AgentDojoAdapterError
 from adapters.base import Adapter, ToolResult
 from adapters.contract_check import check_effects, check_precondition_enforcement, to_result_binding
+from adapters.mmtoolsandbox import MMToolSandboxAdapter, MMToolSandboxAdapterError
 from adapters.tau2 import Tau2Adapter, Tau2AdapterError
 from core.canonical import CanonicalConfig, canonical_equal, diff
-from core.model import Contract
+from core.model import Contract, HeadlineTier, headline_tier
 from core.verdict import ClauseVerdict, DefectClass, Verdict, Witness
 from dynamic.probes import build_dynamic_probe_plan
+from spec.validate import (
+    _classify_tool_return,
+    _git_show,
+    _prompt_template_reachability,
+    _repo_available,
+)
 from toy.adapter import ToyAdapter
 
 __all__ = [
@@ -67,6 +75,17 @@ TOY_CANONICAL_CONFIG = CanonicalConfig(volatile_paths=("state.audit_log.[].seq",
 # recur across domains and must be disambiguated by the caller; this table is deliberately scoped
 # to the tools this milestone has contracts for rather than guessing at the others.
 TAU2_DOMAIN_BY_TOOL = {"cancel_reservation": "airline", "refuel_data": "telecom"}
+
+# contract.benchmark -> the local git clone check8_agent_visibility needs to classify a
+# tool_return/prompt_template provenance quote (see `_check8_passed_for_provenance` below). "toy"
+# has no entry: every toy contract's provenance surface is "docstring" (never tool_return or
+# prompt_template), so check 8 is never actually consulted for it, and a missing repo_root must
+# not silently manufacture a pass -- see `_check8_passed_for_provenance`'s fail-closed default.
+REPO_ROOT_BY_BENCHMARK = {
+    "tau2-bench": PROJECT_ROOT / "repos" / "tau2",
+    "agentdojo": PROJECT_ROOT / "repos" / "agentdojo",
+    "mm-toolsandbox": PROJECT_ROOT / "repos" / "mmtoolsandbox",
+}
 
 
 # =================================================================================================
@@ -191,6 +210,93 @@ def check_ignored_argument(
 # =================================================================================================
 
 
+class _ArgAsClause:
+    """Shim exposing the two attributes `core.model.headline_tier()` reads (`.inferred`,
+    `.provenance`) for an `arg.<name>` clause id -- these come from `check_ignored_argument`
+    (this module) and `ArgSpec` (core/model.py), not from `Contract.all_clauses()`. `ArgSpec` has
+    no `inferred` concept of its own (an argument's effective-ness is a fact about the signature,
+    not a claim that can be hand-annotated as inferred the way a Clause can), so this always
+    reports `inferred=False` -- the arg.* verdict's tier then rests entirely on whatever
+    provenance (if any) the contract's `signature.args.<name>.provenance` supplies."""
+
+    __slots__ = ("inferred", "provenance")
+
+    def __init__(self, provenance):
+        self.inferred = False
+        self.provenance = provenance
+
+
+def _clause_for_id(contract: Contract, clause_id: str):
+    """The Clause (or `_ArgAsClause`-wrapped ArgSpec) object `clause_id` names, for
+    `_headline_tier_for_clause` below. `arg.<name>` ids are synthesized by
+    `check_ignored_argument`/`dynamic/probes.py`'s ignored-argument probes, not present in
+    `Contract.all_clauses()`; every other clause_id this module ever emits (an effect id, or a
+    precondition id via `check_precondition_enforcement`'s `violated_ids[0]`) is a real Clause id
+    that IS in `all_clauses()`. Returns None if `clause_id` cannot be resolved (should not happen
+    for a clause_id this module itself produced, but never raises on it -- an unresolvable
+    clause_id degrades to `headline_tier: null` rather than crashing the run)."""
+    if clause_id.startswith("arg."):
+        spec = contract.signature.args.get(clause_id[len("arg."):])
+        return None if spec is None else _ArgAsClause(spec.provenance)
+    for c in contract.all_clauses():
+        if c.id == clause_id:
+            return c
+    return None
+
+
+def _check8_passed_for_provenance(provenance, *, repo_root: Optional[Path], commit: str) -> bool:
+    """The real spec/validate.py check-8 outcome for one clause's provenance -- exactly what
+    `core.model.headline_tier`'s `check8_passed` argument is documented to require, computed by
+    calling spec/validate.py's OWN per-quote classifiers (`_classify_tool_return`,
+    `_prompt_template_reachability`, via `_git_show`/`_repo_available`) rather than
+    reimplementing them, so this can never drift from what `python spec/validate.py` itself would
+    report for the same clause. spec/validate.py is not modified to expose a per-clause entry
+    point -- check8_agent_visibility only accumulates pass/fail into a Reporter across a whole
+    file -- so this module calls the same private helpers check8_agent_visibility's own
+    `check_prov` closure calls, one clause at a time.
+
+    Returns True immediately for every surface check 8 does not test (docstring, schema,
+    prompt_template's sibling readme/external_standard, maintainer_annotation, or no provenance
+    at all) -- `headline_tier()` only ever consults this return value for a surface check 8 DOES
+    test, but the True default here documents that this function is not the gate for those
+    surfaces, matching `headline_tier`'s own docstring.
+
+    For tool_return/prompt_template: FAILS CLOSED (returns False, never True) if the repo is not
+    available to actually run the check. Assuming a pass when the check could not be run is
+    exactly the bug CLAUDE.md's build instructions call out ("thread the real validator outcome
+    through rather than assuming a pass") -- an unconfirmed tool_return/prompt_template quote is
+    reported as not-yet-agent-visible (MAINTAINER_ANNOTATED tier via `headline_tier`), never
+    silently promoted to AGENT_VISIBLE.
+    """
+    if provenance is None or provenance.surface not in ("tool_return", "prompt_template"):
+        return True
+    if not provenance.file or not provenance.line:
+        return True  # check4 already reports a missing file/line; check 8 has nothing to add
+    if repo_root is None or not _repo_available(str(repo_root)):
+        return False
+    if provenance.surface == "tool_return":
+        lines = _git_show(str(repo_root), commit, provenance.file)
+        if lines is None:
+            return False
+        passed, _desc = _classify_tool_return("\n".join(lines), provenance.line)
+        return passed
+    reachable, _desc = _prompt_template_reachability(provenance.file)
+    return reachable is not False  # None ("could not be determined") is a WARN, not a failure --
+    # matches spec/validate.py's own check8_agent_visibility, which only fails on reachable is False.
+
+
+def _headline_tier_for_clause(contract: Contract, clause_id: str) -> Optional[HeadlineTier]:
+    """`core.model.headline_tier()`, fully wired: resolve `clause_id` back to its Clause (or
+    `_ArgAsClause`), thread the real check-8 outcome for ITS provenance through, and return the
+    derived tier -- or None if `clause_id` could not be resolved at all (see `_clause_for_id`)."""
+    clause = _clause_for_id(contract, clause_id)
+    if clause is None:
+        return None
+    repo_root = REPO_ROOT_BY_BENCHMARK.get(contract.benchmark)
+    check8_passed = _check8_passed_for_provenance(clause.provenance, repo_root=repo_root, commit=contract.commit)
+    return headline_tier(clause, check8_passed)
+
+
 def _witness_to_json(w: Optional[Witness]) -> Optional[dict]:
     if w is None:
         return None
@@ -198,6 +304,7 @@ def _witness_to_json(w: Optional[Witness]) -> Optional[dict]:
 
 
 def _row(*, kind: str, contract: Contract, scenario_id: str, cv: ClauseVerdict, probe_origin: str, extra: Optional[dict] = None) -> dict:
+    tier = _headline_tier_for_clause(contract, cv.clause_id)
     row = {
         "kind": kind,
         "benchmark": contract.benchmark,
@@ -210,6 +317,7 @@ def _row(*, kind: str, contract: Contract, scenario_id: str, cv: ClauseVerdict, 
         "reason_code": cv.reason_code,
         "witness": _witness_to_json(cv.witness),
         "probe_origin": probe_origin,
+        "headline_tier": tier.value if tier is not None else None,
     }
     if extra:
         row.update(extra)
@@ -345,12 +453,32 @@ def _iter_tau2_contracts():
         yield contract, domain
 
 
+def _iter_contracts_by_live_domain(contracts_dir_name: str, adapter: Adapter):
+    """Shared shape for AgentDojo and MM-ToolSandbox: unlike tau2 (TAU2_DOMAIN_BY_TOOL is
+    hand-maintained because several tau2 tool names genuinely recur across domains -- see
+    adapters.tau2.Tau2Adapter.source()'s docstring), neither AgentDojo's 7 shipped contracts nor
+    MM-ToolSandbox's 5 name a tool that appears in more than one in-scope suite/scenario, so the
+    tool -> domain mapping is read directly off the adapter's own `list_tools()` (each ToolRef's
+    `domain` field is exactly the scenario_id `fresh_env` expects -- adapters/agentdojo.py's and
+    adapters/mmtoolsandbox.py's `_cmd_list_tools`/`_cmd_fresh_env` agree on this by construction)
+    instead of being guessed at or duplicated into a second hand-maintained table here."""
+    domain_by_tool = {t.name: t.domain for t in adapter.list_tools()}
+    for path in sorted((CONTRACTS_ROOT / contracts_dir_name).glob("*.yaml")):
+        contract = Contract.from_yaml(path)
+        domain = domain_by_tool.get(contract.tool)
+        if domain is None:
+            continue  # not a tool the live adapter actually exposes -- skip, don't guess
+        yield contract, domain
+
+
 def run_all(*, seed: int = 0) -> list:
-    """Run every shipped toy contract against `ToyAdapter` and every mapped tau2 contract against
-    `Tau2Adapter`, returning the combined `findings.jsonl` rows. If the tau2 venv is not
-    provisioned, records one `adapter_unavailable` row instead of failing the whole run -- mirrors
+    """Run every shipped toy contract against `ToyAdapter` and every mapped tau2/AgentDojo/
+    MM-ToolSandbox contract against its respective live adapter, returning the combined
+    `findings.jsonl` rows. If a benchmark's venv is not provisioned, records one
+    `adapter_unavailable` row for that benchmark instead of failing the whole run -- mirrors
     `tests/test_tau2_adapter.py`'s skip discipline, but as data rather than a test skip, since this
-    is meant to run outside `unittest` too."""
+    is meant to run outside `unittest` too. One benchmark's adapter being unavailable does not
+    block the others -- each is tried independently."""
     rows: list = []
 
     toy_adapter = ToyAdapter()
@@ -361,12 +489,34 @@ def run_all(*, seed: int = 0) -> list:
         tau2_adapter = Tau2Adapter()
     except Tau2AdapterError as e:
         rows.append({"kind": "adapter_unavailable", "benchmark": "tau2-bench", "detail": str(e)})
-        return rows
+    else:
+        try:
+            for contract, domain in _iter_tau2_contracts():
+                rows.extend(run_contract(tau2_adapter, contract, domain, seed=seed))
+        finally:
+            tau2_adapter.close()
+
     try:
-        for contract, domain in _iter_tau2_contracts():
-            rows.extend(run_contract(tau2_adapter, contract, domain, seed=seed))
-    finally:
-        tau2_adapter.close()
+        agentdojo_adapter = AgentDojoAdapter()
+    except AgentDojoAdapterError as e:
+        rows.append({"kind": "adapter_unavailable", "benchmark": "agentdojo", "detail": str(e)})
+    else:
+        try:
+            for contract, domain in _iter_contracts_by_live_domain("agentdojo", agentdojo_adapter):
+                rows.extend(run_contract(agentdojo_adapter, contract, domain, seed=seed))
+        finally:
+            agentdojo_adapter.close()
+
+    try:
+        mmts_adapter = MMToolSandboxAdapter()
+    except MMToolSandboxAdapterError as e:
+        rows.append({"kind": "adapter_unavailable", "benchmark": "mm-toolsandbox", "detail": str(e)})
+    else:
+        try:
+            for contract, domain in _iter_contracts_by_live_domain("mmtoolsandbox", mmts_adapter):
+                rows.extend(run_contract(mmts_adapter, contract, domain, seed=seed))
+        finally:
+            mmts_adapter.close()
 
     return rows
 
