@@ -41,8 +41,8 @@ Committed shape (PAPER-OUTLINE.md, abstract rule):
     in experiments/analysis_plan.md);
   - benchmark count N filled last [N11: per ARCHITECTURE-FINAL.md §9 risk 3].
 Two variants exist per REVIEW-RESPONSE.md Journal-Fit W2 (N=2 floor, N=4 target); the
-Sep 6 kill gate outcome (cleared 2026-08-21: 8 instances across 4 environments, 5 of them
-headline-eligible) selects the target variant. -->
+Sep 6 kill gate outcome (cleared 2026-08-21: 8 instances across 4 environments, 4 of them
+headline-eligible per report/findings.jsonl) selects the target variant. -->
 
 **Keywords** — agentic benchmarks, tool calling, measurement validity, design by contract, conformance testing, data quality. <!-- finalize with abstract -->
 
@@ -76,7 +76,7 @@ This paper tests the interface → implementation → state-transition contract 
 2. **Six executable defect classes** over the state-transition contract, defined as checker rules rather than prose (§III). Phantom Effect, Partial Effect, and Reset Leak have no counterpart in any surveyed audit taxonomy.
 3. **A provenance-bound contract format** in which every clause cites the advertised surface it operationalizes, and a static plus dynamic conformance checker (§V, §VI).
 4. **Open-world-validated detection**: precision and recall reported against both taxonomy-shaped and off-taxonomy injected defects, under a pre-registered analysis plan (§VII).
-5. **Confirmed findings**: seven unique benchmark-class defect cells across four shipped benchmarks, eight instances, verified by direct source reading at pinned commits, with coordinated disclosure to all maintainers (§IX).
+5. **Confirmed findings**: four headline-eligible benchmark-class defect cells across four shipped benchmarks, from eight verified instances, each read directly at a pinned commit by someone other than whoever surfaced it, with coordinated disclosure to all maintainers (§IX).
 
 We did not invent design by contract, contract inference, or benchmark auditing, and we claim none of them. §II concedes the checking technique and rests the paper's novelty on the target and on the consequence for published scores.
 
@@ -217,7 +217,7 @@ The two effect clauses sit in different tiers. `eff.status_cancelled` is grounde
 
 ## IX. Findings and Coordinated Disclosure
 
-Across four shipped benchmarks we confirmed **seven unique benchmark-class defect cells, comprising eight finding instances**. The compressed count leads deliberately: this project's reporting rule counts unique defect classes per benchmark, because eight bugs in one copied helper are one bug, and a reviewer will compress the count this way whether or not we do. Four of the eight instances are Ignored Argument. Every finding was verified by direct source reading at a pinned commit by someone other than whoever first surfaced it, and each carries a clean-clone reproduction command in the artifact. Per-benchmark totals (tools audited, mutating tools, independent implementations, unique defect classes) appear in Table III [N1: report/render.py ← findings.jsonl].
+Across four shipped benchmarks we confirmed eight finding instances, falling into seven benchmark-class cells, of which **four are headline-eligible**. The compressed count leads deliberately: this project's reporting rule counts unique defect classes per benchmark, because eight bugs in one copied helper are one bug, and a reviewer will compress the count this way whether or not we do. We compress it twice, because two of the seven cells cannot carry a headline on our own rules. tau2-bench's Partial Effect is grounded in a `logger.warning` the agent never sees, which makes it maintainer-annotated rather than agent-visible. MedAgentBench's Ungrounded Oracle is a property of the evaluator, not one of the six tool-layer classes. Both are reported here in full, labelled, and excluded from the headline. Four of the eight instances are Ignored Argument. Every finding was verified by direct source reading at a pinned commit by someone other than whoever first surfaced it, and each carries a clean-clone reproduction command in the artifact. Per-benchmark totals (tools audited, mutating tools, independent implementations, unique defect classes) appear in Table III [N1: report/render.py ← findings.jsonl].
 
 **Table: confirmed findings (instance level).**
 

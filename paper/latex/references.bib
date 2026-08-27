@@ -1,0 +1,364 @@
+% references.bib -- built from REFERENCES.md (venue-confirmation pass, 2026-08-21/22/23).
+%
+% Convention followed throughout, per instructions:
+%   - Confirmed venues use proper inproceedings/article entries with real venue, year, DOI.
+%   - Preprint-only entries (confirmed by Scopus 0-hit + no arXiv Comments/Journal-ref) use
+%     misc entries with eprint/archivePrefix/primaryClass and a note stating preprint status.
+%   - Venue claimed but not independently confirmed (AgentDojo's NeurIPS 2024 D&B track
+%     label; constructvalidity25's self-listed NeurIPS 2025 D&B track) uses a misc entry
+%     with a note describing exactly what is and is not confirmed, never asserting the venue.
+%   - BenchGuard (COLM 2026) and MedAgentBench (NEJM AI) are confirmed peer-reviewed venues
+%     and are entered as such.
+%
+% No number, DOI, arXiv id, or venue string below has been invented; every field traces to
+% a row in REFERENCES.md or to the corresponding entry in paper/main.md's own reference list.
+%
+% NOTE: bibtex has no true comment syntax outside entries -- it scans for the next at-sign
+% and tries to parse an entry there. Do not write a literal at-sign anywhere in this preamble.
+
+% ---------------------------------------------------------------------
+% Prior work positioned against (Day 1 gate) — confirmed preprint-only
+% ---------------------------------------------------------------------
+
+@misc{toolveritas26,
+  author       = {Bhat and Vaghasiya and Mohsin and Aali},
+  title        = {Benchmarking the Benchmarks: A Validity Audit of Tool-Calling Evaluation},
+  year         = {2026},
+  eprint       = {2607.02577},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.SE},
+  note         = {Confirmed preprint-only: 0 Scopus results for title (checked 2026-08-21), no Comments/Journal-ref field on the arXiv page.}
+}
+
+@misc{benchguard26,
+  author       = {Tu and Wang and Lu and Huang and Qu and Mostafavi},
+  title        = {{BenchGuard}: Who Guards the Benchmarks? Automated Auditing of {LLM} Agent Benchmarks},
+  year         = {2026},
+  eprint       = {2604.24955},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.SE},
+  note         = {Accepted, Conference on Language Modeling (COLM) 2026 -- confirmed verbatim on the official COLM 2026 accepted-papers page (colm.eventhosts.cc/Conferences/2026/AcceptedPapers), exact title and author match among 856 accepted entries, checked 2026-08-21. Not yet Scopus-indexed as of that date (COLM proceedings lag Scopus indexing).}
+}
+
+@misc{aba26,
+  author       = {Wang and Bianchi and Zhu and Nie and Kwon and Dhingra and Zou},
+  title        = {Automated Benchmark Auditing for {AI} Agents and Large Language Models},
+  year         = {2026},
+  eprint       = {2605.26079},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {Confirmed preprint-only: 0 Scopus results for title (checked 2026-08-21), no Comments/Journal-ref field on the arXiv page.}
+}
+
+@misc{safeaudit26,
+  author       = {Chen and Yan and Zhang and Zhang},
+  title        = {Who Tests the Testers? Systematic Enumeration and Coverage Audit of {LLM} Agent Tool Call Safety},
+  year         = {2026},
+  eprint       = {2603.18245},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.SE},
+  note         = {v2, 2026-08-15. Confirmed preprint-only: 0 Scopus results for title (checked 2026-08-21), no Comments/Journal-ref field on the arXiv page.}
+}
+
+% ---------------------------------------------------------------------
+% Contract and conformance-testing literature — confirmed venues
+% ---------------------------------------------------------------------
+
+@inproceedings{contract26,
+  author    = {Deng and Ma and Gao and Sun},
+  title     = {Efficient Bug Detection by Inferring Implicit {API} Contract of Pointer State Transition},
+  booktitle = {Proceedings of the IEEE International Conference on Dependable Systems and Networks (DSN)},
+  year      = {2026},
+  doi       = {10.1109/dsn69566.2026.00035},
+  note      = {Scopus-confirmed: DOI match, exact title/authors/venue.}
+}
+
+@inproceedings{icepick26,
+  author    = {Ribeiro and Mamede and Ferreira},
+  title     = {Systematic {API} Testing Through Model Checking and Executable Contracts},
+  booktitle = {Proceedings of the IEEE International Conference on Software Testing, Verification and Validation (ICST)},
+  year      = {2026},
+  doi       = {10.1109/icst69053.2026.00060},
+  note      = {Scopus-confirmed: DOI match, exact title/authors/venue.}
+}
+
+@article{agora25,
+  author  = {Alonso and Ernst and Segura and Ruiz-Cort\'{e}s},
+  title   = {Test Oracle Generation for {REST} {APIs}},
+  journal = {ACM Transactions on Software Engineering and Methodology (TOSEM)},
+  volume  = {35},
+  number  = {1},
+  pages   = {art.\ 19},
+  year    = {2025},
+  doi     = {10.1145/3726524},
+  note    = {Scopus-confirmed: DOI match.}
+}
+
+@misc{abc26,
+  author       = {Bhardwaj},
+  title        = {Agent Behavioral Contracts: Formal Specification and Runtime Enforcement for Reliable Autonomous {AI} Agents},
+  year         = {2026},
+  doi          = {10.5281/zenodo.18775393},
+  howpublished = {Zenodo},
+  note         = {Preprint, not peer-reviewed. DOI resolves to a Zenodo deposit rather than arXiv; cross-referenced by arXiv:2602.22302 (same title), whose Comments field reads ``Also available on Zenodo: DOI https://doi.org/10.5281/zenodo.18775393''. 0 Scopus results.}
+}
+
+@article{jcontractor05,
+  author  = {Karaorman and Abercrombie},
+  title   = {j{C}ontractor: Introducing Design-by-Contract to {Java} Using Reflective Bytecode Instrumentation},
+  journal = {Formal Methods in System Design},
+  volume  = {27},
+  number  = {3},
+  year    = {2005},
+  doi     = {10.1007/s10703-005-3400-1},
+  note    = {Scopus-confirmed: DOI match.}
+}
+
+@article{jass01,
+  author  = {Bartetzko and Fischer and M\"{o}ller and Wehrheim},
+  title   = {Jass -- {Java} with Assertions},
+  journal = {Electronic Notes in Theoretical Computer Science (ENTCS)},
+  volume  = {55},
+  number  = {2},
+  year    = {2001},
+  doi     = {10.1016/s1571-0661(04)00247-6},
+  note    = {Scopus-confirmed: DOI match.}
+}
+
+@inproceedings{frames25,
+  author    = {Cheon and others},
+  title     = {Enhancing Design-by-Contract with Frame Specifications},
+  booktitle = {Proceedings of the 20th International Conference on Software Technologies (ICSOFT)},
+  publisher = {SCITEPRESS},
+  year      = {2025},
+  doi       = {10.5220/0013578400003964},
+  note      = {Not in Scopus; confirmed via the SCITEPRESS publisher page, where the DOI resolves.}
+}
+
+@inproceedings{dlcontract23,
+  author    = {Ahmed and Cruz and Imtiaz and Khairunnesa and Rajan},
+  title     = {Design by Contract for Deep Learning {APIs}},
+  booktitle = {Proceedings of the 31st ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE)},
+  year      = {2023},
+  doi       = {10.1145/3611643.3616247},
+  note      = {Scopus-confirmed: DOI match.}
+}
+
+@inproceedings{cogent23,
+  author    = {Ghosal and Jonsson and R\"{u}mmer},
+  title     = {An Active Learning Approach to Synthesizing Program Contracts},
+  booktitle = {Lecture Notes in Computer Science},
+  volume    = {14323},
+  publisher = {Springer},
+  year      = {2023},
+  doi       = {10.1007/978-3-031-47115-5_8},
+  note      = {Scopus-confirmed: DOI match. Specific host conference not independently identified; cited by LNCS volume.}
+}
+
+% ---------------------------------------------------------------------
+% Metamorphic and stateful API testing — confirmed venues
+% ---------------------------------------------------------------------
+
+@article{segura18,
+  author  = {Segura and Parejo and Troya and Ruiz-Cort\'{e}s},
+  title   = {Metamorphic Testing of {RESTful} Web {APIs}},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {44},
+  number  = {11},
+  year    = {2018},
+  doi     = {10.1109/tse.2017.2764464},
+  note    = {Scopus-confirmed: DOI match.}
+}
+
+@article{segura16,
+  author  = {Segura and Fraser and Sanchez and Ruiz-Cort\'{e}s},
+  title   = {A Survey on Metamorphic Testing},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {42},
+  number  = {9},
+  year    = {2016},
+  doi     = {10.1109/tse.2016.2532875},
+  note    = {Scopus-confirmed: DOI match.}
+}
+
+@article{chen18,
+  author  = {Chen and Kuo and Liu and Tse and Zhou},
+  title   = {Metamorphic Testing: A Review of Challenges and Opportunities},
+  journal = {ACM Computing Surveys},
+  volume  = {51},
+  number  = {1},
+  pages   = {art.\ 4},
+  year    = {2019},
+  doi     = {10.1145/3143561},
+  note    = {Year and title corrected from an earlier draft that cited 2018 and a paraphrased title: the Scopus DOI match resolves to 2019, and the actual article title is ``Metamorphic testing: A review of challenges and opportunities.''}
+}
+
+@inproceedings{restler19,
+  author    = {Atlidakis and Godefroid and Polishchuk},
+  title     = {{RESTler}: Stateful {REST} {API} Fuzzing},
+  booktitle = {Proceedings of the 41st International Conference on Software Engineering (ICSE)},
+  year      = {2019},
+  doi       = {10.1109/icse.2019.00083},
+  note      = {Scopus-confirmed: DOI match.}
+}
+
+@inproceedings{godefroid20,
+  author    = {Godefroid and Lehmann and Polishchuk},
+  title     = {Differential Regression Testing for {REST} {APIs}},
+  booktitle = {Proceedings of the 29th ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA)},
+  year      = {2020},
+  doi       = {10.1145/3395363.3397374},
+  note      = {Scopus-confirmed: DOI match.}
+}
+
+% ---------------------------------------------------------------------
+% Gap-sweep and adjacent-work citations — confirmed preprint-only or
+% venue-unconfirmed, per REFERENCES.md's gap-sweep citation-key table
+% ---------------------------------------------------------------------
+
+@misc{liveclawbench26,
+  title        = {{LiveClawBench}: Benchmarking {LLM} Agents on Complex, Real-World Assistant Tasks},
+  author       = {Long and Du and Xu and others},
+  year         = {2026},
+  eprint       = {2604.13072},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {Preprint; venue not yet confirmed.}
+}
+
+@misc{toolgate26,
+  author       = {Liu and Peng and Cao and Wang and Deng and Chen and Yin and Zhang},
+  title        = {{ToolGate}: Contract-Grounded and Verified Tool Execution for {LLMs}},
+  year         = {2026},
+  eprint       = {2601.04688},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {Confirmed preprint-only: Scopus title search returns only two unrelated papers matched on incidental keyword overlap, not this work; the arXiv Comments field reads ``First version of ToolGate'' with no acceptance claim.}
+}
+
+@misc{contract2tool26,
+  title        = {{Contract2Tool}: Learning Preconditions and Effects for Reliable Tool-Augmented {LLM} Agents},
+  author       = {Babu and Iyer},
+  year         = {2026},
+  eprint       = {2606.07904},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {Preprint; venue not yet confirmed.}
+}
+
+@misc{contractbench26,
+  title        = {{ContractBench}: Can {LLM} Agents Preserve Observation Contracts?},
+  author       = {Wang and He and Wang and Xing and De and Chen},
+  year         = {2026},
+  eprint       = {2605.17281},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {Preprint; venue not yet confirmed.}
+}
+
+@misc{toolfuzz25,
+  title        = {{ToolFuzz} -- Automated Agent Tool Testing},
+  author       = {Milev and Balunovi\'{c} and Baader and Vechev},
+  year         = {2025},
+  eprint       = {2503.04479},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.SE},
+  note         = {Preprint; venue not yet confirmed.}
+}
+
+@misc{contractguard26,
+  title        = {The Gate Is Only as Honest as Its Contracts: {ContractGuard} for the Contract Layer of Risk-Aware Causal Gating},
+  author       = {Iyer and Babu},
+  year         = {2026},
+  eprint       = {2606.18550},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CR},
+  note         = {Preprint; venue not yet confirmed.}
+}
+
+@misc{faulttaxonomy26,
+  title        = {Characterizing Faults in Agentic {AI}: A Taxonomy of Types, Symptoms, and Root Causes},
+  author       = {Shah and Morovati and Rahman and Khomh},
+  year         = {2026},
+  eprint       = {2603.06847},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.SE},
+  note         = {Preprint; venue not yet confirmed.}
+}
+
+@misc{abcchecklist25,
+  title        = {Establishing Best Practices for Building Rigorous Agentic Benchmarks},
+  author       = {Zhu and Jin and Pruksachatkun and others},
+  year         = {2025},
+  eprint       = {2507.02825},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.LG},
+  note         = {v5. Preprint; venue not yet confirmed. Referred to in text as the Agentic Benchmark Checklist.}
+}
+
+@misc{constructvalidity25,
+  title        = {Measuring what Matters: Construct Validity in Large Language Model Benchmarks},
+  author       = {Bean and Kearns and Romanou and others},
+  year         = {2025},
+  eprint       = {2511.04703},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  note         = {Self-listed as NeurIPS 2025 Datasets and Benchmarks Track; not yet Scopus- or publisher-confirmed. Cited here as self-described rather than as a confirmed proceedings entry.}
+}
+
+% ---------------------------------------------------------------------
+% Benchmark papers and published-score sources (audited artifacts)
+% ---------------------------------------------------------------------
+
+@misc{taubench24,
+  author       = {Yao and Shinn and Razavi and Narasimhan},
+  title        = {$\tau$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains},
+  year         = {2024},
+  eprint       = {2406.12045},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {Preprint. This is the benchmark audited by the Agentic Benchmark Checklist \cite{abcchecklist25} (repo \texttt{sierra-research/tau-bench}), a distinct artifact and codebase from $\tau^2$-bench \cite{tau2bench25}, the artifact audited in this paper.}
+}
+
+@misc{tau2bench25,
+  author       = {Barres and Dong and Ray and Si and Narasimhan},
+  title        = {$\tau^2$-Bench: Evaluating Conversational Agents in a Dual-Control Environment},
+  year         = {2025},
+  eprint       = {2506.07982},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  note         = {v1, 2025-06-09, no later version as of the audited commit. Preprint; this is the audited artifact's own paper.}
+}
+
+@article{medagentbench25,
+  author  = {Jiang and Black and Geng and Park and Zou and Ng and Chen},
+  title   = {{MedAgentBench}: A Virtual {EHR} Environment to Benchmark Medical {LLM} Agents},
+  journal = {NEJM AI},
+  volume  = {2},
+  number  = {9},
+  year    = {2025},
+  doi     = {10.1056/AIdbp2500144},
+  note    = {Preprint version (arXiv:2501.14654, v2 2025-02-12, titled ``MedAgentBench: A Realistic Virtual EHR Environment to Benchmark Medical LLM Agents'') read directly; Table 3 is cited from that arXiv version, not from the paywalled NEJM AI version.}
+}
+
+@misc{agentdojo24,
+  author       = {Debenedetti and Zhang and Balunovi\'{c} and Beurer-Kellner and Fischer and Tram\`{e}r},
+  title        = {{AgentDojo}: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for {LLM} Agents},
+  year         = {2024},
+  eprint       = {2406.13352},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CR},
+  doi          = {10.48550/arxiv.2406.13352},
+  note         = {Parent venue confirmed via Scopus (2026-08-23): Advances in Neural Information Processing Systems, vol.\ 37, 2024, conference paper, exact title/author match, 63 citations. Scopus does not tag NeurIPS sub-tracks, so the specific ``Datasets and Benchmarks Track'' label is \emph{not} independently confirmed and is not asserted here.}
+}
+
+@misc{mmtoolsandbox26,
+  author       = {Ma and Feng and Metz and Lu and Verma and Dehghan},
+  title        = {{MM-ToolSandBox}: A Unified Framework for Evaluating Visual Tool-Calling Agents},
+  year         = {2026},
+  eprint       = {2607.11818},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  doi          = {10.48550/arxiv.2607.11818},
+  note         = {Preprint; no Comments/Journal-ref acceptance claim on the abstract page; not yet Scopus- or publisher-confirmed. Matches the audited \texttt{apple/ml-mmtoolsandbox} repository.}
+}

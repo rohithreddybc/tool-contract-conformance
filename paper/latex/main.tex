@@ -1,0 +1,423 @@
+% main.tex — IEEE BigData 2026 (Intelligent Data Mining special session)
+% Converted from paper/main.md. This is a FORMAT CONVERSION, not an edit:
+% prose is reproduced verbatim, sections are not reordered, and no number,
+% citation key, file path, line number, or commit hash has been altered.
+%
+% Sections IV, VI, VII, VIII, X, XI are stubs in the source Markdown that
+% name the artifact that must generate their content. They are reproduced
+% here as visible, compiling placeholders via \pending — see README.md in
+% this directory for the full list and for what is deliberately incomplete.
+%
+% The venue forbids an appendix; none is used here.
+
+\documentclass[conference]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{balance}
+\usepackage{url}
+% hyperref must be loaded last
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------------------
+% Placeholder macro. Every [Nk: artifact] marker in the Markdown draft
+% and every NOT-YET-DRAFTED section stub is rendered in red so that no
+% one can compile this file and mistake it for a finished paper.
+% ---------------------------------------------------------------------
+\newcommand{\pending}[2]{\textcolor{red}{[#1: #2]}}
+\newcommand{\pendingblock}[1]{\par\smallskip\noindent\textcolor{red}{\itshape #1}\par\smallskip}
+% Breakable separator for long \texttt{} file paths in narrow table columns:
+% permits a line break with no visible hyphen, unlike ordinary text.
+\newcommand{\brk}{\allowbreak\hspace{0pt}}
+
+% ---------------------------------------------------------------------
+% listings configuration: small monospace Python, legible in one column.
+% ---------------------------------------------------------------------
+\lstdefinestyle{pytool}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\bfseries\color{blue!50!black},
+  commentstyle=\itshape\color{gray},
+  stringstyle=\color{green!40!black},
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  frame=single,
+  numbers=none,
+  tabsize=2,
+  captionpos=b,
+  xleftmargin=2pt,
+  xrightmargin=2pt,
+  aboveskip=6pt,
+  belowskip=6pt
+}
+\lstdefinestyle{yamltool}{
+  style=pytool,
+  language=,
+  keywordstyle=\bfseries\color{purple!60!black},
+  morekeywords={effects,id,text,predicate,provenance,surface,line,quote,docstring,maintainer_annotation}
+}
+\lstset{style=pytool}
+
+\hyphenation{Med-Agent-Bench}
+
+\begin{document}
+
+\title{Scores at Risk: When Benchmark Tools Violate Their Own Advertised Semantics\\
+\large Executable Tool-Contract Conformance Testing for Agentic Benchmarks}
+
+\author{
+\IEEEauthorblockN{Rohith Reddy}
+\IEEEauthorblockA{}
+\and
+\IEEEauthorblockN{Wenbin Zhang}
+\IEEEauthorblockA{}
+}
+
+\maketitle
+
+% =======================================================================
+% ABSTRACT
+% =======================================================================
+% PLACEHOLDER — drafted last, after report/render.py tables exist.
+% Committed shape (PAPER-OUTLINE.md, abstract rule):
+%   - leads with the count that survives inspection: 4 HEADLINE-ELIGIBLE tool-layer cells
+%     across 4 benchmarks, counted from report/findings.jsonl, which is the artifact of record.
+%     Superseded twice: this block said 7 cells, then 5. AgentDojo's Phantom Effect cell went
+%     on 2026-08-26 because the biconditional re-tag never fires -- the fixture masks one half
+%     of the defect, so both halves are confirmed in separate calls but never simultaneously.
+%     A probe-and-fixture gap, reported as one; a fixture chosen to make it fire would be
+%     tuning the instrument to produce the result.
+%     Two of the seven cannot carry a headline — tau2's Partial Effect is maintainer_annotation
+%     grounded and excluded by our own tiering rule, and MedAgentBench's Ungrounded Oracle is an
+%     evaluator-layer property, not one of the six tool-layer classes. Both are reported, adjacent
+%     and labelled, never folded into the headline. 8 instances reported alongside.
+%     A 7 survives only until a reviewer asks which seven. See FINDINGS-VERIFIED.md;
+%   - states the MedAgentBench construct-validity result (write-path no-op + transcript-grounded
+%     grader; measured quantity is emitted-request well-formedness) — NEVER names NEJM AI here;
+%   - promises score-at-risk bounds with their basis tags [N2: analysis/score_at_risk.py];
+%   - promises validated detection (closed-world recall at Wilson lower bounds [N3: mutation/score.py],
+%     open-world escape rate [N4: mutation/score.py + cosmic-ray run]);
+%   - promises NO verdict flips (§VIII may null by construction; null framing is pre-registered
+%     in experiments/analysis_plan.md);
+%   - benchmark count N filled last [N11: per ARCHITECTURE-FINAL.md §9 risk 3].
+% Two variants exist per REVIEW-RESPONSE.md Journal-Fit W2 (N=2 floor, N=4 target); the
+% Sep 6 kill gate outcome (cleared 2026-08-21: 8 instances across 4 environments, 4 of them
+% headline-eligible) selects the target variant.
+\begin{abstract}
+\pendingblock{ABSTRACT NOT YET DRAFTED. Committed shape (see \texttt{PAPER-OUTLINE.md}, abstract rule; comment block reproduced verbatim below the placeholder). Leads with the headline count from \texttt{report/findings.jsonl}; states the MedAgentBench construct-validity result without naming NEJM AI; promises score-at-risk bounds with basis tags \pending{N2}{analysis/score\_at\_risk.py}; promises validated detection (closed-world recall at Wilson lower bounds \pending{N3}{mutation/score.py}, open-world escape rate \pending{N4}{mutation/score.py + cosmic-ray run}); promises no verdict flips (\S\,VIII may null by construction; pre-registered in \texttt{experiments/analysis\_plan.md}); benchmark count $N$ filled last \pending{N11}{per ARCHITECTURE-FINAL.md \S 9 risk 3}.}
+
+% Committed shape, reproduced verbatim as source-of-record commentary.
+% NOTE ON INTERNAL INCONSISTENCY (flagged, not silently resolved): the
+% comment block below states the headline count as "4" in its first
+% bullet and then as "4 of them headline-eligible" in its closing
+% sentence. CLAUDE.md fixes the headline at 4 cells across 4 benchmarks.
+% Both numbers are reproduced exactly as they appear in paper/main.md;
+% see paper/latex/README.md for the full discrepancy report.
+%
+% - leads with the count that survives inspection: 4 HEADLINE-ELIGIBLE tool-layer cells
+%   across 4 benchmarks, counted from report/findings.jsonl, which is the artifact of record.
+%   Superseded twice: this block said 7 cells, then 5. AgentDojo's Phantom Effect cell went
+%   on 2026-08-26 because the biconditional re-tag never fires -- the fixture masks one half
+%   of the defect, so both halves are confirmed in separate calls but never simultaneously.
+%   A probe-and-fixture gap, reported as one; a fixture chosen to make it fire would be
+%   tuning the instrument to produce the result.
+%   Two of the seven cannot carry a headline — tau2's Partial Effect is maintainer_annotation
+%   grounded and excluded by our own tiering rule, and MedAgentBench's Ungrounded Oracle is an
+%   evaluator-layer property, not one of the six tool-layer classes. Both are reported, adjacent
+%   and labelled, never folded into the headline. 8 instances reported alongside.
+%   A 7 survives only until a reviewer asks which seven. See FINDINGS-VERIFIED.md;
+% - states the MedAgentBench construct-validity result (write-path no-op + transcript-grounded
+%   grader; measured quantity is emitted-request well-formedness) — NEVER names NEJM AI here;
+% - promises score-at-risk bounds with their basis tags [N2: analysis/score_at_risk.py];
+% - promises validated detection (closed-world recall at Wilson lower bounds [N3: mutation/score.py],
+%   open-world escape rate [N4: mutation/score.py + cosmic-ray run]);
+% - promises NO verdict flips (§VIII may null by construction; null framing is pre-registered
+%   in experiments/analysis_plan.md);
+% - benchmark count N filled last [N11: per ARCHITECTURE-FINAL.md §9 risk 3].
+% Two variants exist per REVIEW-RESPONSE.md Journal-Fit W2 (N=2 floor, N=4 target); the
+% Sep 6 kill gate outcome (cleared 2026-08-21: 8 instances across 4 environments, 4 of them
+% headline-eligible) selects the target variant.
+\end{abstract}
+
+\begin{IEEEkeywords}
+agentic benchmarks, tool calling, measurement validity, design by contract, conformance testing, data quality
+\end{IEEEkeywords}
+% Keywords: finalize with abstract (per source comment).
+
+% =======================================================================
+% I. INTRODUCTION
+% =======================================================================
+\section{Introduction}
+
+Agentic benchmarks now help decide which language models ship. A benchmark scores an agent by executing its tool calls against a simulated environment and reading the state those calls leave behind. The simulation is load-bearing: every verdict rests on the assumption that a tool call changed the world the way the tool's interface said it would. The field has begun to notice that this assumption is fragile. LiveClawBench names, as its own motivating problem, that agent-benchmark mocks are commonly ``reduced to endpoint-level stubs that remove sessions, artifacts, state transitions, and downstream side effects'' \cite{liveclawbench26}. That observation was made prospectively, as a reason to build higher-fidelity mocks for new benchmarks. Nobody has measured which already-shipped benchmarks discard state transitions, or what the loss costs their published scores.
+
+The loss can be total. MedAgentBench \cite{medagentbench25} evaluates language-model agents against a simulated electronic health record. Its harness handles every write request an agent emits in one branch of one function (\texttt{src/server/tasks/medagentbench/\_\_init\_\_.py}, lines 85--91 at commit \texttt{9926011}, abridged):
+
+\begin{lstlisting}
+elif r.startswith('POST'):
+    try:
+        payload = json.loads('\n'.join(r.split('\n')[1:]))
+    ...
+    else:
+        session.inject({"role": "user", "content":
+            "POST request accepted and executed successfully. ..."})
+\end{lstlisting}
+
+The payload is parsed into a local variable and never read again. No code anywhere in the repository performs the write: \texttt{git grep send\_post\_request} returns nothing at the pinned commit, and every \texttt{requests.post} call site lives in the client-side model transport [C1, C2 $\rightarrow$ \texttt{FINDINGS-VERIFIED.md}]. Every write action in this clinical-agent benchmark is a no-op that reports success to the agent.
+
+No published benchmark audit can see this defect. Prior audits examine task instructions, gold solutions, evaluation scripts, environment configurations, graders, and judges \cite{benchguard26}, \cite{aba26}, \cite{toolveritas26}, \cite{safeaudit26}. All of them stop at the layer above the tool body, and all of them treat the tool implementation as ground truth. A deterministic grader that inspects sandbox state inherits any defect in the tool that wrote that state, and reports agreement. The contract that runs from a tool's interface, through its implementation, to the state transition it performs is tested by none of them.
+
+That untested contract is a data-quality problem of direct concern to this community. Benchmark scores are published measurement data: the field mines them, aggregates them into leaderboards, and consumes them in model-selection and deployment decisions. A defect in the instrument that generates a score propagates into every downstream use of the number, and unlike noise it replicates perfectly, because every rerun of a defective tool corrupts the measurement in exactly the same way. Auditing the process that generates this data is data quality work in the most literal sense.
+
+This paper tests the interface $\rightarrow$ implementation $\rightarrow$ state-transition contract directly. For each mutating tool in a benchmark we author an executable contract from the tool's own advertised surfaces (docstring, schema, prompt text, return strings), check the implementation and its state transitions against that contract, and then trace the consequence: which task verdicts depend on state a defective tool was responsible for producing. The contributions, in order of importance:
+
+\begin{enumerate}
+\item \textbf{Score-at-risk dependency analysis}: a static, per-benchmark bound on how many task verdicts depend on state a defective tool should have written, each row tagged with the evaluator basis that produced it (\S\,IV).
+\item \textbf{Six executable defect classes} over the state-transition contract, defined as checker rules rather than prose (\S\,III). Phantom Effect, Partial Effect, and Reset Leak have no counterpart in any surveyed audit taxonomy.
+\item \textbf{A provenance-bound contract format} in which every clause cites the advertised surface it operationalizes, and a static plus dynamic conformance checker (\S\,V, \S\,VI).
+\item \textbf{Open-world-validated detection}: precision and recall reported against both taxonomy-shaped and off-taxonomy injected defects, under a pre-registered analysis plan (\S\,VII).
+\item \textbf{Confirmed findings}: four headline-eligible benchmark-class defect cells across four shipped benchmarks, from eight verified instances, each read directly at a pinned commit by someone other than whoever surfaced it, with coordinated disclosure to all maintainers (\S\,IX).
+\end{enumerate}
+
+We did not invent design by contract, contract inference, or benchmark auditing, and we claim none of them. \S\,II concedes the checking technique and rests the paper's novelty on the target and on the consequence for published scores.
+
+One result deserves a preview because it shapes the whole argument. MedAgentBench's grader for write tasks reconstructs the write from the agent's own transcript, admitting evidence only when it is followed by the literal success string the harness fabricates. The defective tool and the grader that should catch it are mutually consistent. Each layer looks correct when audited alone, which is why five prior audits, several of them applied to closely related artifacts, reported nothing (\S\,II, \S\,IX).
+
+% =======================================================================
+% II. BACKGROUND AND RELATED WORK
+% =======================================================================
+\section{Background and Related Work}
+
+% [Figure 1 — three-layer diagram: tool interface (docstring, schema, prompt text) / tool
+% implementation and state transition / evaluator. Each prior work drawn as a bracket over
+% the layers it inspects; this work is the only bracket over the middle layer, and Finding 4
+% is drawn as the arc connecting the middle and evaluator layers. Draft this figure before
+% revising this section; it carries the positioning.]
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\linewidth}{\centering\color{red}
+\pending{Figure 1}{three-layer diagram --- tool interface (docstring, schema, prompt text) / tool implementation and state transition / evaluator. Each prior work drawn as a bracket over the layers it inspects; this work is the only bracket over the middle layer, and Finding 4 is drawn as the arc connecting the middle and evaluator layers. Draft this figure before revising this section; it carries the positioning.}
+}}
+\caption{Placeholder for the three-layer positioning diagram (not yet drafted).}
+\label{fig:threelayer}
+\end{figure}
+
+\textbf{Benchmark auditing.} BenchGuard audits the four artifacts that define a task: instructions, ground-truth reference solutions, evaluation scripts, and environment configurations, across 14 defect subcategories \cite{benchguard26}. The Automated Benchmark Audit framework works the same territory with a three-axis schema over instructions, environments, and evaluation \cite{aba26}, and SafeAudit meta-audits the coverage of safety test suites \cite{safeaudit26}. Mapping our six defect classes against their categories yields zero overlap in 27 categories [C6 $\rightarrow$ \texttt{GATE.md} \S 2]. The nearest miss, BenchGuard's INST-CONTRADICT, checks instruction against gold program, both task metadata, where ours requires reading the tool body. The structural point is common to all three: a tool that returns success without acting is invisible to an audit of task artifacts, because the artifacts they inspect remain mutually consistent.
+
+\textbf{Tool-calling evaluator validity.} Tool-Veritas audits whether benchmark verdicts match true task outcomes across four benchmark families, including tau2-bench Retail, through execution traces, evaluator outputs, and final verdicts \cite{toolveritas26}. Its deterministic gates ``inspect observable properties of the sandbox state'', which is exactly the trust relation we test: it audits whether the verdict matches the outcome, while we audit whether the state the verdict reads was ever correctly written. A gate reading state produced by a defective tool inherits the defect. One of its terms requires explicit disposal: ``implementation-specification mismatch'' appears once in that paper, in its Section 2 related work, where it denotes LLM judges scoring final answers rather than verified tool use. It is an evaluator artifact, never defined as a failure class, and carries no case study. The collision is in the name only.
+
+\textbf{Contracts at the agent runtime.} ToolGate specifies each tool as a Hoare-style contract whose precondition gates invocation and whose postcondition gates commitment \cite{toolgate26}. Agent Behavioral Contracts formalizes runtime enforcement on the agent side \cite{abc26}, Contract2Tool learns preconditions and effects to help agents select tools \cite{contract2tool26}, and ContractBench asks whether agents preserve observation contracts across a pipeline \cite{contractbench26}. All four share one direction of trust: the contract is the trusted input and the agent is the system under test. We invert the relation and test the contract against the implementation that advertises it. ToolFuzz is the nearest engineering neighbor: it tests whether production LangChain tools behave as their documentation promises, using agent-response correctness as the oracle and the documentation as ground truth \cite{toolfuzz25}. Our object is a benchmark's own simulated tool, our observable is the state transition rather than the response, and the documentation is precisely what we do not trust. Either side of a divergence may be the faulty one. ContractGuard's ``forging a tool's effects'' is an adversarial-security concern, an attacker defeating a permission gate, unrelated to the benign implementation divergence studied here \cite{contractguard26}. A recent 34-fault taxonomy of agentic-AI failures includes a ``Tool Invocation'' category glossed as covering violations of API contracts \cite{faulttaxonomy26}. It is mined from issue trackers of deployed agent frameworks, where the contract is assumed correct and the agent violates it. We study the inverse case, where the tool violates its own contract and the victim is the measurement rather than the task.
+
+\textbf{Contract inference and API oracles.} The checking technique in this paper is not new, and we do not claim it is. Design by contract with runtime verification is decades old \cite{jcontractor05}, \cite{jass01}, and its modern line runs directly through our method: ConTract infers implicit API contracts over pointer state transitions and checks implementations against them, with 127 developer-confirmed inconsistencies \cite{contract26}. IcePICK closes the oracle gap with a first-order executable contract language for API specifications \cite{icepick26}, and AGORA+ detects invariants over REST request/response pairs at 80\% reported precision \cite{agora25}. Frame specifications formalize what a call must not change \cite{frames25}, contracts have been synthesized for stateful modules \cite{cogent23} and studied for deep-learning APIs \cite{dlcontract23}, and our Ignored Argument and Partial Effect detectors are metamorphic relations in all but name \cite{segura18}, \cite{segura16}, \cite{chen18}, with stateful sequence exploration long established for REST APIs \cite{restler19}, \cite{godefroid20}. What distinguishes this work is the system under test and the cost model of a fault. In production software a contract violation costs an outage or a bug report. In a benchmark the same violation costs a number in a published table that nobody can tell is wrong. None of the works above examine an agentic benchmark harness, and the defect classes that matter there (a success signal decoupled from any state change, an effect applied without its inverse, state leaking across episodes) do not appear in their fault models.
+
+\textbf{The audit that touched a related artifact.} The Agentic Benchmark Checklist reports that $\tau$-bench counts empty responses as successful, a grading-rubric defect: some tasks ship empty ground truth, and the substring-matching evaluator is gameable \cite{abcchecklist25}. That audit examined the original tau-bench \cite{taubench24} inside its stated collection window of January 2024 to March 2025. tau2-bench \cite{tau2bench25}, the artifact we audit, was first released in June 2025, after that window closed, with a different grading design (assertion functions and database checks, no substring matching in the domains we audit), and \texttt{git log -S} confirms the code carrying both of our tau2-bench findings has existed unchanged since that repository's first commit [\texttt{EXTERNAL-VERIFICATION.md} Task 1]. Different benchmark, different codebase, different layer: theirs is a ground-truth and rubric defect, ours are tool-implementation defects. No prior audit, including this one, overlaps our findings.
+
+\textbf{Construct validity.} A recent systematic review of 445 LLM benchmarks by 29 expert reviewers diagnoses pervasive failures to map test items onto well-defined capability constructs \cite{constructvalidity25}. Our evidence sits deliberately outside that genre of judgment call: a tool either honors its declared contract on a given call or it does not, the checker rule is executable, and the witness is a pair of state snapshots. Where that literature argues about what a benchmark measures, we demonstrate mechanically that one thing a benchmark measures is not the thing its own interface declares.
+
+\textbf{The published numbers this defect sits under.} MedAgentBench's paper reports ``Action SR'', the success rate on the 150 write tasks, for all 11 evaluated models in its Table 3 \cite{medagentbench25}. Action SR ranges 0.00\% to 71.33\% across the 11 evaluated models: the best is Gemini-1.5 Pro at 71.33\%, and two models score 0.00\%. The paper's own abstract goes further and headlines 69.67\% overall SR for Claude 3.5 Sonnet v2; overall SR is a weighted blend of Query SR and this same Action SR, so the number the benchmark authors chose to foreground inherits the construct-validity problem for its write half. We cite the arXiv table, which we read directly. The same paper is published in NEJM AI (vol.\ 2, iss.\ 9), which is evidence that these numbers reach a clinical audience. The file containing the POST branch of \S\,I has been touched by exactly one commit in its history (January 2025) and is unchanged at our pinned commit, so every one of those Action SR values was produced under an implementation in which no write occurs. The paper's own \S\,2.4.1 describes ``rule-based sanity checks to verify the correctness of the payload of POST requests'', which is the transcript-reconstruction mechanism we trace in \S\,IX: the grader recovers the intended write from the agent's message text, gated on the fabricated success string. To be precise about what this means: the numbers are not wrong. They faithfully measure whether the agent emitted a well-formed POST request. What they do not measure is whether any clinical record changed, which is what ``action success rate'' is taken to mean by anyone reading a clinical-agent leaderboard.
+
+\textbf{Why every prior audit missed it.} The tool defect (Finding 1) and the grader design (Finding 4) are mutually consistent. The grader's gate condition is the literal success string the harness injects at \texttt{\_\_init\_\_.py:91}, consumed by \texttt{extract\_posts} in the grading module. The tool reports a write that did not happen, and the grader accepts exactly that report as its evidence. Audited alone, each layer is coherent: the tool returns what it says it returns, and the grader correctly detects what it looks for. BenchGuard's EVAL-MISMATCH category and Tool-Veritas's reward-basis mismatch plausibly cover the grader-side class of this defect, yet neither audit found this instance, and the reason is structural rather than accidental: single-layer audits are blind to cross-layer consistency defects by construction. Checking each layer separately is insufficient when the layers agree with each other about a world that does not exist. This mutual-consistency result, rather than the checker machinery, is the paper's central intellectual claim. We distinguish the evaluator-side property involved here, which \S\,IV names Ungrounded Oracle, from Tool-Veritas's reward-basis mismatch and hallucinated-completion categories: those concern whether the verdict matches the outcome, while ours concerns the provenance of the oracle's evidence. A grader reading the agent's transcript can be perfectly consistent with everything it observes and still be measuring the wrong thing.
+
+\textbf{tau2-bench's numbers.} The pinned commit we audit sits inside the code lineage that produced tau2-bench's own published per-domain pass$^{1}$ results and the numbers on the live public leaderboard linked from the repository's README, and both audited defects have been present, unpatched, across that entire span \cite{tau2bench25}, [\texttt{EXTERNAL-VERIFICATION.md} Task 2]. We claim no causal link from either defect to any specific published tau2 number here. Whether a task verdict depends on the affected state is exactly the question the score-at-risk analysis of \S\,IV exists to answer, and asserting it from outside that analysis would overreach.
+
+The honest summary of this section: the checking technique is mature SE, the audit target is unoccupied, and the field's own newest benchmark work names our symptom while auditing nothing \cite{liveclawbench26}. What is new here is the target, the defect classes that target implies, the cross-layer blindness result, and the traced consequence for published scores.
+
+% =======================================================================
+% III. THE BENCHMARK TOOL LAYER AS A MEASUREMENT INSTRUMENT
+% =======================================================================
+\section{The Benchmark Tool Layer as a Measurement Instrument}
+
+A benchmark tool is not application code that happens to be simulated. It is the write path of a measuring device. When production software has a defective write path, a service degrades and someone files an issue. When a benchmark tool has one, a published number is corrupted silently and reproducibly, and the number keeps being cited either way. This section fixes the object under test, the defect classes, and the principle that separates a defect from a legitimate simplification.
+
+\textbf{Why the defect is invisible downstream.} Every deterministic evaluator in the surveyed literature reads state that tools wrote. Tool-Veritas's gates ``inspect observable properties of the sandbox state'' \cite{toolveritas26}, and tau2-bench's evaluator compares final database state between gold and predicted runs [C11]. If the tool that wrote the state is defective, a gate reading that state inherits the defect and reports agreement. Consistency between a broken tool and a grader reading its output is not validity. This is why the tool layer needs its own audit rather than better downstream checks.
+
+\textbf{The defect taxonomy.} Table~\ref{tab:taxonomy} defines six defect classes, each as an executable checker rule over the tuple \texttt{(pre, post, args, result)}: the canonical state snapshots before and after a call, the call's arguments, and its return value. The classes are typed at the tool boundary. Prose descriptions are glosses; the rule is the definition.
+
+\begin{table}[t]
+\caption{Six executable defect classes.}
+\label{tab:taxonomy}
+\centering
+\small
+\begin{tabular}{@{}p{0.15\linewidth}p{0.55\linewidth}p{0.18\linewidth}@{}}
+\toprule
+Class & Checker rule (over \texttt{pre}, \texttt{post}, \texttt{args}, \texttt{result}) & Status \\
+\midrule
+Phantom Effect & success signal true $\land$ advertised effect delta absent & field-observed \\
+Unenforced Precondition & precondition predicate false $\land$ (no error signal $\lor$ state mutated) & field-observed \\
+Ignored Argument & post-state invariant under variation of an argument advertised as effective & field-observed \\
+Partial Effect & $\geq\!1$ advertised effect predicate holds $\land$ $\geq\!1$ fails on the same call & field-observed \\
+Invariant Break & environment invariant false after a legal call sequence & mutation-only \\
+Reset Leak & snapshot after reset $\neq$ initial snapshot & mutation-only \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Four of the six classes are field-observed in shipped benchmarks (\S\,IX). \textbf{Invariant Break and Reset Leak have no field-observed instance anywhere in our findings.} They exist in this paper only as injected mutants, and every count in \S\,VII and \S\,IX keeps that distinction visible. We note the direction of travel rather than hide it: Ignored Argument was itself mutation-only until the third and fourth benchmarks were audited, and it is now the most common class in the finding set, with four instances. Breadth of audit, not depth on one artifact, is what converted it.
+
+\textbf{Result--state disagreement is a signal, not a class.} The Ignored Argument rule is deliberately state-only. An earlier draft required both the post-state and the result to be invariant under the argument, and that conjunctive rule fails on a real case: AgentDojo's \texttt{reserve\_car\_rental} discards \texttt{end\_time} from state but interpolates it into the success string, so the result varies with the argument and the conjunctive rule would never fire (\S\,IX, Finding 6). The checker as first specified would have missed one of its own anchor findings, in precisely the case where the misreporting return message makes the defect worse. The rule is therefore state-only, and a result that varies with an argument whose effect on state is absent is reported as an aggravating signal on the finding it accompanies. The corresponding mutation operator inherits this definition and injects state-drop variants both with and without a result echo.
+
+\textbf{The benign-simplification principle.} The strongest objection a maintainer can raise is that these are intentional simplifications of a simulation that never claimed fidelity. The answer is a criterion, stated once and applied uniformly:
+
+\begin{quote}
+A simplification is benign exactly when it is advertised. The defect is never the simplification; it is the undisclosed divergence between what the interface tells the agent and what the implementation does.
+\end{quote}
+
+Three consequences follow. First, tau2-bench's own maintainers already draw this line. At \texttt{airline/tools.py:689} they advertise a deferred flight-database update in the surface the behavior is visible from, and the checker correctly does not flag it. At line 367 they merely log that seat release is not implemented, in a warning the agent never sees, and the checker flags it. The distinction between disclosed and undisclosed divergence is theirs before it is ours. Second, either side of a divergence may be repaired. A maintainer who replies that the docstring was aspirational and fixes the docstring has restored conformance exactly as completely as one who fixes the code, and \S\,IX counts such a response as a resolved finding. This converts the audit from an accusation into a specification of what disclosure would make a simulation honest. Third, the advertised surface is the right baseline even against the position that a benchmark is a formal game owing fidelity only to itself, because the agent's behavior is the measured quantity and that behavior is conditioned on the interface text. A divergence corrupts the measurement upstream of any oracle, whether or not a grader reads the affected field. And internal consistency between what the agent is told and what the grader rewards itself requires interface--implementation conformance.
+
+\textbf{One evaluator-layer property, kept outside the taxonomy.} MedAgentBench's write graders exhibit a property we name Ungrounded Oracle: the evaluator's oracle for a state change reads the actor's claim rather than the state. It is field-observed and load-bearing in \S\,II, but it is not a seventh class. The six classes are typed over \texttt{(pre, post, args, result)} at the tool boundary, while oracle grounding is typed over grader source code, a different object checked by a different procedure. \S\,IV emits it as a per-task classification of the benchmark's evaluator rather than as a row in Table~\ref{tab:taxonomy}.
+
+% =======================================================================
+% IV. SCORE-AT-RISK DEPENDENCY ANALYSIS  [STUB]
+% =======================================================================
+\section{Score-at-Risk Dependency Analysis}
+\pendingblock{NOT YET DRAFTED. Content generated by \texttt{analysis/score\_at\_risk.py} $\rightarrow$ \pending{N2}{analysis/score\_at\_risk.py}. Must include: the three-step static analysis (defect $\rightarrow$ field $\rightarrow$ evaluator $\rightarrow$ tasks); the per-task oracle-grounding classification (state\_grounded / transcript\_grounded / mixed) that replaces a zero or hundred-percent field intersection for MedAgentBench (REVIEW-RESPONSE.md W2); basis tags on every at-risk figure (whole\_state\_hash / collection\_only / exact\_field), never pooled (X8); the experiment-frame relation stated as overlapping populations, not nested, with the mechanical counterexample from AgentDojo Finding 5 (W6); the bound-not-misgrading sentence; the task-selection rule (reference solution invokes a tool with a confirmed VIOLATES clause, committed by hash before any run); Figure 2 (worked tau2 dependency graph); Table II.}
+
+% =======================================================================
+% V. THE CONTRACT SPECIFICATION
+% =======================================================================
+\section{The Contract Specification}
+
+A contract is one YAML document per mutating tool, validated against a committed JSON Schema (\texttt{spec/schema.json}). Its clause kinds mirror the contract the interface already makes informally: \texttt{preconditions}, \texttt{effects} (delta assertions), \texttt{frame} (what must not change), \texttt{success\_signal}, \texttt{on\_precondition\_violation}, \texttt{invariants}, and \texttt{reset}. Every normative clause must cite its provenance: the file, line, and verbatim quote of the advertised surface it operationalizes, and the build fails if the quote has drifted from the pinned commit.
+
+\textbf{Grounding tiers.} Which text counts as ``advertised'' is the construct-validity question, so the answer is a closed list committed before any contract was authored, with three tiers.
+
+\begin{table}[t]
+\caption{Grounding tiers (schema \texttt{advertisedSurface}).}
+\label{tab:tiers}
+\centering
+\scriptsize
+\begin{tabular}{@{}p{0.13\linewidth}p{0.30\linewidth}p{0.07\linewidth}p{0.38\linewidth}@{}}
+\toprule
+Tier & Surfaces & Headline & Meaning \\
+\midrule
+Agent-visible & \texttt{docstring}, \texttt{schema}, \texttt{prompt\_template}, \texttt{tool\_return}, \texttt{readme}, \texttt{external\_standard} & yes & the agent was conditioned on this text; a violation corrupts the measurement by \S\,III's argument \\
+Maintainer-annotated & \texttt{maintainer\_annotation} & no & the maintainer wrote the intended semantics into the code (a comment, a log line, a TODO) but no agent ever sees it \\
+Inferred & none (\texttt{inferred: true}) & no & we inferred the semantics; nobody wrote them anywhere \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The tiers exist because the two lower ranks are different epistemic objects: a maintainer's own \texttt{\# Release seats} comment above an unimplemented release is materially stronger evidence of intended semantics than our inference, and materially weaker than text the agent read. Headline eligibility is derived by the report generator from a clause's provenance, never hand-set, and a validator check enforces the boundary mechanically: a \texttt{tool\_return} quote must occur in a \texttt{return} expression or a raised exception's message, never in a \texttt{logger.*} call. That check exists because the first draft of our own flagship contract grounded its decisive clause in a log line, exactly the error the mechanism is for.
+
+Maintainer intent is irrelevant to the measurement claim, and one sentence disposes of it: the agent is conditioned only on what the interface tells it, so an aspirational docstring corrupts the measurement anyway, because the agent believed it and the evaluator scored the resulting state.
+
+\textbf{The predicate language.} Predicates are restricted Python over exactly four bindings, \texttt{pre}, \texttt{post}, \texttt{args}, \texttt{result}, evaluated on canonicalized JSON-shaped snapshots under a whitelisted AST: literals, path access, comparisons, boolean and restricted arithmetic operators, a fixed set of pure builtins, and comprehensions with mandatory explicit binders. A free name, a non-whitelisted node, or a path that does not resolve is a located authoring error, and an unresolvable path makes the clause UNTESTABLE rather than silently false. Frame clauses use a small path-pattern grammar (\texttt{*}, \texttt{[]}, \texttt{**}) over the same snapshots. This is a small DSL, and we say so plainly rather than pretend otherwise. Readers who know IcePICK's executable contract language \cite{icepick26} will recognize the shape. What we claim for it is narrow: it is reviewable by eye, executes without a parser we must defend, and is expressive enough for all six defect classes.
+
+\textbf{Worked example.} The contract for tau2-bench's \texttt{cancel\_reservation} (excerpt; the authoritative copy is \texttt{spec/contracts/tau2/cancel\_reservation.yaml}):
+
+\begin{lstlisting}[style=yamltool]
+effects:
+  - id: eff.status_cancelled
+    text: "the reservation is marked cancelled"
+    predicate: "post.reservations[args.reservation_id].status == 'cancelled'"
+    provenance: {surface: docstring, line: 342, quote: "Cancel the whole reservation"}
+  - id: eff.seats_released
+    text: "cancelling releases the seats the booking reserved"
+    predicate: >
+      all(post.flights[f.flight_number].dates[f.date].available_seats[...]
+          == pre.flights[...].available_seats[...] + len(...passengers)
+          for f in pre.reservations[args.reservation_id].flights)
+    provenance: {surface: maintainer_annotation, line: 367,
+                 quote: "Seats release not implemented for cancellation!!!"}
+\end{lstlisting}
+
+The two effect clauses sit in different tiers. \texttt{eff.status\_cancelled} is grounded in the docstring the agent reads. \texttt{eff.seats\_released} is grounded only in the maintainer's own log line: a search of every agent-visible surface in the domain, including the tool docstring and the agent's policy prompt, found no statement that cancellation returns seats to inventory. The violation is real and corroborated by two maintainer annotations, and it is not headline-eligible, which \S\,IX states rather than argues around.
+
+\textbf{A detector that knows when not to fire.} Biconditional success (success signal $\Leftrightarrow$ full advertised effect) is opt-in per contract and requires a provenance-cited justification, because two legitimate patterns would otherwise be misclassified. tau2's flight-change path advertises a deferred database update in a maintainer-visible deferral annotation at \texttt{airline/tools.py:689}, and the checker, given the \texttt{advertised\_deferred} annotation, correctly declines to flag it while still flagging \texttt{cancel\_reservation}. And tau2's airline policy prompt states outright that ``The API does not check that cancellation rules are met'', an agent-visible surface advertising non-enforcement, so the Unenforced Precondition detector must not fire on cancellation eligibility while still firing on \texttt{refuel\_data}, whose docstring advertises a check the implementation comments out. Both true negatives are exercised in our test suite. A checker credible enough to indict a benchmark must first demonstrate restraint on the cases the benchmark discloses.
+
+\textbf{Verdict lattice.} Every clause check resolves to CONFORMS, VIOLATES with a minimal witness (probe arguments plus the pre/post snapshot pair), or UNTESTABLE with a reason code. UNTESTABLE clauses stay in every reported denominator.
+
+\textbf{Contract authoring is measured, not trusted.} Translating an advertised sentence into a predicate is a judgment call, so it is dual-annotated and the agreement is reported extensionally: both annotators' predicates are compiled and evaluated against a shared, pre-committed probe corpus, and agreement is counted at the verdict level per clause, with UNTESTABLE-versus-anything counted as disagreement. All clauses on finding-bearing tools are dual-annotated, plus a seeded random sample of at least 30\% of the rest, and the two strata are reported separately because both annotators know the findings. The protocol, including the clause segmentation rule, the adjudication procedure, and the annotator checklist, was committed before annotation began (\texttt{experiments/annotation\_protocol.md}). The headline robustness question it answers is whether any VIOLATES finding flips under the second annotator's contracts. Agreement results: \pending{N7}{experiments/annotation\_protocol.md protocol run}. The paper will state whether the second annotator is the co-author, and will not describe them as independent if so.
+
+% =======================================================================
+% VI. THE CONFORMANCE CHECKER  [STUB]
+% =======================================================================
+\section{The Conformance Checker}
+\pendingblock{NOT YET DRAFTED --- deliberately the shortest technical section ($\sim$0.5 pg per the 2026-08-21 cuts). Content from \texttt{core/}, \texttt{adapters/}, \texttt{static\_check/checks.py}, and the dynamic harness, drafted at \texttt{checker-freeze-v1}. Covers: adapter interface (list\_tools, fresh\_env, snapshot, invoke, reset, source) over a subprocess JSON boundary; static checks (constant-success returns, dead guards, unused parameters, unpaired writes); dynamic snapshot$\rightarrow$invoke$\rightarrow$snapshot loop; \texttt{findings.jsonl} report schema, the reproducibility spine that \texttt{report/render.py} renders every table from. Adapter mechanics and Python-version details go to the artifact, not here.}
+
+% =======================================================================
+% VII. DETECTOR VALIDATION  [STUB]
+% =======================================================================
+\section{Detector Validation}
+\pendingblock{NOT YET DRAFTED. All numbers generated under the pre-registered plan committed at \texttt{checker-freeze-v1} (\texttt{experiments/detector\_analysis\_plan.md}; cite the commit hash). Fills: \pending{N3}{mutation/score.py} closed-world recall per class with tool-clustered, design-effect-adjusted Wilson intervals, claims stated at the interval lower bound; \pending{N4}{mutation/score.py + cosmic-ray run} open-world escape rate, raw and adjudicated, decomposed into clause/probe/canonicalization gaps, framed as a lower bound on taxonomy incompleteness; \pending{N5}{spec/coverage.py} contract-coverage metric per tool plus biconditional adoption count; \pending{N6}{manual triage Sep 9-10} wild precision (confirmed VIOLATES / all VIOLATES). Baseline reference point: AGORA+ 80\% precision on REST invariants \cite{agora25}. No hypothesis tests anywhere in this section.}
+
+% =======================================================================
+% VIII. EVALUATION IMPACT  [STUB]
+% =======================================================================
+\section{Evaluation Impact}
+\pendingblock{NOT YET DRAFTED. Tier 1 trajectory replay only (Tier 2 cut 2026-08-21): \pending{N8}{experiments/ab\_run.py} verdict flips under replay against as-shipped vs.\ patched tools, per task, with the benchmark's own evaluator scoring both worlds; \pending{N9}{experiments/ab\_run.py} tasks requiring the $k=3$ divergence fallback. Pre-registered in \texttt{experiments/analysis\_plan.md} (cite commit hash); a null result is publishable under the committed framing and the abstract promises no flips. Runs on tau2-bench only: MedAgentBench's graders read no server state, so a patch there is unobservable by construction (Finding 4), and no A/B is attempted on it. Telecom replay records user-simulator tool calls as well as agent calls (the user simulator writes state). Patches: uncomment \texttt{telecom/tools.py:629-630}; add the seat release at \texttt{airline/tools.py:366}. Patch diffs ship in the artifact (no appendix at this venue).}
+
+% =======================================================================
+% IX. FINDINGS AND COORDINATED DISCLOSURE
+% =======================================================================
+\section{Findings and Coordinated Disclosure}
+
+Across four shipped benchmarks we confirmed eight finding instances, falling into seven benchmark-class cells, of which \textbf{four are headline-eligible}. The compressed count leads deliberately: this project's reporting rule counts unique defect classes per benchmark, because eight bugs in one copied helper is one bug, and a reviewer will compress the count this way whether or not we do. We compress it twice, because two of the seven cells cannot carry a headline on our own rules. tau2-bench's Partial Effect is grounded in a \lstinline|logger.warning| the agent never sees, which makes it maintainer-annotated rather than agent-visible. MedAgentBench's Ungrounded Oracle is a property of the evaluator, not one of the six tool-layer classes. Both are reported here in full, labelled, and excluded from the headline. Four of the eight instances are Ignored Argument. Every finding was verified by direct source reading at a pinned commit by someone other than whoever first surfaced it, and each carries a clean-clone reproduction command in the artifact. Per-benchmark totals (tools audited, mutating tools, independent implementations, unique defect classes) appear in Table~\ref{tab:table3} \pending{N1}{report/render.py $\leftarrow$ findings.jsonl}.
+
+\begin{table*}[t]
+\caption{Confirmed findings (instance level).}
+\label{tab:findings}
+\centering
+\small
+\begin{tabular}{@{}p{0.02\textwidth}p{0.16\textwidth}p{0.32\textwidth}p{0.18\textwidth}p{0.24\textwidth}@{}}
+\toprule
+\# & Benchmark @ commit & Tool / path & Class & Grounding tier \\
+\midrule
+1 & MedAgentBench @ \texttt{9926011} & POST branch, \texttt{\_\_init\_\_.py:85-91} (three tool definitions, one code path) & Phantom Effect & agent-visible (\texttt{prompt\_template}, \texttt{tool\_return}) \\
+2 & tau2-bench @ \texttt{c3398666} & \texttt{refuel\_data}, \texttt{src\brk/tau2\brk/domains\brk/telecom\brk/tools.py:607-657} & Unenforced Precondition & agent-visible (\texttt{docstring}) \\
+3 & tau2-bench @ \texttt{c3398666} & \texttt{cancel\_reservation}, \texttt{src\brk/tau2\brk/domains\brk/airline\brk/tools.py:315, 363-368} & Partial Effect & \textbf{maintainer-annotated: not headline-eligible} \\
+4 & MedAgentBench @ \texttt{9926011} & write graders, \texttt{refsol.py} (SHA-256-pinned; not in the repository) & Ungrounded Oracle (evaluator property, \S\,III) & grader source \\
+5 & AgentDojo @ \texttt{089ed46} & \texttt{update\_scheduled\_transaction}, \texttt{banking\_client.py:115-151} & Ignored Argument + Phantom Effect & agent-visible (\texttt{docstring}) \\
+6 & AgentDojo @ \texttt{089ed46} & \texttt{reserve\_car\_rental}, \texttt{travel\_booking\_client.py:382-400} & Ignored Argument & agent-visible (\texttt{docstring}) \\
+7 & MM-ToolSandbox @ \texttt{1e8e932} & \texttt{venmo\_social}, \texttt{mini\brk/venmo.py:464-470} & Ignored Argument & agent-visible (\texttt{docstring}) \\
+8 & AgentDojo @ \texttt{089ed46} & \texttt{invite\_user\_to\_slack}, \texttt{slack.py:93-103} & Ignored Argument & agent-visible (\texttt{docstring}) \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\pendingblock{Table III (per-benchmark totals: tools audited, mutating tools, independent implementations, unique defect classes) is NOT YET DRAFTED --- \pending{N1}{report/render.py $\leftarrow$ findings.jsonl}.}
+\label{tab:table3}
+
+\textbf{MedAgentBench (Findings 1 and 4).} Finding 1 is the no-op POST branch quoted in \S\,I. Finding 4 is what makes it undetectable from inside the benchmark: the grading module, distributed outside the repository and pinned here by SHA-256, reconstructs each write from the conversation transcript. Its \texttt{extract\_posts} function admits an agent message as a write attempt only when the following message contains ``POST request accepted'', the literal string the harness fabricates at \texttt{\_\_init\_\_.py:91}, and no grader issues a FHIR read to verify any write. Two of the ten task families (60 of 300 cases) grade writes unconditionally through this path. Three more read the server only to decide whether a write is required, then grade the required write from the transcript. We do not claim a case count for those three without a server run. The pair of findings is the cross-layer result of \S\,II: patching the tool to perform real writes would change no score, because no grader observes the state a patch would repair, and that is why \S\,VIII attempts no A/B experiment on this benchmark.
+
+\textbf{tau2-bench (Findings 2 and 3).} In \texttt{refuel\_data}, the docstring declares ``Line status must be Active'' and advertises a \texttt{ValueError} when checks fail. The implementing check is present in the source and commented out, while the sibling \texttt{gb\_amount} check survives, so a suspended or closed line can be refuelled and the customer billed. The omission is selective, which is what makes it a contract violation rather than absent validation. In \texttt{cancel\_reservation}, booking decrements \texttt{available\_seats}, cancellation refunds and marks the reservation cancelled but never increments seats back, and the maintainer logs exactly that (``Seats release not implemented for cancellation!!!'') at line 367, with a matching TODO at line 689. Within an episode, seat inventory decreases monotonically regardless of cancellations. Finding 3 is Partial Effect only: we traced the reset path and confirmed each simulation loads a fresh database from disk, so the drift cannot cross tasks, and an earlier Reset Leak label was withdrawn. Its grounding also deserves plain statement: no agent-visible surface in the domain says cancellation releases seats, so the violation rests on the maintainers' own annotations, sits in the middle grounding tier, and is excluded from every headline count.
+
+\textbf{AgentDojo (Findings 5, 6, 8).} \texttt{update\_scheduled\_transaction} documents six optional updatable fields but applies each behind a truthiness guard rather than a \texttt{None} check, so \texttt{recurring}, typed \texttt{bool | None}, can be switched on but never off. The tool then returns ``Transaction ... updated.'' unconditionally, a Phantom Effect stacked on the Ignored Argument. A second tool in the same benchmark, \texttt{update\_user\_info}, repeats the truthiness pattern on four string fields and is counted as an additional instance of the same cell rather than a new finding, but it makes an instructive contrast: it returns the account's actual stored fields, so a caller can in principle notice the failure. The same defect class with and without the phantom success signal, in one codebase, shows the two classes are separable in real code. \texttt{reserve\_car\_rental} accepts an \texttt{end\_time} parameter, writes \texttt{start\_time} into both fields, and then interpolates the discarded \texttt{end\_time} into its success message, actively misreporting the stored state (the aggravating signal of \S\,III). No shipped user task exercises this tool through its ground truth, so this finding enters the defect counts and is excluded from any score-impact claim. \texttt{invite\_user\_to\_slack} requires a \texttt{user\_email} parameter whose docstring says where the invite ``should be sent'', and the body never reads it. The benchmark models inboxes, so the advertised behavior was expressible. This is the strongest Ignored Argument instance in the set, because the parameter is mandatory, and it was surfaced by our static checker in a full-repository scan rather than by hand, then confirmed by direct source read: the first finding the framework found before a human did.
+
+\textbf{MM-ToolSandbox (Finding 7).} \texttt{venmo\_social} declares \texttt{sort\_by}, documents it twice in its own docstring, and never forwards it in the comment-listing branch, while forwarding the two sibling parameters documented beside it. The correct forwarding pattern appears 250 lines above in the same file. An agent that asks for a sorted listing receives an unsorted one and no indication its argument was dropped.
+
+All four benchmarks are cited at the specific commits audited \cite{medagentbench25}, \cite{tau2bench25}, \cite{agentdojo24}, \cite{mmtoolsandbox26}. Instance-level evidence, including verbatim quotes and line numbers for every claim above, is in the findings ledger and reproducible from clean clones with the commands shipped in the artifact.
+
+\textbf{Coordinated disclosure.} We disclose all findings to the four maintainer teams on 2026-09-10, seventeen days before submission, with per-finding reproduction commands and proposed repairs. Under \S\,III's principle, a repair to either side of a divergence resolves a finding, and a documentation fix counts exactly as a code fix does. Maintainer responses, and for any team that does not respond, the fact and date of non-response, are reported here: \pending{N12}{disclosure log, from 2026-09-10}.
+
+% =======================================================================
+% X. THREATS TO VALIDITY  [STUB]
+% =======================================================================
+\section{Threats to Validity}
+\pendingblock{NOT YET DRAFTED --- drafted after \S\,IV and \S\,VII numbers exist, since each mitigation cites them. The four named threats and their built-in mitigations are fixed in PAPER-OUTLINE.md \S\,X: construct validity (advertised-surface enumeration, tiering, dual annotation, the intent argument); detector circularity (open-world escape rate, coverage metric, held-out contracts); external validity (benchmark count, MedAgentBench contributes one mutating code path); bound interpretation (at-risk $\neq$ misgraded). Also carries the PROVENANCE.md sentence: the repository was initialized partway through the work, so authoring order is not reconstructible from history; the pre-registration claims are about scoring and recording order, which are.}
+
+% =======================================================================
+% XI. CONCLUSION  [STUB]
+% =======================================================================
+\section{Conclusion}
+\pendingblock{NOT YET DRAFTED --- two paragraphs, written last: what the instrument framing buys the field; what a benchmark maintainer should do differently on Monday. One venue-bridge sentence per REVIEW-RESPONSE.md E-W1.}
+
+% =======================================================================
+% REFERENCES
+% =======================================================================
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% Back matter (Data Availability with Zenodo DOI, funding/acknowledgment line if any):
+% deferred. EXTERNAL-VERIFICATION.md Task 3 found no CFP requirement for CRediT / ethics /
+% data-availability statements; recheck the CyberChair submission portal's required fields
+% at submission time before adding or omitting them. No appendix is used (venue forbids one).
+
+\end{document}

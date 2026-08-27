@@ -7,3 +7,11 @@ repos/
 .venv-*/
 __pycache__/
 *.pyc
+
+# LaTeX build artifacts
+paper/latex/main.aux
+paper/latex/main.log
+paper/latex/main.out
+paper/latex/main.blg
+paper/latex/main.pdf
+paper/*.zip
