@@ -23,6 +23,14 @@ The ordering claims that carry methodological weight are about what happens **af
 
 The distinction matters. Pre-registration protects against choosing an analysis after seeing the data. The data here are mutant scores and verdict flips, and **none of them exist yet**. The window that would have been closed by a late plan is still open; the window that a squashed import closed is the weaker claim about authoring order, and the paper drops it.
 
+## `checker-freeze-v1` — tagged 2026-08-26 at `57b019d`
+
+The freeze happened, before any mutant was generated or scored. The precondition was verified rather than asserted: no mutant corpus, no mutant score and no scoring result exists at or before that commit. `mutation/` held operators, site enumeration, scoring and equivalence code exercised only against the toy reference domain, which is what the build spec permitted in that milestone.
+
+Frozen state: 282 tests passing; 42 contracts passing all 8 validator checks with zero skips (19 tau2, 12 AgentDojo and MM-ToolSandbox, 11 toy); `report/findings.jsonl` at 207 rows across four benchmarks with 11 VIOLATES; 4 headline-eligible cells.
+
+This is the commit §VII cites. It is what makes the ordering claim checkable: a reviewer can confirm from the tag alone that the analysis plan predates the data, which is the only pre-registration claim that matters and the one a squashed import could not support.
+
 ## Rules from this point
 
 1. **No squashing.** Every subsequent change lands as its own commit.
