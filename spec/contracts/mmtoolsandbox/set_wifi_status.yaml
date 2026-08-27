@@ -60,11 +60,24 @@ effects:
       line: 207
       quote: "If we want to turn on wifi"
 
+# on_precondition_violation.expect is ONE object for the whole contract (schema.json has no
+# per-precondition error_type), but set_wifi_status's own docstring (setting.py:207-210) declares
+# TWO distinct exception types across its two preconditions -- "Raises: ValueError: If wifi is
+# already turned on / off. PermissionError: If low battery mode is on..." -- so no single
+# error_type is accurate for both. error_type was previously pinned to PermissionError (true only
+# for pre.not_low_battery_when_turning_on) from authoring against the low-battery branch alone;
+# left in place, adapters/_mmtoolsandbox_worker.py's fresh_env fix below (a real, non-null
+# SETTING row) makes pre.state_actually_changes's own violate-probe reachable for the first time
+# (previously masked -- see that fix's note) and its real ValueError would then fail the
+# error_type check, reporting Unenforced Precondition against a tool that enforces both
+# preconditions exactly as documented. error_type is omitted rather than left wrong, matching
+# every other multi-precondition contract in this project that does not share one exception type
+# across all its preconditions (spec/contracts/toy/*.yaml). error_signal:true and
+# state_delta:none are unaffected -- both hold for every violated precondition here.
 on_precondition_violation:
   expect:
     error_signal: true
     state_delta: none
-    error_type: PermissionError
   provenance:
     surface: tool_return
     file: mmtoolsandbox/tools/tool_sandbox/setting.py
@@ -76,9 +89,9 @@ success_signal:
   biconditional: false
 
 notes: >
-  Both preconditions are genuinely enforced (set_boolean_settings raises before any
-  update_database call, setting.py:37-44; set_wifi_status's own low-battery guard raises before
-  even calling set_boolean_settings, lines 215-216) -- expected CONFORMS on the
-  check_precondition_enforcement path, in contrast to refuel_data.yaml's pre.line_active. Not
-  known to be broken; included to keep the MM-ToolSandbox mutation corpus non-circular and to
-  exercise the phase-2 delegate rule.
+  Both preconditions are genuinely enforced (set_boolean_settings raises ValueError before any
+  update_database call, setting.py:37-44; set_wifi_status's own low-battery guard raises
+  PermissionError before even calling set_boolean_settings, lines 215-216) -- expected CONFORMS
+  on the check_precondition_enforcement path for both, in contrast to refuel_data.yaml's
+  pre.line_active. Not known to be broken; included to keep the MM-ToolSandbox mutation corpus
+  non-circular and to exercise the phase-2 delegate rule.

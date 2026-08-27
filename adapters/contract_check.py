@@ -220,9 +220,25 @@ def check_precondition_enforcement(
     None.
 
     Otherwise: compare the declared expectation (must the call signal an error? must the state
-    delta be empty?) against what actually happened. A call is expected to be constructed by the
-    CALLER so that at least one precondition is deliberately violated -- this function only
-    grades the outcome, it does not choose the probe.
+    delta be empty? -- and, when declared, must the raised exception be a SPECIFIC type?) against
+    what actually happened. A call is expected to be constructed by the CALLER so that at least
+    one precondition is deliberately violated -- this function only grades the outcome, it does
+    not choose the probe.
+
+    `expect.error_type` (schema.json on_precondition_violation.expect.error_type, GAP 2 in
+    CLAUDE.md's build note): 23 shipped contracts declare a specific expected exception type
+    (e.g. "ValueError") and, before this fix, this function never read it -- a tool that raised
+    the WRONG exception still reported CONFORMS as long as it raised something and left no delta.
+    Checked here against `error`'s own type-name prefix: every concrete adapter that formats an
+    error string from a live exception does so as `f"{type(e).__name__}: {e}"`
+    (adapters/_tau2_worker.py, adapters/_agentdojo_worker.py, adapters/_mmtoolsandbox_worker.py,
+    and agentdojo's own `functions_runtime.py:run_function`, which the AgentDojo worker calls
+    through) -- so `error.split(":", 1)[0].strip()` recovers the raised class's `__name__`
+    without needing the adapter boundary (adapters/base.py's `ToolResult`) to carry a second,
+    dedicated field. toy/adapter.py is the one adapter that does NOT follow this convention (it
+    catches a single internal `ToyError` and stores only `str(e)`, discarding the type name), but
+    no toy contract declares `error_type`, so this is a real but currently inert gap, not a false
+    negative in the shipped contract set -- recorded here rather than silently assumed away.
     """
     if contract.on_precondition_violation is None:
         return None
@@ -250,6 +266,10 @@ def check_precondition_enforcement(
         enforced = False
     if expect.state_delta == "none" and not actual_no_delta:
         enforced = False
+    if expect.error_type is not None and actual_error_signal:
+        actual_error_type = error.split(":", 1)[0].strip()
+        if actual_error_type != expect.error_type:
+            enforced = False
 
     clause_id = violated_ids[0]
     if enforced:

@@ -109,7 +109,11 @@ from mmtoolsandbox.common.execution_context import (  # noqa: E402
     get_current_context,
     set_current_context,
 )
+from mmtoolsandbox.common.i18n import DefaultLocalizer  # noqa: E402
 from mmtoolsandbox.common.utils import NotGiven  # noqa: E402
+from mmtoolsandbox.datasets.initial_database_states.base import (  # noqa: E402
+    setting_initial_database_state,
+)
 from mmtoolsandbox.tools.tool_sandbox import calendar as _ts_calendar  # noqa: E402
 from mmtoolsandbox.tools.tool_sandbox import reminder as _ts_reminder  # noqa: E402
 from mmtoolsandbox.tools.tool_sandbox import setting as _ts_setting  # noqa: E402
@@ -264,12 +268,36 @@ def _cmd_list_tools(args: dict) -> dict:
 
 
 def _cmd_fresh_env(args: dict) -> dict:
+    """DEFECT (found reading sweep output, not a failing test), root-caused and fixed here:
+    `set_wifi_status` was flagged VIOLATES on `pre.not_low_battery_when_turning_on` with an
+    `IndexError: index 0 is out of bounds` instead of the contract's declared `PermissionError`.
+    That was never a bug in MM-ToolSandbox's tool -- it was this worker handing every tool a bare
+    `ExecutionContext()`, whose `SETTING` table starts with ONLY the all-None "headguard" row
+    `execution_context.py`'s own docstring describes ("makes sure we can represent an empty
+    snapshot"). `ExecutionContext.get_database(...)` drops that headguard by default (see its own
+    docstring), so `setting_database[setting_name][0]` in
+    `repos/mmtoolsandbox/mmtoolsandbox/tools/tool_sandbox/setting.py`'s `get_boolean_settings`/
+    `set_boolean_settings` -- code this project does not own or modify -- indexes into a
+    genuinely EMPTY dataframe and raises IndexError. A real MM-ToolSandbox scenario never reaches
+    this state: `mmtoolsandbox/datasets/scenarios.py`'s `_create_base_scenarios` seeds exactly
+    this table via `setting_initial_database_state(DefaultLocalizer)` (the dataset's own "base"
+    collection -- device_id/cellular/wifi/location_service/low_battery_mode/locale/coordinates,
+    every field the tool_sandbox `setting` tools read) before any tool ever runs. This worker now
+    does the same, so `set_wifi_status` is evaluated against a real, populated settings row
+    instead of a table this adapter itself left artificially empty -- see
+    tests/test_mmtoolsandbox_fresh_env.py for the regression pin (both the seeded-state shape and
+    that `set_wifi_status` no longer IndexErrors on the low-battery-mode precondition probe)."""
     scenario_id = args["scenario_id"]
     if scenario_id not in IN_SCOPE_SCENARIOS:
         raise ValueError(f"unknown scenario_id {scenario_id!r}; in-scope scenarios are {IN_SCOPE_SCENARIOS}")
     env_id = uuid.uuid4().hex
     if scenario_id == "tool_sandbox":
-        _LIVE_ENVS[env_id] = {"scenario": scenario_id, "ctx": ExecutionContext()}
+        ctx = ExecutionContext()
+        ctx.add_to_database(
+            namespace=DatabaseNamespace.SETTING,
+            rows=setting_initial_database_state(DefaultLocalizer),
+        )
+        _LIVE_ENVS[env_id] = {"scenario": scenario_id, "ctx": ctx}
     else:  # venmo_boundary
         _LIVE_ENVS[env_id] = {"scenario": scenario_id, "log": []}
     return {"env_id": env_id, "domain": scenario_id, "scenario_id": scenario_id}
@@ -302,12 +330,30 @@ _mini_venmo._get = _boundary_stub  # patch the one seam MM-ToolSandbox's own min
 
 
 def _cmd_snapshot(args: dict) -> dict:
+    """`ExecutionContext._dbs` always carries one extra all-None "headguard" row per namespace
+    (execution_context.py's own module docstring: "makes sure we can represent an empty
+    snapshot"), which `ExecutionContext.get_database(...)` -- what every real tool_sandbox tool
+    reads through -- drops by default. This worker used to hand that raw, headguard-INCLUDING
+    row straight to the checker via `to_dict()["_dbs"]`, so every contract's `pre.<NAMESPACE>`/
+    `post.<NAMESPACE>` saw a phantom all-null row the real tool never sees -- a snapshot
+    inventing a row the underlying store does not genuinely have. Harmless for the `any(...)`-
+    style predicates the other three tool_sandbox contracts use (a row that is all-None never
+    satisfies an equality comparison), but directly caused the `set_wifi_status` false positive:
+    `pre.SETTING[0]` indexed straight into that phantom row instead of the real settings row.
+    Dropped here with the SAME public classmethod (`ExecutionContext.drop_headguard`) the real
+    tool code effectively relies on via `get_database`, so `pre.<NAMESPACE>[0]`/`post.<NAMESPACE>`
+    now see exactly what a live tool call would see -- never a row this adapter invented for JSON
+    stability. See tests/test_mmtoolsandbox_fresh_env.py for the regression pin."""
     entry = _live(args["env_id"])
     if entry["scenario"] == "tool_sandbox":
         set_current_context(entry["ctx"])
-        dbs = get_current_context().get_tool_state_registry if False else None  # unused; explicit no-op
-        raw = get_current_context().to_dict(serialize_console=False)["_dbs"]
-        return {"snapshot": {str(namespace): rows for namespace, rows in raw.items()}}
+        ctx = get_current_context()
+        return {
+            "snapshot": {
+                str(namespace): ExecutionContext.drop_headguard(dataframe).to_dicts()
+                for namespace, dataframe in ctx._dbs.items()
+            }
+        }
     return {"snapshot": {"boundary_calls": entry["log"]}}
 
 

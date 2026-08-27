@@ -468,6 +468,22 @@ Consequences, stated now rather than discovered in September: the audited MM-Too
 
 ## Candidates, not yet confirmed
 
+**tau2-bench, `suspend_line` — behaviour verified, classification contested. Found by the framework, in a contract the harness had never exercised.**
+
+Surfaced 2026-08-27 when a coverage bug was fixed: the harness had been routing only 2 of 19 tau2 contracts and silently skipping the rest. `suspend_line` was in the skipped 17.
+
+The behaviour is confirmed by direct read at `c3398666` (`telecom/tools.py:261-295`). `reason: str` is a **required** positional parameter, documented at L273 as "Reason for suspension", and its only use in the body is `logger.info(f"Line {line_id} suspended. Reason: {reason}")` at L290. It is never persisted — `Line` has no field for it — and never returned. From the agent's position, a required argument has no observable consequence of any kind.
+
+**Why it is not counted.** Finding 8's `user_email` is documented as "The user email where invite should be sent", which advertises an action. `suspend_line`'s docstring says only "reason: Reason for suspension" — a description of what the argument *means*, not a promise about what happens to it. Its "Logic:" line advertises exactly two effects, status and `suspension_start_date`, and the tool performs both. A maintainer could fairly answer that `reason` is for the audit log and the audit log is where it goes.
+
+That is a real disagreement about whether the interface advertises persistence, and it is exactly what the annotation protocol's adjudication step exists to settle. It stays a candidate until adjudicated.
+
+**It does not raise the headline count.** The count has moved 8 → 7 → 5 → 4, always downward, always by applying our own rules more strictly. I said that if a later change appeared to raise it, the burden would be on that change. This one does not discharge it: adding a contested instance to a benchmark that already has a headline cell would buy a fifth cell with the weakest evidence in the set. If adjudication confirms it, it enters then.
+
+**What it does show, and this belongs in the paper.** Fixing a coverage bug in our own harness immediately surfaced a defect no human had looked for, in a tool nobody had flagged. That is the framework doing the job the paper claims for it, and it is a better argument for the tooling than any recall number.
+
+---
+
 **AgentDojo** — `add_calendar_event_participants` (`calendar_client.py:242-254`) has a docstring promising "It will also email the new participants," and the tool takes no `inbox` dependency, unlike its three sibling calendar-mutation tools. Moderate confidence, source reading only. Needs a runtime check.
 
 **MM-ToolSandbox** — `venmo_transact`'s `balance` branch (`mini/venmo.py:294-302`) forwards a raw `NotGiven` sentinel for `payment_card_id` unguarded, while every other parameter in the function is guarded; the docstring calls the same parameter both "Requires" (L117-118) and "optional" (L133) for the same actions. Two reasons this is held back: the defect class is arguable — a self-contradictory docstring may be better read as an ambiguous advertised surface than as an unenforced precondition, which is a distinction the annotation protocol exists to adjudicate — and the downstream failure mode cannot be confirmed while AppWorld is uncloneable.

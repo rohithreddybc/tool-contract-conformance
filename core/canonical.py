@@ -126,6 +126,40 @@ def canonical_equal(a: Any, b: Any, config: "CanonicalConfig | None" = None) -> 
     return _struct_equal(ca, cb, cfg.float_tolerance)
 
 
+def _descend(node: Any, path: tuple) -> Any:
+    """Walk `path` (a tuple of dict keys / list indices, as produced by core.frame.match_paths)
+    into an already-canonicalized `node`. Returns `_MISSING` -- never raises -- the instant a
+    step does not resolve, so a concrete path that exists in one snapshot but not the other
+    (a key added or removed by the call) degrades to a clean unequal comparison downstream
+    rather than a KeyError/IndexError/TypeError escaping this module."""
+    for key in path:
+        if isinstance(node, dict) and key in node:
+            node = node[key]
+        elif isinstance(node, list) and isinstance(key, int) and 0 <= key < len(node):
+            node = node[key]
+        else:
+            return _MISSING
+    return node
+
+
+def canonical_equal_at(pre: Any, post: Any, path: tuple, config: "CanonicalConfig | None" = None) -> bool:
+    """Tolerance- and volatility-aware equality of the SUBTREE at `path` between two RAW (not yet
+    canonicalized) snapshots -- what `dynamic.harness.check_frame` needs to grade one concrete
+    frame-path match. `config.volatile_paths`/`unordered_paths` are frame-path patterns rooted at
+    the snapshot's own root (e.g. 'state.audit_log.[].seq'), exactly like `canonical_equal`'s and
+    `diff`'s -- so this canonicalizes the FULL `pre`/`post` snapshots first (masking/reordering
+    resolves correctly regardless of where `path` cuts into the tree) and only then descends
+    `path` into each already-canonicalized tree, comparing the two extracted subtrees with the
+    same tolerance-aware leaf rule `canonical_equal` uses (`_struct_equal`). Canonicalizing the
+    extracted subtree in isolation instead -- the naive alternative -- would silently break any
+    volatile_paths entry nested under `path`, since `_matched_path_set` would then try to match
+    that pattern against the subtree's own (differently-rooted) shape."""
+    cfg = config or CanonicalConfig()
+    cpre = canonicalize(pre, cfg)
+    cpost = canonicalize(post, cfg)
+    return _struct_equal(_descend(cpre, path), _descend(cpost, path), cfg.float_tolerance)
+
+
 def _struct_equal(a: Any, b: Any, tol: float) -> bool:
     if isinstance(a, dict) and isinstance(b, dict):
         return set(a) == set(b) and all(_struct_equal(a[k], b[k], tol) for k in a)

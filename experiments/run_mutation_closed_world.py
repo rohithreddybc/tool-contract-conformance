@@ -140,7 +140,26 @@ def _rebuild_adapter(benchmark: str):
     raise ValueError(f"unknown benchmark {benchmark!r}")
 
 
-def _detected_with_watchdog(adapters_by_benchmark, target: RealTarget, patch_source: str, seed: int, timeout: float = 45.0) -> dict:
+def _sibling_contracts_by_target(targets: "list[RealTarget]") -> dict:
+    """`(benchmark, tool) -> tuple of every OTHER eligible target's contract sharing that SAME
+    (benchmark, scenario_id)` -- the `sibling_contracts` shape `dynamic.harness.run_contract`'s
+    `check_invariants` needs for its companion-sequence search (see that function's module-section
+    docstring in dynamic/harness.py). Built from the SAME eligible-target list this script already
+    enumerates (`build_targets`), not a second contract-loading pass -- mirrors
+    `dynamic.harness._with_siblings`'s grouping rule exactly (grouped by scenario_id, since a tau2
+    contract's scenario_id is one specific domain and a companion from a different domain could
+    never resolve against a `fresh_env(scenario_id)` built for this one)."""
+    by_scenario: dict = {}
+    for t in targets:
+        by_scenario.setdefault((t.benchmark, t.scenario_id), []).append(t)
+    out: dict = {}
+    for ts in by_scenario.values():
+        for t in ts:
+            out[(t.benchmark, t.tool)] = tuple(o.contract for o in ts if o.tool != t.tool)
+    return out
+
+
+def _detected_with_watchdog(adapters_by_benchmark, target: RealTarget, patch_source: str, seed: int, timeout: float = 45.0, sibling_contracts: tuple = ()) -> dict:
     """`_detected`, run on a background thread with a hard wall-clock budget. A subprocess-backed
     adapter's `_send` blocks on `stdout.readline()`; a sufficiently pathological mutant (observed
     empirically once during this run, cause not fully diagnosed -- a hang with zero CPU consumed
@@ -157,7 +176,7 @@ def _detected_with_watchdog(adapters_by_benchmark, target: RealTarget, patch_sou
     box: dict = {}
 
     def _run():
-        box["result"] = _detected(adapters_by_benchmark, target, patch_source, seed)
+        box["result"] = _detected(adapters_by_benchmark, target, patch_source, seed, sibling_contracts=sibling_contracts)
 
     t = threading.Thread(target=_run, daemon=True)
     t.start()
@@ -188,15 +207,25 @@ def _detected_with_watchdog(adapters_by_benchmark, target: RealTarget, patch_sou
     return box.get("result", {"detected": None, "n_rows": 0, "verdict_counts": {}, "error": "watchdog: worker thread finished with no result"})
 
 
-def _detected(adapters_by_benchmark, target: RealTarget, patch_source: str, seed: int) -> dict:
+def _detected(adapters_by_benchmark, target: RealTarget, patch_source: str, seed: int, sibling_contracts: tuple = ()) -> dict:
     """Patch `target.tool` to `patch_source`, run the frozen checker against it, report whether
     any clause verdict came back VIOLATES. Never raises -- a patch/invoke/checker failure is
     itself a reportable outcome (`error` populated, `detected=None`), not a crash of the whole
-    corpus run."""
+    corpus run.
+
+    `sibling_contracts` (see `_sibling_contracts_by_target` above) is forwarded to
+    `run_contract` so `check_invariants`'s companion-sequence search can actually run for a
+    target whose own invariant clauses need a second tool's call first (toy's
+    acquire_lock/release_lock pair is the shipped example) -- without it, M-INVAR recall would
+    still be limited to whatever a single legal call can exercise, silently under-counting
+    exactly the gap this checker fix exists to close."""
     base = adapters_by_benchmark[target.benchmark]
     mutant = MutatedAdapter(base, target.tool, patch_source)
     try:
-        rows = run_contract(mutant, target.contract, target.scenario_id, cfg=CFG_BY_BENCHMARK[target.benchmark], seed=seed)
+        rows = run_contract(
+            mutant, target.contract, target.scenario_id, cfg=CFG_BY_BENCHMARK[target.benchmark], seed=seed,
+            sibling_contracts=sibling_contracts,
+        )
         verdicts = [r["verdict"] for r in rows]
         detected = "VIOLATES" in verdicts
         return {"detected": detected, "n_rows": len(rows), "verdict_counts": _count(verdicts), "error": None}
@@ -217,6 +246,7 @@ def _count(values: list) -> dict:
 
 
 def run_defect_operators(adapters_by_benchmark, targets: "list[RealTarget]", out_fh) -> None:
+    siblings_by_target = _sibling_contracts_by_target(targets)
     module_source_cache: dict = {}
 
     def source_for(target: RealTarget) -> str:
@@ -265,7 +295,10 @@ def run_defect_operators(adapters_by_benchmark, targets: "list[RealTarget]", out
                     "site_params": site.params, "detected": None, "error": f"patch_build: {type(e).__name__}: {e}",
                 }) + "\n")
                 continue
-            result = _detected_with_watchdog(adapters_by_benchmark, target, patch_source, SEED)
+            result = _detected_with_watchdog(
+                adapters_by_benchmark, target, patch_source, SEED,
+                sibling_contracts=siblings_by_target.get((target.benchmark, target.tool), ()),
+            )
             out_fh.write(json.dumps({
                 "kind": "defect_mutant", "operator": operator, "benchmark": target.benchmark,
                 "tool": target.tool, "is_toy": target.is_toy, "site_detail": site.detail,
@@ -276,33 +309,38 @@ def run_defect_operators(adapters_by_benchmark, targets: "list[RealTarget]", out
             "drawn": len(chosen), "requested": K_PER_CLASS,
         }) + "\n")
 
-    run_reset_operator(targets, source_for, out_fh)
+    run_reset_operator(adapters_by_benchmark, targets, source_for, out_fh)
 
 
-def run_reset_operator(targets: "list[RealTarget]", source_for, out_fh) -> None:
-    """M-RESET cannot be scored by `dynamic.harness.run_contract` at all: that function never
-    calls `Adapter.reset()` and neither it nor `adapters/contract_check.py` implements any
-    evaluator for a contract's `reset:` clause (spec/schema.json documents the clause and its
-    `no_reset_path` UNTESTABLE reason code; nothing in the currently-wired dynamic checker reads
-    it -- confirmed by grep, not assumed). This is a genuine gap in the FROZEN checker's actual
-    coverage, discovered while wiring this experiment -- CLAUDE.md is explicit that finding such
-    a gap means "stop and report", not quietly add a new check_reset() function after
-    checker-freeze-v1 (which would itself trigger sec 8's refreeze rule and change what
-    "detected" means for every other operator too). So: every M-RESET mutant this section draws
-    is reported as UNTESTABLE with reason `no_reset_path_checker`, never as a false "not
-    detected" -- the corpus and its denominator are still fully reported (sec 5: "UNTESTABLE
-    stays in all denominators with reason codes"), just never fed into run_contract.
+def run_reset_operator(adapters_by_benchmark, targets: "list[RealTarget]", source_for, out_fh) -> None:
+    """M-RESET, scored through `dynamic.harness.check_reset` (added alongside this change -- see
+    that function's docstring in dynamic/harness.py). BEFORE this fix, `run_contract` never
+    called `Adapter.reset()` at all and nothing evaluated a contract's `reset:` clause; every
+    M-RESET mutant this section drew was reported UNTESTABLE with reason
+    `no_reset_path_checker`, structurally, without ever being run -- see this function's git
+    history for that version's full docstring. That was correct UNDER checker-freeze-v1: CLAUDE.md
+    is explicit that finding a gap like this means "stop and report", not quietly patch a new
+    check around it without a refreeze. This IS the refreeze's fix.
 
-    A second, independent consequence of the same design (adapters reset by reconstructing a
-    whole fresh environment -- see adapters/_tau2_worker.py, _agentdojo_worker.py,
-    _mmtoolsandbox_worker.py, and toy/bank.py's own `reset()` -- confirmed empirically: only the
-    toy domain's module source contains a function literally named "reset" among this corpus's
-    36 eligible tools' own modules) is that M-RESET's site pool is toy-only in this corpus. Sites
-    are enumerated ONCE per distinct module (not once per contracted tool that happens to share
-    that module) to avoid counting the same reset() field assignment many times over.
-    """
-    seen_modules: dict = {}  # source_path -> (benchmark, is_toy, source_text)
+    `reset` is not itself a contracted tool (mutation/sites.py's `reset_names=` sites target the
+    reset ROUTINE, not an agent-visible tool), so a mutant here has no contract of its own to run
+    `run_contract` against. It is instead patched in as `tool="reset"` (toy/adapter.py's
+    `patch_tool` was loosened alongside this fix to accept `"reset"` in addition to
+    `MUTATING_TOOLS`, precisely for this) and scored against EVERY eligible contracted tool
+    sharing that module -- since `reset()` restores the WHOLE environment, a dropped field-restore
+    is only witnessed by whichever contract's own probe actually touches that field. "Detected" =
+    any VIOLATES row from any of them, mirroring `_detected`'s own "any VIOLATES row" convention
+    for every other operator.
+
+    Confirmed empirically (unchanged by this fix): only the toy domain's module source contains a
+    function literally named "reset" among this corpus's eligible tools' own modules, so this
+    section's site pool remains toy-only -- real-benchmark M-RESET recall is still N/A, not 0/0,
+    and the report must keep saying so (this function no longer manufactures that distinction
+    itself; see experiments/build_mutation_report.py's own updated M-RESET handling)."""
+    seen_modules: dict = {}  # source_path -> (benchmark, is_toy, source_text, [witness targets])
+    witnesses_by_path: dict = {}
     for target in targets:
+        witnesses_by_path.setdefault(target.source_path, []).append(target)
         if target.source_path not in seen_modules:
             try:
                 source = source_for(target)
@@ -312,22 +350,61 @@ def run_reset_operator(targets: "list[RealTarget]", source_for, out_fh) -> None:
             if reset_names:
                 seen_modules[target.source_path] = (target.benchmark, target.is_toy, source)
 
-    pool = []  # (benchmark, is_toy, source, MutationSite)
+    pool = []  # (benchmark, is_toy, source, source_path, MutationSite)
     for source_path, (benchmark, is_toy, source) in seen_modules.items():
         reset_names = _reset_names_present(source)
         sites = enumerate_sites(source, [], reset_names=reset_names, excluded_tools=frozenset())
-        pool.extend((benchmark, is_toy, source, s) for s in sites)
+        pool.extend((benchmark, is_toy, source, source_path, s) for s in sites)
 
-    bare = [s for (_, _, _, s) in pool]
-    site_index = {id(s): (b, t, src) for (b, t, src, s) in pool}
+    bare = [s for (_, _, _, _, s) in pool]
+    site_index = {id(s): (b, t, src, path) for (b, t, src, path, s) in pool}
     chosen_sites = select_sites(bare, "M-RESET", K_PER_CLASS, SEED)
 
     for site in chosen_sites:
-        benchmark, is_toy, source = site_index[id(site)]
+        benchmark, is_toy, source, source_path = site_index[id(site)]
+        witness_targets = witnesses_by_path.get(source_path, [])
+        try:
+            patch_source = build_function_patch_source(source, site.tool, site.operator, dict(site.params))
+        except Exception as e:  # noqa: BLE001
+            out_fh.write(json.dumps({
+                "kind": "defect_mutant", "operator": "M-RESET", "benchmark": benchmark, "tool": site.tool,
+                "is_toy": is_toy, "site_detail": site.detail, "site_params": site.params,
+                "detected": None, "n_rows": 0, "verdict_counts": {}, "error": f"patch_build: {type(e).__name__}: {e}",
+            }) + "\n")
+            continue
+
+        base = adapters_by_benchmark[benchmark]
+        mutant = MutatedAdapter(base, site.tool, patch_source)
+        detected = False
+        n_rows = 0
+        verdict_counts: dict = {}
+        error = None
+        try:
+            for wt in witness_targets:
+                siblings = tuple(o.contract for o in witness_targets if o.tool != wt.tool)
+                rows = run_contract(
+                    mutant, wt.contract, wt.scenario_id, cfg=CFG_BY_BENCHMARK[benchmark], seed=SEED,
+                    sibling_contracts=siblings,
+                )
+                n_rows += len(rows)
+                for r in rows:
+                    verdict_counts[r["verdict"]] = verdict_counts.get(r["verdict"], 0) + 1
+                if any(r["verdict"] == "VIOLATES" for r in rows):
+                    detected = True
+        except Exception as e:  # noqa: BLE001 -- a patch/invoke/checker failure is itself a
+            # reportable outcome, not a crash of the whole corpus run, matching `_detected`.
+            detected = None
+            error = f"{type(e).__name__}: {e}"
+        finally:
+            try:
+                mutant.close()
+            except Exception:
+                pass
+
         out_fh.write(json.dumps({
             "kind": "defect_mutant", "operator": "M-RESET", "benchmark": benchmark, "tool": site.tool,
             "is_toy": is_toy, "site_detail": site.detail, "site_params": site.params,
-            "detected": None, "n_rows": 0, "verdict_counts": {}, "error": "UNTESTABLE:no_reset_path_checker",
+            "detected": detected, "n_rows": n_rows, "verdict_counts": verdict_counts, "error": error,
         }) + "\n")
     out_fh.write(json.dumps({
         "kind": "operator_pool_size", "operator": "M-RESET", "pool_size": len(bare),

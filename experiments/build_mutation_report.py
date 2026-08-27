@@ -67,10 +67,13 @@ def classify_defect_mutant(row: dict) -> str:
     error. `detected`/`missed` both mean the checker evaluated at least one testable clause
     (CONFORMS and/or VIOLATES present); `untestable_no_clause_evaluated` means every row the
     checker produced for this mutant was UNTESTABLE (a probe-gap-at-corpus-level situation, not
-    a genuine "the checker looked and missed"); `untestable_no_checker_path` is M-RESET's
-    structural case (see experiments/run_mutation_closed_world.py's run_reset_operator
-    docstring: no dynamic reset-clause evaluator exists in the wired checker at all);
-    `error` is a patch/build/invoke crash unrelated to any of the above."""
+    a genuine "the checker looked and missed"); `untestable_no_checker_path` is kept as a
+    classification (rather than removed outright) for a row an OLDER raw file may still carry
+    from before dynamic.harness.check_reset existed (see the checker-freeze-v1 refreeze note in
+    experiments/run_mutation_closed_world.py's run_reset_operator docstring) -- a FRESH run no
+    longer produces this error string for any operator, M-RESET included, now that a real
+    reset-clause evaluator exists and is wired in; `error` is a patch/build/invoke crash
+    unrelated to any of the above."""
     err = row.get("error")
     if err and isinstance(err, str) and err.startswith("UNTESTABLE:"):
         return "untestable_no_checker_path"
@@ -113,19 +116,16 @@ def build_closed_world_recall(rows: list) -> dict:
         classified = [(r, classify_defect_mutant(r)) for r in op_rows]
         counts = Counter(c for _, c in classified)
 
-        if operator == "M-RESET":
-            out["by_operator"][operator] = {
-                "status": "UNTESTABLE_STRUCTURAL",
-                "reason": "no_reset_path_checker: dynamic.harness.run_contract never calls Adapter.reset() "
-                          "or evaluates a contract's reset: clause -- confirmed by inspection, not assumed. "
-                          "Every M-RESET mutant is therefore UNTESTABLE by the currently-wired checker, "
-                          "structurally, not empirically -- reporting a Wilson interval on 0/N here would "
-                          "misrepresent 'the checker never had a code path to try' as 'the checker tried and "
-                          "missed every time'.",
-                "n_drawn": len(op_rows), "classification_counts": dict(counts),
-                "toy_n": sum(1 for r in op_rows if r["is_toy"]), "real_n": sum(1 for r in op_rows if not r["is_toy"]),
-            }
-            continue
+        # M-RESET no longer gets a hard-coded UNTESTABLE_STRUCTURAL branch: dynamic.harness now
+        # ships check_reset (the checker-freeze-v1 refreeze fix), so a fresh
+        # mutation_closed_world_raw.jsonl carries real detected/missed/untestable rows for it,
+        # exactly like the other five operators. The one remaining, EMPIRICAL (not structural)
+        # fact about this corpus is unchanged by that fix: only the toy domain's module source
+        # contains a function literally named "reset" among this corpus's eligible tools' own
+        # modules (confirmed by mutation/real_targets.py's own site enumeration, not assumed), so
+        # M-RESET's "real" scope below is expected to have n_drawn == 0 -- reported as "no data"
+        # by `_pooled_and_per_tool`, the same honest treatment MedAgentBench's own 5-of-6-operator
+        # gap already gets, never silently coerced into a 0/0 Wilson interval.
 
         for scope, pred in (("toy", lambda r: r["is_toy"]), ("real", lambda r: not r["is_toy"]), ("all", lambda r: True)):
             scoped = [r for r in op_rows if pred(r)]
@@ -145,7 +145,14 @@ def build_closed_world_recall(rows: list) -> dict:
 
 
 def build_precision(rows: list) -> dict:
-    defects = [r for r in rows if r.get("kind") == "defect_mutant" and r["operator"] != "M-RESET"]
+    # M-RESET mutants are no longer excluded here: the old exclusion existed because every
+    # M-RESET row previously carried `detected=None` (checker-freeze-v1's harness had no reset
+    # evaluator at all, see experiments/run_mutation_closed_world.py's run_reset_operator), so
+    # including them would have been a silent no-op at best; now that dynamic.harness.check_reset
+    # produces real True/False detections, M-RESET's TRUE detections belong in the TP count on
+    # the same footing as the other five operators' -- there is nothing precision-special about
+    # this defect class, and a fresh run would otherwise silently under-report `n_flags`.
+    defects = [r for r in rows if r.get("kind") == "defect_mutant"]
     equivalents = [r for r in rows if r.get("kind") == "equivalence_mutant"]
 
     per_tool: "dict[str, list]" = defaultdict(lambda: [0, 0])  # tool -> [TP+FP flags issued correctly? see below]
@@ -399,9 +406,6 @@ def write_markdown_summary(result: dict) -> None:
     lines.append("|---|---|---|---|---|---|---|")
     for op in DEFECT_OPERATORS:
         entry = rec["by_operator"].get(op, {})
-        if entry.get("status") == "UNTESTABLE_STRUCTURAL":
-            lines.append(f"| {op} | UNTESTABLE (no checker path) | {entry['n_drawn']} | 0 | 0 | {entry['n_drawn']} | 0 |")
-            continue
         s = entry.get("real", {})
         cc = s.get("classification_counts", {})
         recall_str = _fmt_rate(s.get("recall")) if s.get("recall") else "no data"
@@ -416,8 +420,6 @@ def write_markdown_summary(result: dict) -> None:
     lines.append("|---|---|---|---|---|---|---|")
     for op in DEFECT_OPERATORS:
         entry = rec["by_operator"].get(op, {})
-        if entry.get("status") == "UNTESTABLE_STRUCTURAL":
-            continue
         s = entry.get("toy", {})
         cc = s.get("classification_counts", {})
         recall_str = _fmt_rate(s.get("recall")) if s.get("recall") else "no data"

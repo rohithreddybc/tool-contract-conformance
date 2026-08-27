@@ -1,7 +1,7 @@
 """Tests for core/canonical.py. Run with: python -m unittest discover tests"""
 import unittest
 
-from core.canonical import VOLATILE_SENTINEL, CanonicalConfig, canonical_equal, canonicalize, diff
+from core.canonical import VOLATILE_SENTINEL, CanonicalConfig, canonical_equal, canonical_equal_at, canonicalize, diff
 
 
 class TestSortedKeys(unittest.TestCase):
@@ -170,6 +170,53 @@ class TestDiff(unittest.TestCase):
         pre = {"created_at": "t1", "x": 1}
         post = {"created_at": "t2", "x": 1}
         self.assertEqual(diff(pre, post, cfg), {})
+
+
+class TestCanonicalEqualAt(unittest.TestCase):
+    """canonical_equal_at -- the subtree-level, root-relative-config-aware equality
+    dynamic.harness.check_frame is built on."""
+
+    def test_unchanged_subtree_is_equal(self):
+        pre = {"accounts": {"a": {"balance": 10, "owner": "alice"}}}
+        post = {"accounts": {"a": {"balance": 10, "owner": "alice"}}}
+        self.assertTrue(canonical_equal_at(pre, post, ("accounts", "a"), CanonicalConfig()))
+
+    def test_changed_leaf_makes_the_subtree_unequal(self):
+        pre = {"accounts": {"a": {"balance": 10}}}
+        post = {"accounts": {"a": {"balance": 20}}}
+        self.assertFalse(canonical_equal_at(pre, post, ("accounts", "a"), CanonicalConfig()))
+        # ... but a sibling subtree the change never touched is still equal.
+        pre2 = {"accounts": {"a": {"balance": 10}, "b": {"balance": 5}}}
+        post2 = {"accounts": {"a": {"balance": 20}, "b": {"balance": 5}}}
+        self.assertTrue(canonical_equal_at(pre2, post2, ("accounts", "b"), CanonicalConfig()))
+
+    def test_path_present_in_only_one_side_is_unequal_not_vacuously_equal(self):
+        pre = {"orders": {}}
+        post = {"orders": {"o1": {"status": "new"}}}
+        self.assertFalse(canonical_equal_at(pre, post, ("orders", "o1"), CanonicalConfig()))
+
+    def test_float_tolerance_forgives_a_within_tolerance_drift(self):
+        cfg = CanonicalConfig(float_tolerance=0.02)
+        pre = {"x": {"amount": 10.00}}
+        post = {"x": {"amount": 10.01}}
+        self.assertTrue(canonical_equal_at(pre, post, ("x",), cfg))
+
+    def test_volatile_path_nested_under_the_subtree_is_masked_using_the_root_relative_pattern(self):
+        # config.volatile_paths is rooted at the SNAPSHOT root ('state.a.audit.ts'), not at the
+        # subtree being extracted ('a') -- canonical_equal_at must canonicalize the full snapshot
+        # first (where the root-relative pattern resolves correctly) and only then descend,
+        # rather than canonicalizing the already-extracted subtree in isolation (where the same
+        # pattern string would fail to match anything and silently stop masking).
+        cfg = CanonicalConfig(volatile_paths=("state.a.audit.ts",))
+        pre = {"a": {"value": 1, "audit": {"ts": "t1"}}}
+        post = {"a": {"value": 1, "audit": {"ts": "t2"}}}
+        self.assertTrue(canonical_equal_at(pre, post, ("a",), cfg))
+
+    def test_bool_is_never_forgiven_by_tolerance(self):
+        cfg = CanonicalConfig(float_tolerance=1.0)
+        pre = {"x": {"flag": True}}
+        post = {"x": {"flag": False}}
+        self.assertFalse(canonical_equal_at(pre, post, ("x",), cfg))
 
 
 if __name__ == "__main__":

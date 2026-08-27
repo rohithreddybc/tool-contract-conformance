@@ -37,10 +37,13 @@ from adapters.base import Adapter, ToolResult
 from adapters.contract_check import check_effects, check_precondition_enforcement, to_result_binding
 from adapters.mmtoolsandbox import MMToolSandboxAdapter, MMToolSandboxAdapterError
 from adapters.tau2 import Tau2Adapter, Tau2AdapterError
-from core.canonical import CanonicalConfig, canonical_equal, diff
+from core.canonical import CanonicalConfig, canonical_equal, canonical_equal_at, diff
+from core.frame import FrameMatchError, match_paths
 from core.model import Contract, HeadlineTier, headline_tier
+from core.predicates import PathError, PredicateTypeError, compile_predicate, evaluate
 from core.verdict import ClauseVerdict, DefectClass, Verdict, Witness
-from dynamic.probes import build_dynamic_probe_plan, joint_falsy_argument_names
+from dynamic.probes import build_dynamic_probe_plan, generate_effect_probe, joint_falsy_argument_names
+from mutation.real_targets import resolve_domain
 from spec.validate import (
     _classify_tool_return,
     _git_show,
@@ -52,6 +55,9 @@ from toy.adapter import ToyAdapter
 __all__ = [
     "InvokeRecord",
     "check_ignored_argument",
+    "check_reset",
+    "check_invariants",
+    "check_frame",
     "run_contract",
     "run_all",
     "write_findings",
@@ -69,12 +75,19 @@ REPORT_PATH = PROJECT_ROOT / "report" / "findings.jsonl"
 # through call-count drift across probes that are otherwise unrelated to the audit log.
 TOY_CANONICAL_CONFIG = CanonicalConfig(volatile_paths=("state.audit_log.[].seq",))
 
-# tau2 tool name -> in-scope domain, for the two contracts this milestone ships
-# (spec/contracts/tau2/{cancel_reservation,refuel_data}.yaml). Not a general tool->domain
-# resolver -- adapters.tau2.Tau2Adapter.source() already documents that several tau2 tool names
-# recur across domains and must be disambiguated by the caller; this table is deliberately scoped
-# to the tools this milestone has contracts for rather than guessing at the others.
-TAU2_DOMAIN_BY_TOOL = {"cancel_reservation": "airline", "refuel_data": "telecom"}
+# DEFECT (found reading sweep output, not a failing test): this used to be a hand-maintained
+# tool -> domain table scoped to only the 2 tau2 contracts this project's first milestone shipped
+# ({"cancel_reservation": "airline", "refuel_data": "telecom"}). `_iter_tau2_contracts` below
+# `continue`d past every contract not in that table -- silently, with no row, no warning, no
+# trace -- so all 17 tau2 contracts authored afterwards (tests/test_new_tau2_contracts.py) were
+# never dynamically exercised even though they load, validate, and are counted everywhere else.
+# `mutation/real_targets.py`'s `resolve_domain` already fixed this properly (its own docstring
+# calls out this exact table by name as the thing it generalises away from) by reading the domain
+# off `contract.source.file` -- every tau2 contract is authored against one specific domain's
+# tools.py, and that domain name is baked into the path
+# (".../domains/<domain>/tools.py") -- instead of hand-maintaining a second name -> domain
+# mapping that must be remembered on every new contract. Reused here rather than reimplemented a
+# third time.
 
 # contract.benchmark -> the local git clone check8_agent_visibility needs to classify a
 # tool_return/prompt_template provenance quote (see `_check8_passed_for_provenance` below). "toy"
@@ -206,8 +219,453 @@ def check_ignored_argument(
 
 
 # =================================================================================================
+# check_reset -- Reset Leak. Fixes the gap the checker-freeze-v1 mutation run exposed: nothing in
+# the previously-wired checker ever called `Adapter.reset()` or evaluated a contract's `reset:`
+# clause, so Reset Leak (core/verdict.py's DefectClass.RESET_LEAK) had a defect class, a mutation
+# operator (mutation/operators.py's m_reset), and a schema field, but no code path that could ever
+# produce the verdict -- confirmed by grep, not assumed (dynamic/probes.py never generates a reset
+# probe; adapters/contract_check.py's two entry points both grade a single invoke() tuple and
+# never call `Adapter.reset`). See CLAUDE.md's build note on this fix for the full context.
+# =================================================================================================
+
+
+def check_reset(
+    adapter: Adapter,
+    contract: Contract,
+    scenario_id: str,
+    *,
+    effect_probe=None,
+    cfg: Optional[CanonicalConfig] = None,
+    seed: int = 0,
+) -> Optional[ClauseVerdict]:
+    """Reset Leak (PAPER-OUTLINE.md sec III: "snapshot after reset != initial snapshot"): drive
+    ONE legal mutating call (`effect_probe`, normally the caller's already-searched
+    `plan.effect_probe` -- see `run_contract` below -- so this never pays for a second,
+    independent search) so the pre-reset environment actually diverges from its own initial
+    snapshot in the region this contract's tool controls, call `Adapter.reset()`, and compare the
+    resulting snapshot against the ORIGINAL initial snapshot with `core.canonical.canonical_equal`
+    -- tolerance- and volatility-aware, per CLAUDE.md's build note for this fix. Deliberately NOT
+    `core.predicates.evaluate()` against `contract.reset.predicate` (every shipped reset predicate
+    is the literal string "post == pre", verified against every contract under spec/contracts/):
+    that evaluator binds `pre`/`post` to one invoke() call's before/after pair, and reusing it here
+    would silently rebind the same names to a completely different pair (the environment's
+    snapshot before ANY call vs. after `reset()`, which takes no args and returns nothing) --
+    exactly the kind of confusable-shape bug PREDICATE-GRAMMAR.md sec 1's four fixed bindings
+    exist to rule out. `canonical_equal(initial, post_reset, cfg)` computes what "post == pre"
+    means for reset's own (initial, post-reset) pair, made tolerance-aware, without overloading
+    the general single-call evaluator for a shape it was never specified for.
+
+    Returns None if `contract.reset` is absent -- "the contract makes no claim", mirroring
+    `check_precondition_enforcement`'s identical convention for a missing
+    `on_precondition_violation` block, and matching schema.json's own "Omit when the benchmark has
+    no reset path" note for the `reset:` block itself (as opposed to a PRESENT `reset:` block
+    whose adapter cannot actually be exercised, below).
+
+    UNTESTABLE / `no_reset_path` if `contract.reset` IS declared but `Adapter.reset` cannot
+    actually be run (raises `NotImplementedError`, `adapters.base.Adapter`'s own documented
+    fallback for a method a concrete adapter has not implemented) -- `no_reset_path` is already a
+    registered `core.verdict.UNTESTABLE_REASONS` member and is exactly the reason code
+    schema.json's `reset` block docstring names for this situation.
+
+    If `effect_probe` is None (a probe gap: this contract's own happy-path search found no joint
+    assignment satisfying every precondition), the check still runs against an untouched fresh
+    env -- a real, if weaker, test ("does reset(fresh) == fresh") -- never silently skipped."""
+    if contract.reset is None:
+        return None
+    cfg = cfg or CanonicalConfig()
+
+    env = adapter.fresh_env(scenario_id)
+    initial = adapter.snapshot(env)
+
+    if effect_probe is not None:
+        try:
+            adapter.invoke(env, contract.tool, effect_probe.args)
+        except Exception:  # noqa: BLE001 -- best-effort "dirty the state" step; a call that
+            # raises unexpectedly (rather than returning ToolResult(success=False, ...), which
+            # every concrete adapter's `invoke` is documented to do for a declared failure)
+            # leaves the env at its untouched initial snapshot, which is still a legal starting
+            # point for the reset check below -- never a reason to abandon it.
+            pass
+
+    try:
+        adapter.reset(env)
+    except NotImplementedError:
+        return ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=RESET_CLAUSE_ID, reason_code="no_reset_path")
+
+    post_reset = adapter.snapshot(env)
+    if canonical_equal(initial, post_reset, cfg):
+        return ClauseVerdict(verdict=Verdict.CONFORMS, clause_id=RESET_CLAUSE_ID)
+    return ClauseVerdict(
+        verdict=Verdict.VIOLATES,
+        clause_id=RESET_CLAUSE_ID,
+        defect_class=DefectClass.RESET_LEAK,
+        witness=Witness(args={}, diff=diff(initial, post_reset, cfg), result=None),
+    )
+
+
+# =================================================================================================
+# check_invariants -- Invariant Break. Fixes the second gap the mutation run's suspiciously-total
+# M-INVAR recall (0.000 across 8 real-tool mutants) pointed at: `invariants:` clauses are parsed
+# (core/model.py), schema-validated (spec/validate.py), and counted (spec/coverage.py), but
+# nothing EVALUATED one -- confirmed by grep across dynamic/, adapters/, core/ before writing this.
+# The 0.000 was therefore a genuine missing code path, not weak detection: see this fix's build
+# note for the full audit table.
+#
+# schema.json's own words for `invariants`: "Environment-level properties that must hold after any
+# legal call sequence, not just this call. Checked by the sequence prober, not the single-call
+# harness." Every existing check in this module (`check_effects`, `check_precondition_enforcement`,
+# `check_ignored_argument`) grades exactly ONE invoke() call (or, for Ignored Argument, several
+# INDEPENDENT fresh-env calls that never share state) -- none of them is "the sequence prober" the
+# schema anticipates. This is it.
+#
+# A single legal call is the degenerate, length-1 case of "a legal call sequence" and is tried
+# first (`_try_single_call_sequence`, reusing the contract's OWN already-searched effect
+# happy-path probe -- most shipped invariant clauses, e.g. every *_nonnegative clause and tau2
+# airline's inv.seat_conservation, constrain `post` alone and are fully testable this way). Some
+# invariants are genuinely only exercisable by a length-2 sequence across TWO tools that share
+# compensating state -- toy/bank.py's acquire_lock/release_lock pair is the shipped example
+# (release_lock's own precondition, `pre.locks[id].held_by == args.holder`, can never be satisfied
+# from a truly fresh env, since `held_by` starts `None` and no probe-generated string equals
+# `None` -- so release_lock's half of inv.held_iff_count_positive is untestable by a single call,
+# by construction, regardless of this fix). `_try_paired_sequence` covers this generically, with
+# NO benchmark or tool vocabulary: two contracts are "companions" iff they declare an IDENTICAL
+# invariant clause (same id, same predicate text) -- a purely structural signal, not a hand-built
+# pairing table -- and a companion's own effect happy-path probe is run first, in the SAME env,
+# before this contract's.
+# =================================================================================================
+
+
+def _shares_invariant_clause(a: Contract, b: Contract) -> bool:
+    """True iff `a` and `b` declare at least one (id, predicate)-identical invariant clause -- the
+    generic, tool-agnostic signal `check_invariants` uses to find a "companion" contract whose own
+    legal call, run first in a shared env, can put THIS contract's tool into a state its own
+    single-call search could never reach on its own (see module-section docstring above)."""
+    a_keys = {(c.id, c.predicate) for c in a.invariants}
+    b_keys = {(c.id, c.predicate) for c in b.invariants}
+    return bool(a_keys & b_keys)
+
+
+def _run_probe_in_env(adapter: Adapter, env, tool: str, args: dict):
+    """One (snapshot, invoke, snapshot) step inside an EXISTING env -- deliberately distinct from
+    this module's own `_invoke_fresh`, which always opens a brand-new env per call. The sequence
+    prober's whole point is to chain calls inside the SAME env, so it needs this instead."""
+    pre = adapter.snapshot(env)
+    tr: ToolResult = adapter.invoke(env, tool, args)
+    post = adapter.snapshot(env)
+    result = to_result_binding(tr.raw, tr.success, tr.error)
+    return pre, post, tr.success, result
+
+
+def _try_single_call_sequence(adapter: Adapter, scenario_id: str, contract: Contract, own_probe):
+    """Length-1 legal call sequence: `contract`'s own effect happy-path probe, run once in a
+    fresh env. Returns `(label, pre, post, args, result)` on a successful call, else None (no
+    invention -- a probe gap here is reported as UNTESTABLE by the caller, never guessed
+    around)."""
+    if own_probe is None:
+        return None
+    env = adapter.fresh_env(scenario_id)
+    try:
+        pre, post, success, result = _run_probe_in_env(adapter, env, contract.tool, own_probe.args)
+    except Exception:  # noqa: BLE001 -- an adapter-level failure here is a probe gap, not a
+        # reason to crash the whole invariant check; see `_try_paired_sequence`'s identical guard.
+        return None
+    if not success:
+        return None
+    return ("single_call", pre, post, dict(own_probe.args), result)
+
+
+def _try_paired_sequence(adapter: Adapter, scenario_id: str, first: Contract, second: Contract, *, seed: int):
+    """Length-2 legal call sequence: `first`'s own effect happy-path probe, then `second`'s, both
+    freshly searched against the LIVE state at that point in the sequence (never the cached probe
+    from either contract's own single-call search, which was only ever searched against a truly
+    fresh env) and both run inside the SAME env. Returns `(label, pre, post, args, result)` for the
+    final (`second`) call on success, else None."""
+    try:
+        env = adapter.fresh_env(scenario_id)
+        pre0 = adapter.snapshot(env)
+        first_probe = generate_effect_probe(first, pre0, seed=seed)
+        if first_probe is None:
+            return None
+        _, post1, success1, _ = _run_probe_in_env(adapter, env, first.tool, first_probe.args)
+        if not success1:
+            return None
+        second_probe = generate_effect_probe(second, post1, seed=seed + 1)
+        if second_probe is None:
+            return None
+        pre2, post2, success2, result2 = _run_probe_in_env(adapter, env, second.tool, second_probe.args)
+        if not success2:
+            return None
+    except Exception:  # noqa: BLE001 -- e.g. a companion drawn from a sibling contract whose tool
+        # does not exist in THIS scenario_id's live env (a subprocess adapter can raise its own
+        # adapter-error type for an unknown tool name). Not a crash-worthy condition: it just means
+        # this particular candidate sequence could not be built, exactly like a probe-search miss.
+        return None
+    label = f"paired_sequence:{first.tool}->{second.tool}"
+    return (label, pre2, post2, dict(second_probe.args), result2)
+
+
+def check_invariants(
+    adapter: Adapter,
+    contract: Contract,
+    scenario_id: str,
+    sibling_contracts: tuple = (),
+    *,
+    own_probe=None,
+    cfg: Optional[CanonicalConfig] = None,
+    seed: int = 0,
+) -> list:
+    """Invariant Break (PAPER-OUTLINE.md sec III: "environment invariant false after a legal call
+    sequence"). Builds every candidate legal sequence this module knows how to construct (see
+    module-section docstring), evaluates every declared invariant clause against each sequence's
+    final (pre, post, args, result), and reports, per clause:
+
+      - VIOLATES (defect_class INVARIANT_BREAK) if ANY sequence's witness makes the predicate
+        False -- existential, matching "false after A legal call sequence": one counterexample is
+        enough, and a checker that only tried one sequence and missed a violation another sequence
+        would have found is a probe-gap limitation to report, not a reason to withhold the verdict
+        it DID find.
+      - else CONFORMS if at least one sequence's witness made the predicate True.
+      - else UNTESTABLE (`no_observable_state` or `predicate_type_error`, matching
+        `adapters/contract_check.py`'s identical two-way split) if no candidate sequence could
+        even be built, or every one that was built raised evaluating this specific clause.
+
+    Returns `[]` (no rows -- not applicable, not a gap) if `contract.invariants` is empty, mirroring
+    dynamic/probes.py's own "not applicable" convention for a contract with <2 falsy-eligible
+    arguments. Returns a list of `(ClauseVerdict, probe_origin_label)` pairs, one per declared
+    invariant clause -- `run_contract` below threads the label into each `findings.jsonl` row's
+    `probe_origin`, same shape `check_ignored_argument`'s caller uses."""
+    if not contract.invariants:
+        return []
+    cfg = cfg or CanonicalConfig()
+
+    witnesses = []
+    single = _try_single_call_sequence(adapter, scenario_id, contract, own_probe)
+    if single is not None:
+        witnesses.append(single)
+
+    # Companion sequences always end with a call to `contract`'s OWN tool -- the witness being
+    # evaluated has to be (pre, post, args, result) of a call to THIS tool, or a clause declared
+    # on `contract` is being graded against some OTHER tool's own effect entirely. (An earlier
+    # version of this also tried `contract` first / `companion` second, on the theory that which
+    # tool needs to go first might vary; that is wrong, not just redundant -- it fed e.g.
+    # transfer's `inv.total_balance_conserved` a witness whose (pre, post) pair was actually
+    # deposit's own call, and deposit genuinely does NOT conserve the total balance, producing a
+    # false VIOLATES on a perfectly conforming toy tool. Caught by the toy-domain no-false-
+    # positive regression sweep this fix's tests run -- see tests/test_dynamic_harness.py.)
+    companions = [d for d in sibling_contracts if d.tool != contract.tool and _shares_invariant_clause(contract, d)]
+    for i, companion in enumerate(companions):
+        w = _try_paired_sequence(adapter, scenario_id, companion, contract, seed=seed + 10 + 2 * i)
+        if w is not None:
+            witnesses.append(w)
+
+    if not witnesses:
+        return [
+            (ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=inv.id, reason_code="no_observable_state"),
+             "invariant_sequence_not_found")
+            for inv in contract.invariants
+        ]
+
+    out = []
+    for inv in contract.invariants:
+        compiled = compile_predicate(inv.predicate)
+        violation = None
+        conforming = None
+        last_reason = "no_observable_state"
+        for label, pre, post, args, result in witnesses:
+            try:
+                ok = evaluate(compiled, pre, post, args, result)
+            except PathError:
+                last_reason = "no_observable_state"
+                continue
+            except PredicateTypeError:
+                last_reason = "predicate_type_error"
+                continue
+            if ok:
+                if conforming is None:
+                    conforming = (label, pre, post, args, result)
+            else:
+                violation = (label, pre, post, args, result)
+                break
+        if violation is not None:
+            label, pre, post, args, result = violation
+            out.append((
+                ClauseVerdict(
+                    verdict=Verdict.VIOLATES,
+                    clause_id=inv.id,
+                    defect_class=DefectClass.INVARIANT_BREAK,
+                    witness=Witness(args=args, diff=diff(pre, post, cfg), result=result),
+                ),
+                label,
+            ))
+        elif conforming is not None:
+            out.append((ClauseVerdict(verdict=Verdict.CONFORMS, clause_id=inv.id), conforming[0]))
+        else:
+            out.append((
+                ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=inv.id, reason_code=last_reason),
+                "invariant_no_evaluable_witness",
+            ))
+    return out
+
+
+# =================================================================================================
+# check_frame -- the last structural gap: 35 shipped contracts declare `frame:` clauses
+# (PREDICATE-GRAMMAR.md sec 3 -- "how Partial Effect and unadvertised side effects are caught"),
+# but `core/frame.py::match_paths` was, before this fix, only ever called for canonicalization
+# masking (core/canonical.py) and static validation (spec/validate.py check 3's parse-only pass).
+# No code path resolved a frame pattern against a REAL (pre, post) pair and compared it -- grep
+# confirms `match_paths` had exactly those two call sites project-wide. Every frame clause was
+# therefore decorative: schema-valid, static-check-clean, and dynamically inert.
+#
+# Taxonomy mapping (pre-registered at checker-freeze-v1; see this fix's build note -- the six
+# defect classes in core/verdict.py's DefectClass are closed, and this deliberately does not add
+# a seventh):
+#
+#   mode: "unchanged" violated, >=1 effect clause on the SAME call also VIOLATES
+#       -> VIOLATES / DefectClass.PARTIAL_EFFECT. The existing definition: some advertised
+#          effects landed, some did not, and here there is collateral damage besides.
+#
+#   mode: "unchanged" violated, every effect clause on the same call CONFORMS
+#       -> the tool did everything it advertised, PLUS something it did not. Not cleanly any of
+#          the six classes. VIOLATES with defect_class=None, and an `unadvertised_side_effect`
+#          aggravating signal attached to the row -- the SAME mechanism check_ignored_argument
+#          already uses for the result-vs-state disagreement signal (a plain dict returned
+#          alongside the ClauseVerdict, never folded into core/verdict.py's lattice). A signal,
+#          not a class: it must never enter class counts, class recall, or the taxonomy table
+#          (that filtering lives in the report scripts this fix does not touch, per CLAUDE.md's
+#          "do not regenerate report/mutation_*" instruction -- this module only has to make the
+#          row shape distinguishable, which defect_class=None plus the aggravating_signal key
+#          already does).
+#
+#   mode: "changed" violated (the region that was ADVERTISED to change did not)
+#       -> ALWAYS VIOLATES / DefectClass.PARTIAL_EFFECT, regardless of what any other effect
+#          clause on the same call did. schema.json's own words for mode: "changed" -- "occasionally
+#          the clearer way to state an ADVERTISED EFFECT over a wildcard path" -- mean a
+#          mode:changed clause already IS an effect clause wearing frame syntax; its failure is
+#          "an advertised change never happened", which is Partial Effect's shape outright. The
+#          "did everything advertised, plus something extra" narrative behind the
+#          unadvertised_side_effect signal is incoherent for this mode (nothing extra happened;
+#          something expected did not), so mode:"changed" never routes through that branch.
+#
+# A frame pattern matching nothing (in EITHER snapshot) is never a vacuous pass -- core/frame.py's
+# own `require_match` contract -- but it must also never crash the whole run: caught here and
+# reported UNTESTABLE/no_observable_state, one row per unmatchable clause, exactly the "report
+# UNTESTABLE with a registered reason code rather than silently skipping it" instruction covering
+# the state.reservations.* / args.reservation_id exclusion gap recorded in
+# spec/GRAMMAR-GAPS.md (no shipped frame clause currently has that exact shape, but the next one
+# that does must degrade this way, not crash or vacuously pass).
+# =================================================================================================
+
+
+def _frame_concrete_paths(pattern: str, pre: Any, post: Any) -> list:
+    """Concrete paths `pattern` matches, unioned across BOTH `pre` and `post` (each matched with
+    `require_match=False`) rather than either snapshot alone. Matching only `pre` would raise a
+    spurious FrameMatchError for a pattern that legitimately matches a key the call just CREATED
+    (present in `post`, absent in `pre` -- itself exactly the kind of unadvertised structural
+    change frame checking exists to catch, not a reason to blow up); matching only `post`
+    symmetrically misses a key the call just DELETED. Raises FrameMatchError -- never a vacuous
+    pass, per core/frame.py's own contract -- only when the union across both snapshots is
+    genuinely empty."""
+    paths = set(match_paths(pattern, pre, require_match=False))
+    paths |= set(match_paths(pattern, post, require_match=False))
+    if not paths:
+        raise FrameMatchError(f"frame path {pattern!r} matched nothing in pre or post")
+    return sorted(paths, key=lambda p: tuple(str(x) for x in p))
+
+
+def check_frame(
+    contract: Contract,
+    pre: Any,
+    post: Any,
+    args: Any,
+    result: Any,
+    *,
+    effect_verdicts: list = (),
+    cfg: Optional[CanonicalConfig] = None,
+) -> list:
+    """Frame Break / unadvertised-side-effect detection (PREDICATE-GRAMMAR.md sec 3; see the
+    module-section docstring above for the taxonomy mapping this implements). `effect_verdicts`
+    is the SAME call's own `check_effects` output -- the caller (`run_contract`) always evaluates
+    frame clauses against the identical (pre, post, args, result) tuple used for the effect
+    happy-path probe, so "an effect clause on the same call" is well-defined.
+
+    Returns `[]` (not applicable, not a gap) if `contract.frame` is empty. Otherwise one
+    `(ClauseVerdict, Optional[dict])` pair per declared frame clause, mirroring
+    `check_invariants`'s `(verdict, label)` return shape -- the second element here is the
+    aggravating-signal dict `_row` merges into the findings.jsonl row's `extra`, or None when
+    there is nothing to attach (CONFORMS, UNTESTABLE, or a partial_effect-tagged VIOLATES, which
+    already carries a real defect_class and needs no additional signal)."""
+    if not contract.frame:
+        return []
+    cfg = cfg or CanonicalConfig()
+    any_effect_violated = any(v.verdict == Verdict.VIOLATES for v in effect_verdicts)
+
+    out = []
+    for fc in contract.frame:
+        try:
+            paths = _frame_concrete_paths(fc.path, pre, post)
+        except FrameMatchError:
+            out.append((
+                ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=fc.id, reason_code="no_observable_state"),
+                None,
+            ))
+            continue
+
+        changed_paths = [p for p in paths if not canonical_equal_at(pre, post, p, cfg)]
+        any_changed = bool(changed_paths)
+        # mode "unchanged" (default): every matched subtree must be equal pre/post -- violated
+        # iff ANY of them changed. mode "changed": at least one must differ -- violated iff NONE
+        # of them did (see PREDICATE-GRAMMAR.md sec 3 / schema.json frameClause.mode).
+        violated = any_changed if fc.mode != "changed" else not any_changed
+
+        if not violated:
+            out.append((ClauseVerdict(verdict=Verdict.CONFORMS, clause_id=fc.id), None))
+            continue
+
+        witness = Witness(args=args, diff=diff(pre, post, cfg), result=result)
+
+        if fc.mode == "changed":
+            # An advertised effect (expressed via frame syntax) never happened -- always Partial
+            # Effect, regardless of any other effect clause's outcome. See module-section
+            # docstring: the aggravating-signal branch below is incoherent for this mode.
+            out.append((
+                ClauseVerdict(verdict=Verdict.VIOLATES, clause_id=fc.id, defect_class=DefectClass.PARTIAL_EFFECT, witness=witness),
+                None,
+            ))
+            continue
+
+        if any_effect_violated:
+            out.append((
+                ClauseVerdict(verdict=Verdict.VIOLATES, clause_id=fc.id, defect_class=DefectClass.PARTIAL_EFFECT, witness=witness),
+                None,
+            ))
+        else:
+            # Every effect clause on this call held, yet a region advertised unchanged moved:
+            # the tool did everything it advertised plus something it did not. Not one of the
+            # six classes -- an aggravating signal on the row, never a class of its own.
+            out.append((
+                ClauseVerdict(verdict=Verdict.VIOLATES, clause_id=fc.id, defect_class=None, witness=witness),
+                {
+                    "aggravating_signal": "unadvertised_side_effect",
+                    "changed_paths": [".".join(str(x) for x in p) for p in changed_paths],
+                },
+            ))
+    return out
+
+
+# =================================================================================================
 # The per-contract loop.
 # =================================================================================================
+
+
+RESET_CLAUSE_ID = "reset.snapshot"
+# Synthetic clause id for the Reset Leak check (see `check_reset` below) -- analogous to
+# `arg.<name>` for Ignored Argument: `contract.reset` (core/model.py's `Reset` dataclass) has no
+# `id` of its own (schema.json's `reset` block is a single object, not a list of clauses), so this
+# module mints ONE stable id per contract to carry a reset verdict through `_row`/findings.jsonl
+# and through `_headline_tier_for_clause` (see `_ResetAsClause` below). Not in the
+# `^(pre|eff|inv|frame)\.` id pattern schema.json's `clause` $def enforces -- deliberately, exactly
+# like `arg.<name>`, because this id is never written into a contract YAML; it is synthesized here
+# at check time only.
 
 
 class _ArgAsClause:
@@ -226,18 +684,38 @@ class _ArgAsClause:
         self.provenance = provenance
 
 
+class _ResetAsClause:
+    """Shim exposing the two attributes `core.model.headline_tier()` reads (`.inferred`,
+    `.provenance`) for the synthetic `RESET_CLAUSE_ID` -- mirrors `_ArgAsClause` exactly.
+    `core.model.Reset` has no `inferred` field of its own (schema.json's `reset` block never
+    exposed one; every shipped `reset:` block is either agent-visibly grounded via its own
+    `provenance` or carries none at all), so this always reports `inferred=False` -- a reset
+    verdict with no provenance therefore lands in `HeadlineTier.INFERRED` via
+    `headline_tier()`'s own `provenance is None` branch, not a special case here."""
+
+    __slots__ = ("inferred", "provenance")
+
+    def __init__(self, provenance):
+        self.inferred = False
+        self.provenance = provenance
+
+
 def _clause_for_id(contract: Contract, clause_id: str):
-    """The Clause (or `_ArgAsClause`-wrapped ArgSpec) object `clause_id` names, for
+    """The Clause (or `_ArgAsClause`/`_ResetAsClause`-wrapped object) `clause_id` names, for
     `_headline_tier_for_clause` below. `arg.<name>` ids are synthesized by
-    `check_ignored_argument`/`dynamic/probes.py`'s ignored-argument probes, not present in
-    `Contract.all_clauses()`; every other clause_id this module ever emits (an effect id, or a
-    precondition id via `check_precondition_enforcement`'s `violated_ids[0]`) is a real Clause id
-    that IS in `all_clauses()`. Returns None if `clause_id` cannot be resolved (should not happen
-    for a clause_id this module itself produced, but never raises on it -- an unresolvable
-    clause_id degrades to `headline_tier: null` rather than crashing the run)."""
+    `check_ignored_argument`/`dynamic/probes.py`'s ignored-argument probes, and `RESET_CLAUSE_ID`
+    by `check_reset` below -- neither is present in `Contract.all_clauses()`; every other
+    clause_id this module ever emits (an effect id, a precondition id via
+    `check_precondition_enforcement`'s `violated_ids[0]`, or an invariant id via `check_invariants`
+    below -- invariants ARE in `all_clauses()`) is a real Clause id that IS in `all_clauses()`.
+    Returns None if `clause_id` cannot be resolved (should not happen for a clause_id this module
+    itself produced, but never raises on it -- an unresolvable clause_id degrades to
+    `headline_tier: null` rather than crashing the run)."""
     if clause_id.startswith("arg."):
         spec = contract.signature.args.get(clause_id[len("arg."):])
         return None if spec is None else _ArgAsClause(spec.provenance)
+    if clause_id == RESET_CLAUSE_ID:
+        return None if contract.reset is None else _ResetAsClause(contract.reset.provenance)
     for c in contract.all_clauses():
         if c.id == clause_id:
             return c
@@ -303,7 +781,46 @@ def _witness_to_json(w: Optional[Witness]) -> Optional[dict]:
     return {"args": w.args, "diff": w.diff, "result": w.result}
 
 
+def _untestable_declared_reason(contract: Contract, clause_id: str) -> Optional[str]:
+    """GAP 3 (CLAUDE.md): `contract.untestable` (core/model.py's `Untestable` list, schema.json's
+    `untestable:` block -- "Clauses deliberately not checked, each with a machine-readable
+    reason. Entries here stay in every denominator the paper reports") was parsed by
+    core/model.py and schema-validated by spec/validate.py's check 1, but nothing ever READ it:
+    grep across adapters/, dynamic/, core/, spec/coverage.py turned up zero consumers. Impact was
+    zero -- no shipped contract declares an `untestable:` block -- but leaving it unconsumed would
+    have meant a future author's entry silently vanishing from every denominator the moment it was
+    used, exactly the failure mode the pre-registered detector_analysis_plan.md guards against for
+    the DYNAMICALLY-discovered UNTESTABLE case (a probe gap) and which this project chose to also
+    close for the DECLARATIVELY-known case (an author who already knows a clause cannot be
+    dynamically exercised -- nondeterministic_env, requires_network -- rather than let it be
+    silently re-evaluated and possibly misreport CONFORMS/VIOLATES for a clause the contract's own
+    author says is not a fair dynamic test). Wiring this through (rather than making an
+    `untestable:` block a hard validation error) costs nothing today, since zero contracts are
+    affected, and is symmetric with how `check_reset`/`check_precondition_enforcement` already
+    treat an ABSENT block as "the contract makes no claim" -- a PRESENT entry should not be
+    weaker than that.
+
+    Returns the declared `reason` (already schema-validated against the untestable.reason enum,
+    itself a subset of core.verdict.UNTESTABLE_REASONS) for `clause_id`, or None if `clause_id` is
+    not named there -- the overwhelmingly common case.
+
+    Known limitation, stated rather than hidden: this overrides the REPORTED verdict only, at row
+    construction (`_row`, below) -- it does not suppress the underlying probe call that produced
+    `cv`. A `requires_network` declaration is therefore not a guarantee that this build never
+    attempts the call; it only guarantees the row the checker reports is UNTESTABLE with the
+    author's own declared reason rather than whatever the live evaluation happened to produce.
+    None of the four in-scope adapters (toy, tau2, agentdojo, mm-toolsandbox) makes a live network
+    call today, so this limitation has no live consequence for the current benchmark set."""
+    for u in contract.untestable:
+        if u.clause_id == clause_id:
+            return u.reason
+    return None
+
+
 def _row(*, kind: str, contract: Contract, scenario_id: str, cv: ClauseVerdict, probe_origin: str, extra: Optional[dict] = None) -> dict:
+    declared_reason = _untestable_declared_reason(contract, cv.clause_id)
+    if declared_reason is not None:
+        cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=cv.clause_id, reason_code=declared_reason)
     tier = _headline_tier_for_clause(contract, cv.clause_id)
     row = {
         "kind": kind,
@@ -318,6 +835,7 @@ def _row(*, kind: str, contract: Contract, scenario_id: str, cv: ClauseVerdict, 
         "witness": _witness_to_json(cv.witness),
         "probe_origin": probe_origin,
         "headline_tier": tier.value if tier is not None else None,
+        "contract_declared_untestable": declared_reason is not None,
     }
     if extra:
         row.update(extra)
@@ -331,16 +849,25 @@ def run_contract(
     *,
     cfg: Optional[CanonicalConfig] = None,
     seed: int = 0,
+    sibling_contracts: tuple = (),
 ) -> list:
     """The full milestone-2 build-spec loop for one contract against one live adapter: generate
     the probe plan from a fresh pre-snapshot, invoke every probe against its OWN fresh
     environment, evaluate every resulting call against the contract with
     `adapters.contract_check` (effects, precondition enforcement) plus this module's own
-    `check_ignored_argument`, and return the `findings.jsonl` rows (see `_row`). Never raises on
-    a probe-generation gap -- an effect clause with no happy-path probe, or an argument with too
-    few distinct successful variants, is reported as an UNTESTABLE row rather than silently
-    dropped, so the sec-4.3 probe-gap accounting in `detector_analysis_plan.md` has something to
-    count."""
+    `check_ignored_argument`, `check_reset`, and `check_invariants`, and return the
+    `findings.jsonl` rows (see `_row`). Never raises on a probe-generation gap -- an effect clause
+    with no happy-path probe, or an argument with too few distinct successful variants, is
+    reported as an UNTESTABLE row rather than silently dropped, so the sec-4.3 probe-gap
+    accounting in `detector_analysis_plan.md` has something to count.
+
+    `sibling_contracts` -- every OTHER shipped contract valid for this SAME `scenario_id` (never
+    including `contract` itself) -- is optional and defaults to `()`: every existing call site
+    (tests, `experiments/open_world_cosmic_ray/*/scoring_lib.py`, the closed-world mutation
+    runner) keeps working unchanged, just without `check_invariants`'s length-2 companion
+    sequencing (see that function's docstring) -- a strictly weaker but never wrong degradation,
+    since the length-1 single-call check is tried regardless. `run_all` below is the reference
+    caller that actually builds this list."""
     cfg = cfg or CanonicalConfig()
     seed_env = adapter.fresh_env(scenario_id)
     pre0 = adapter.snapshot(seed_env)
@@ -379,14 +906,33 @@ def run_contract(
     if plan.effect_probe is not None:
         rec = _invoke_fresh(adapter, scenario_id, contract.tool, plan.effect_probe.args)
         if rec.success:
-            for cv in check_effects(contract, rec.pre, rec.post, rec.args, rec.result, cfg=cfg):
+            effect_verdicts = check_effects(contract, rec.pre, rec.post, rec.args, rec.result, cfg=cfg)
+            for cv in effect_verdicts:
                 rows.append(_row(kind="effect", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin=plan.effect_probe.origin))
+            for cv, aggravation in check_frame(contract, rec.pre, rec.post, rec.args, rec.result, effect_verdicts=effect_verdicts, cfg=cfg):
+                rows.append(
+                    _row(
+                        kind="frame", contract=contract, scenario_id=scenario_id, cv=cv,
+                        probe_origin=plan.effect_probe.origin, extra=aggravation,
+                    )
+                )
         else:
             for ec in contract.effects:
                 cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=ec.id, reason_code="no_observable_state")
                 rows.append(
                     _row(
                         kind="effect", contract=contract, scenario_id=scenario_id, cv=cv,
+                        probe_origin="effect_happy_path_call_failed", extra={"call_error": rec.error},
+                    )
+                )
+            # A failed call never reached the tool's effect code, so post == pre and grading a
+            # frame clause here would manufacture a vacuous CONFORMS -- same reasoning as the
+            # effect-clause branch immediately above; report UNTESTABLE per clause instead.
+            for fc in contract.frame:
+                cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=fc.id, reason_code="no_observable_state")
+                rows.append(
+                    _row(
+                        kind="frame", contract=contract, scenario_id=scenario_id, cv=cv,
                         probe_origin="effect_happy_path_call_failed", extra={"call_error": rec.error},
                     )
                 )
@@ -397,6 +943,9 @@ def run_contract(
         for ec in contract.effects:
             cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=ec.id, reason_code="no_observable_state")
             rows.append(_row(kind="effect", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin="effect_happy_path_not_found"))
+        for fc in contract.frame:
+            cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=fc.id, reason_code="no_observable_state")
+            rows.append(_row(kind="frame", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin="effect_happy_path_not_found"))
 
     # -- joint-falsy probe: dynamic/probes.py's generic fix for the probe gap
     #    detector_analysis_plan.md sec 4.3 names -- see generate_joint_falsy_probe's docstring.
@@ -461,6 +1010,21 @@ def run_contract(
                 )
             )
 
+    # -- Reset Leak: adapter.reset() must restore exactly the initial snapshot. Reuses
+    #    `plan.effect_probe` (already searched above) to dirty the state first -- see
+    #    `check_reset`'s docstring for why an untouched env would otherwise be a vacuous test.
+    #    Emits no row at all when `contract.reset` is absent (no claim made), matching
+    #    `check_precondition_enforcement`'s identical convention. ------------------------------
+    reset_cv = check_reset(adapter, contract, scenario_id, effect_probe=plan.effect_probe, cfg=cfg, seed=seed + 4)
+    if reset_cv is not None:
+        rows.append(_row(kind="reset", contract=contract, scenario_id=scenario_id, cv=reset_cv, probe_origin="reset_check"))
+
+    # -- Invariant Break: environment invariants after a legal call sequence (see
+    #    `check_invariants`'s module-section docstring for the sequence prober this implements).
+    #    Emits no rows at all when `contract.invariants` is empty. ------------------------------
+    for cv, origin in check_invariants(adapter, contract, scenario_id, sibling_contracts, own_probe=plan.effect_probe, cfg=cfg, seed=seed + 5):
+        rows.append(_row(kind="invariant", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin=origin))
+
     return rows
 
 
@@ -475,32 +1039,70 @@ def _iter_toy_contracts():
 
 
 def _iter_tau2_contracts():
+    """Yields every contract under `spec/contracts/tau2/` paired with the domain
+    `mutation.real_targets.resolve_domain` reads off `contract.source.file` (never a hand-
+    maintained tool->domain table -- see the module comment above this function for why the old
+    one silently dropped 17 of 19 contracts). `domain` is `None` when a contract's `source.file`
+    does not match the expected `domains/<domain>/tools.py` shape -- callers MUST turn that into
+    a loud `UNTESTABLE`/`adapter_unsupported` row (`_unroutable_row` below), never a silent skip;
+    this generator itself never drops a contract."""
     for path in sorted((CONTRACTS_ROOT / "tau2").glob("*.yaml")):
         if path.suffix != ".yaml":
             continue
         contract = Contract.from_yaml(path)
-        domain = TAU2_DOMAIN_BY_TOOL.get(contract.tool)
-        if domain is None:
-            continue  # not a tool this milestone has a domain mapping for -- skip, don't guess
-        yield contract, domain
+        yield contract, resolve_domain("tau2-bench", contract)
 
 
 def _iter_contracts_by_live_domain(contracts_dir_name: str, adapter: Adapter):
-    """Shared shape for AgentDojo and MM-ToolSandbox: unlike tau2 (TAU2_DOMAIN_BY_TOOL is
-    hand-maintained because several tau2 tool names genuinely recur across domains -- see
-    adapters.tau2.Tau2Adapter.source()'s docstring), neither AgentDojo's 7 shipped contracts nor
+    """Shared shape for AgentDojo and MM-ToolSandbox: neither AgentDojo's 7 shipped contracts nor
     MM-ToolSandbox's 5 name a tool that appears in more than one in-scope suite/scenario, so the
     tool -> domain mapping is read directly off the adapter's own `list_tools()` (each ToolRef's
     `domain` field is exactly the scenario_id `fresh_env` expects -- adapters/agentdojo.py's and
-    adapters/mmtoolsandbox.py's `_cmd_list_tools`/`_cmd_fresh_env` agree on this by construction)
-    instead of being guessed at or duplicated into a second hand-maintained table here."""
+    adapters/mmtoolsandbox.py's `_cmd_list_tools`/`_cmd_fresh_env` agree on this by construction),
+    via the same `resolve_domain` tau2 uses above rather than a second hand-maintained table.
+
+    Yields `(contract, None)` -- never skips -- when a contract names a tool the live adapter
+    does not currently expose; see `_iter_tau2_contracts`'s docstring for why the caller must
+    turn that into a reported row instead of dropping the contract."""
     domain_by_tool = {t.name: t.domain for t in adapter.list_tools()}
     for path in sorted((CONTRACTS_ROOT / contracts_dir_name).glob("*.yaml")):
         contract = Contract.from_yaml(path)
-        domain = domain_by_tool.get(contract.tool)
-        if domain is None:
-            continue  # not a tool the live adapter actually exposes -- skip, don't guess
-        yield contract, domain
+        yield contract, resolve_domain(contract.benchmark, contract, domain_by_tool)
+
+
+def _unroutable_row(contract: Contract) -> dict:
+    """The loud replacement for the old silent `continue`: one `findings.jsonl` row per contract
+    that `_iter_tau2_contracts`/`_iter_contracts_by_live_domain` could not resolve a live
+    `scenario_id` for. Verdict is UNTESTABLE with the registered `adapter_unsupported` reason
+    code (`core.verdict.UNTESTABLE_REASONS`) -- never a bare skip -- so the contract still counts
+    in every denominator (`experiments/detector_analysis_plan.md`: "UNTESTABLE clauses stay in
+    all denominators with their reason codes") and is greppable in the report rather than merely
+    absent from it. `clause_id` is a synthetic contract-level id outside the
+    `^(pre|eff|inv|frame)\\.` pattern `spec/schema.json` enforces for authored clauses --
+    deliberately, exactly like `RESET_CLAUSE_ID`/`arg.<name>` above, since it is never written
+    into a contract YAML."""
+    cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id="contract.unroutable", reason_code="adapter_unsupported")
+    return _row(kind="unroutable", contract=contract, scenario_id=None, cv=cv, probe_origin="domain_unresolved")
+
+
+def _with_siblings(pairs) -> list:
+    """`[(contract, scenario_id), ...] -> [(contract, scenario_id, siblings), ...]`, where
+    `siblings` is every OTHER contract sharing that SAME `scenario_id` -- exactly the
+    `sibling_contracts` shape `run_contract`/`check_invariants` need for the companion-sequence
+    search (see `check_invariants`'s module-section docstring). Grouped by `scenario_id`, not
+    merely "every other contract in this benchmark": for tau2 a contract's `scenario_id` is one
+    specific domain (airline/retail/telecom), and a companion drawn from a DIFFERENT domain would
+    never resolve against a `fresh_env(scenario_id)` built for this one (`_try_paired_sequence`
+    already guards this defensively too, but there is no reason to hand it a candidate that could
+    never work)."""
+    pairs = list(pairs)
+    by_scenario: dict = {}
+    for contract, scenario_id in pairs:
+        by_scenario.setdefault(scenario_id, []).append(contract)
+    return [
+        (contract, scenario_id, tuple(c for c in by_scenario[scenario_id] if c.tool != contract.tool))
+        for contract, scenario_id in pairs
+    ]
 
 
 def run_all(*, seed: int = 0) -> list:
@@ -510,12 +1112,18 @@ def run_all(*, seed: int = 0) -> list:
     `adapter_unavailable` row for that benchmark instead of failing the whole run -- mirrors
     `tests/test_tau2_adapter.py`'s skip discipline, but as data rather than a test skip, since this
     is meant to run outside `unittest` too. One benchmark's adapter being unavailable does not
-    block the others -- each is tried independently."""
+    block the others -- each is tried independently.
+
+    Every shipped contract is accounted for in the output, one way or another: a contract whose
+    domain `_iter_tau2_contracts`/`_iter_contracts_by_live_domain` could not resolve gets exactly
+    one `_unroutable_row` (UNTESTABLE/`adapter_unsupported`) instead of being silently `continue`d
+    past -- see those functions' docstrings for the defect this replaced (17 of 19 tau2 contracts
+    dropped with no row, no warning, no trace)."""
     rows: list = []
 
     toy_adapter = ToyAdapter()
-    for contract, scenario_id in _iter_toy_contracts():
-        rows.extend(run_contract(toy_adapter, contract, scenario_id, cfg=TOY_CANONICAL_CONFIG, seed=seed))
+    for contract, scenario_id, siblings in _with_siblings(_iter_toy_contracts()):
+        rows.extend(run_contract(toy_adapter, contract, scenario_id, cfg=TOY_CANONICAL_CONFIG, seed=seed, sibling_contracts=siblings))
 
     try:
         tau2_adapter = Tau2Adapter()
@@ -523,8 +1131,11 @@ def run_all(*, seed: int = 0) -> list:
         rows.append({"kind": "adapter_unavailable", "benchmark": "tau2-bench", "detail": str(e)})
     else:
         try:
-            for contract, domain in _iter_tau2_contracts():
-                rows.extend(run_contract(tau2_adapter, contract, domain, seed=seed))
+            for contract, domain, siblings in _with_siblings(_iter_tau2_contracts()):
+                if domain is None:
+                    rows.append(_unroutable_row(contract))
+                    continue
+                rows.extend(run_contract(tau2_adapter, contract, domain, seed=seed, sibling_contracts=siblings))
         finally:
             tau2_adapter.close()
 
@@ -534,8 +1145,11 @@ def run_all(*, seed: int = 0) -> list:
         rows.append({"kind": "adapter_unavailable", "benchmark": "agentdojo", "detail": str(e)})
     else:
         try:
-            for contract, domain in _iter_contracts_by_live_domain("agentdojo", agentdojo_adapter):
-                rows.extend(run_contract(agentdojo_adapter, contract, domain, seed=seed))
+            for contract, domain, siblings in _with_siblings(_iter_contracts_by_live_domain("agentdojo", agentdojo_adapter)):
+                if domain is None:
+                    rows.append(_unroutable_row(contract))
+                    continue
+                rows.extend(run_contract(agentdojo_adapter, contract, domain, seed=seed, sibling_contracts=siblings))
         finally:
             agentdojo_adapter.close()
 
@@ -545,8 +1159,11 @@ def run_all(*, seed: int = 0) -> list:
         rows.append({"kind": "adapter_unavailable", "benchmark": "mm-toolsandbox", "detail": str(e)})
     else:
         try:
-            for contract, domain in _iter_contracts_by_live_domain("mmtoolsandbox", mmts_adapter):
-                rows.extend(run_contract(mmts_adapter, contract, domain, seed=seed))
+            for contract, domain, siblings in _with_siblings(_iter_contracts_by_live_domain("mmtoolsandbox", mmts_adapter)):
+                if domain is None:
+                    rows.append(_unroutable_row(contract))
+                    continue
+                rows.extend(run_contract(mmts_adapter, contract, domain, seed=seed, sibling_contracts=siblings))
         finally:
             mmts_adapter.close()
 

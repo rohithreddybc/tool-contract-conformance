@@ -104,9 +104,10 @@ def resolve_domain(benchmark: str, contract: Contract, domain_by_tool: "Optional
     but a single CONTRACT is authored against one specific domain's tools.py, and that domain
     name is baked into `contract.source.file` (".../domains/<domain>/tools.py") -- read off the
     path directly rather than hand-maintaining a second tool->domain table that could drift from
-    what the contract was actually authored against (dynamic/harness.py's TAU2_DOMAIN_BY_TOOL
-    does the latter, but only for the 2 tools its milestone shipped; this generalises to all 19
-    without introducing a second hand-maintained mapping to keep in sync).
+    what the contract was actually authored against. `dynamic/harness.py` used to hand-maintain
+    exactly such a table, scoped to only the 2 tools its first milestone shipped -- every contract
+    added afterwards was silently `continue`d past with no row, no warning, no trace. It now
+    imports and reuses `resolve_domain` (this function) instead of a second implementation.
 
     AgentDojo / MM-ToolSandbox: neither has cross-domain name reuse among its contracted tools
     (dynamic/harness.py's `_iter_contracts_by_live_domain` docstring), so the live adapter's own

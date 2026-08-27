@@ -137,11 +137,19 @@ class ToyAdapter(Adapter):
         Python's attribute lookup prefers over the class's own method for every subsequent call
         on this instance, leaving every other ToyBank instance (including a fresh one from
         another `fresh_env()` call) untouched. `unpatch_tool` is therefore a no-op here -- see
-        its docstring."""
+        its docstring.
+
+        `tool == "reset"` is accepted alongside `MUTATING_TOOLS` -- added for the M-RESET
+        operator (mutation/operators.py's `m_reset`): `reset` is not itself an agent-visible tool
+        (deliberately excluded from `MUTATING_TOOLS`, see that table's own comment), but it is a
+        real method on `ToyBank` that `mutation/sites.py`'s `reset_names=("reset",)` enumerates
+        sites against, and the mutation-experiment driver needs to be able to install a mutated
+        `reset` the same way it installs a mutated tool, so `dynamic.harness.check_reset` (added
+        alongside this change) has something real to score."""
         import toy.bank as bank_module
 
         bank = self._get(env)
-        if tool not in MUTATING_TOOLS:
+        if tool not in MUTATING_TOOLS and tool != "reset":
             raise ToyAdapterError(f"unknown tool: {tool}")
         ns: dict = {}
         exec(compile(mutant_source, f"<mutant:{tool}>", "exec"), vars(bank_module), ns)
