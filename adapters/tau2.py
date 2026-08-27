@@ -236,3 +236,12 @@ class Tau2Adapter(Adapter):
     def source(self, tool: str) -> SourceRef:
         result = self._send({"cmd": "source", "args": {"tool": tool}})
         return SourceRef.from_dict(result["source"])
+
+    def patch_tool(self, env: EnvHandle, tool: str, mutant_source: str) -> None:
+        """Scoped to `env` alone -- see adapters/_tau2_worker.py's `_cmd_patch_tool` docstring
+        and adapters/base.py's `Adapter.patch_tool`."""
+        self._send({"cmd": "patch_tool", "args": {"env_id": env.env_id, "tool": tool, "source": mutant_source}})
+
+    def unpatch_tool(self, tool: str) -> None:
+        """No-op -- see `patch_tool`'s docstring."""
+        return None

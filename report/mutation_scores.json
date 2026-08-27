@@ -1,0 +1,4649 @@
+{
+  "closed_world": {
+    "adapter_availability_notes": [],
+    "n_targets": 36,
+    "precision": {
+      "false_positive_mutants": [],
+      "fp": 0,
+      "n_equivalence_controls_scored": 24,
+      "n_flags": 48,
+      "precision": {
+        "n_tools": 27,
+        "per_tool": {
+          "add_reminder": {
+            "claim": "precision:add_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:add_reminder",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "add_user_to_channel": {
+            "claim": "precision:add_user_to_channel >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:add_user_to_channel",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "cancel_pending_order": {
+            "claim": "precision:cancel_pending_order >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:cancel_pending_order",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "create_calendar": {
+            "claim": "precision:create_calendar >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:create_calendar",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "deposit": {
+            "claim": "precision:deposit >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:deposit",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "disable_roaming": {
+            "claim": "precision:disable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:disable_roaming",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "enable_roaming": {
+            "claim": "precision:enable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:enable_roaming",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "exchange_delivered_order_items": {
+            "claim": "precision:exchange_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:exchange_delivered_order_items",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "freeze_account": {
+            "claim": "precision:freeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:freeze_account",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "modify_pending_order_address": {
+            "claim": "precision:modify_pending_order_address >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+            "label": "precision:modify_pending_order_address",
+            "n": 4,
+            "point": 1.0,
+            "successes": 4,
+            "wilson_lower": 0.5101091635454027,
+            "wilson_upper": 1.0
+          },
+          "modify_pending_order_payment": {
+            "claim": "precision:modify_pending_order_payment >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:modify_pending_order_payment",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "modify_user_address": {
+            "claim": "precision:modify_user_address >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:modify_user_address",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "release_item": {
+            "claim": "precision:release_item >= 0.439 (n=3; Wilson 95% CI [0.439, 1.000], point estimate 1.000)",
+            "label": "precision:release_item",
+            "n": 3,
+            "point": 1.0,
+            "successes": 3,
+            "wilson_lower": 0.4385029682449546,
+            "wilson_upper": 1.0
+          },
+          "release_lock": {
+            "claim": "precision:release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:release_lock",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "remove_reminder": {
+            "claim": "precision:remove_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:remove_reminder",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "reserve_hotel": {
+            "claim": "precision:reserve_hotel >= 0.566 (n=5; Wilson 95% CI [0.566, 1.000], point estimate 1.000)",
+            "label": "precision:reserve_hotel",
+            "n": 5,
+            "point": 1.0,
+            "successes": 5,
+            "wilson_lower": 0.5655175352168251,
+            "wilson_upper": 1.0
+          },
+          "resize_inventory": {
+            "claim": "precision:resize_inventory >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:resize_inventory",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "resume_line": {
+            "claim": "precision:resume_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:resume_line",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "return_delivered_order_items": {
+            "claim": "precision:return_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:return_delivered_order_items",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "send_money": {
+            "claim": "precision:send_money >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:send_money",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "suspend_line": {
+            "claim": "precision:suspend_line >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+            "label": "precision:suspend_line",
+            "n": 4,
+            "point": 1.0,
+            "successes": 4,
+            "wilson_lower": 0.5101091635454027,
+            "wilson_upper": 1.0
+          },
+          "tag_item": {
+            "claim": "precision:tag_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:tag_item",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "transfer": {
+            "claim": "precision:transfer >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:transfer",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "unfreeze_account": {
+            "claim": "precision:unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:unfreeze_account",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "update_reservation_baggages": {
+            "claim": "precision:update_reservation_baggages >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:update_reservation_baggages",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "update_reservation_passengers": {
+            "claim": "precision:update_reservation_passengers >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:update_reservation_passengers",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "withdraw": {
+            "claim": "precision:withdraw >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:withdraw",
+            "n": 2,
+            "point": 1.0,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          }
+        },
+        "pooled": {
+          "claim": "precision >= 0.926 (n=48; Wilson 95% CI [0.926, 1.000], point estimate 1.000)",
+          "label": "precision",
+          "n": 48.0,
+          "point": 1.0,
+          "successes": 48.0,
+          "wilson_lower": 0.9258998703338824,
+          "wilson_upper": 0.9999999999999999
+        }
+      },
+      "tp": 48
+    },
+    "recall": {
+      "by_operator": {
+        "M-IGNARG": {
+          "all": {
+            "classification_counts": {
+              "detected": 6,
+              "error": 3,
+              "missed": 13,
+              "untestable_no_clause_evaluated": 3
+            },
+            "n_drawn": 25,
+            "recall": {
+              "n_tools": 19,
+              "per_tool": {
+                "acquire_lock": {
+                  "claim": "M-IGNARG recall (all):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):acquire_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "add_reminder": {
+                  "claim": "M-IGNARG recall (all):add_reminder >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):add_reminder",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "book_reservation": {
+                  "claim": "M-IGNARG recall (all):book_reservation >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):book_reservation",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "cancel_pending_order": {
+                  "claim": "M-IGNARG recall (all):cancel_pending_order >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):cancel_pending_order",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "create_calendar": {
+                  "claim": "M-IGNARG recall (all):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (all):create_calendar",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_address": {
+                  "claim": "M-IGNARG recall (all):modify_pending_order_address >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (all):modify_pending_order_address",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-IGNARG recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_user_address": {
+                  "claim": "M-IGNARG recall (all):modify_user_address >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
+                  "label": "M-IGNARG recall (all):modify_user_address",
+                  "n": 3,
+                  "point": 0.6666666666666666,
+                  "successes": 2,
+                  "wilson_lower": 0.2076596008020477,
+                  "wilson_upper": 0.9385080552796037
+                },
+                "release_item": {
+                  "claim": "M-IGNARG recall (all):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):release_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "release_lock": {
+                  "claim": "M-IGNARG recall (all):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):release_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "reserve_hotel": {
+                  "claim": "M-IGNARG recall (all):reserve_hotel >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):reserve_hotel",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "send_certificate": {
+                  "claim": "M-IGNARG recall (all):send_certificate >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):send_certificate",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "send_money": {
+                  "claim": "M-IGNARG recall (all):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (all):send_money",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "set_wifi_status": {
+                  "claim": "M-IGNARG recall (all):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):set_wifi_status",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "suspend_line": {
+                  "claim": "M-IGNARG recall (all):suspend_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):suspend_line",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "tag_item": {
+                  "claim": "M-IGNARG recall (all):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):tag_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "transfer": {
+                  "claim": "M-IGNARG recall (all):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):transfer",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "unfreeze_account": {
+                  "claim": "M-IGNARG recall (all):unfreeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):unfreeze_account",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "withdraw": {
+                  "claim": "M-IGNARG recall (all):withdraw >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):withdraw",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-IGNARG recall (all) >= 0.110 (n=22.0615; Wilson 95% CI [0.110, 0.447], point estimate 0.240)",
+                "label": "M-IGNARG recall (all)",
+                "n": 22.061528556975997,
+                "point": 0.24,
+                "successes": 5.294766853674239,
+                "wilson_lower": 0.10962948857422358,
+                "wilson_upper": 0.4474874307075638
+              }
+            }
+          },
+          "real": {
+            "classification_counts": {
+              "detected": 6,
+              "error": 3,
+              "missed": 5,
+              "untestable_no_clause_evaluated": 3
+            },
+            "n_drawn": 17,
+            "recall": {
+              "n_tools": 12,
+              "per_tool": {
+                "add_reminder": {
+                  "claim": "M-IGNARG recall (real):add_reminder >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):add_reminder",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "book_reservation": {
+                  "claim": "M-IGNARG recall (real):book_reservation >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):book_reservation",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "cancel_pending_order": {
+                  "claim": "M-IGNARG recall (real):cancel_pending_order >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):cancel_pending_order",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "create_calendar": {
+                  "claim": "M-IGNARG recall (real):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (real):create_calendar",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_address": {
+                  "claim": "M-IGNARG recall (real):modify_pending_order_address >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (real):modify_pending_order_address",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-IGNARG recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_user_address": {
+                  "claim": "M-IGNARG recall (real):modify_user_address >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
+                  "label": "M-IGNARG recall (real):modify_user_address",
+                  "n": 3,
+                  "point": 0.6666666666666666,
+                  "successes": 2,
+                  "wilson_lower": 0.2076596008020477,
+                  "wilson_upper": 0.9385080552796037
+                },
+                "reserve_hotel": {
+                  "claim": "M-IGNARG recall (real):reserve_hotel >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):reserve_hotel",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "send_certificate": {
+                  "claim": "M-IGNARG recall (real):send_certificate >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):send_certificate",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "send_money": {
+                  "claim": "M-IGNARG recall (real):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (real):send_money",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "set_wifi_status": {
+                  "claim": "M-IGNARG recall (real):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):set_wifi_status",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "suspend_line": {
+                  "claim": "M-IGNARG recall (real):suspend_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):suspend_line",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-IGNARG recall (real) >= 0.162 (n=14.2477; Wilson 95% CI [0.162, 0.607], point estimate 0.353)",
+                "label": "M-IGNARG recall (real)",
+                "n": 14.247713082619427,
+                "point": 0.35294117647058826,
+                "successes": 5.028604617395092,
+                "wilson_lower": 0.16174505484414217,
+                "wilson_upper": 0.6065968089942112
+              }
+            }
+          },
+          "toy": {
+            "classification_counts": {
+              "missed": 8
+            },
+            "n_drawn": 8,
+            "recall": {
+              "n_tools": 7,
+              "per_tool": {
+                "acquire_lock": {
+                  "claim": "M-IGNARG recall (toy):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):acquire_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "release_item": {
+                  "claim": "M-IGNARG recall (toy):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):release_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "release_lock": {
+                  "claim": "M-IGNARG recall (toy):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):release_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "tag_item": {
+                  "claim": "M-IGNARG recall (toy):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):tag_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "transfer": {
+                  "claim": "M-IGNARG recall (toy):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):transfer",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "unfreeze_account": {
+                  "claim": "M-IGNARG recall (toy):unfreeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):unfreeze_account",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "withdraw": {
+                  "claim": "M-IGNARG recall (toy):withdraw >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):withdraw",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-IGNARG recall (toy) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+                "label": "M-IGNARG recall (toy)",
+                "n": 8.0,
+                "point": 0.0,
+                "successes": 0.0,
+                "wilson_lower": 0.0,
+                "wilson_upper": 0.32440756488388023
+              }
+            }
+          }
+        },
+        "M-INVAR": {
+          "all": {
+            "classification_counts": {
+              "detected": 1,
+              "missed": 7,
+              "untestable_no_clause_evaluated": 2
+            },
+            "n_drawn": 10,
+            "recall": {
+              "n_tools": 6,
+              "per_tool": {
+                "modify_pending_order_items": {
+                  "claim": "M-INVAR recall (all):modify_pending_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-INVAR recall (all):modify_pending_order_items",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "modify_pending_order_payment": {
+                  "claim": "M-INVAR recall (all):modify_pending_order_payment >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
+                  "label": "M-INVAR recall (all):modify_pending_order_payment",
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
+                },
+                "release_lock": {
+                  "claim": "M-INVAR recall (all):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-INVAR recall (all):release_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "resize_inventory": {
+                  "claim": "M-INVAR recall (all):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-INVAR recall (all):resize_inventory",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "update_reservation_baggages": {
+                  "claim": "M-INVAR recall (all):update_reservation_baggages >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-INVAR recall (all):update_reservation_baggages",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "update_reservation_flights": {
+                  "claim": "M-INVAR recall (all):update_reservation_flights >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-INVAR recall (all):update_reservation_flights",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-INVAR recall (all) >= 0.012 (n=6; Wilson 95% CI [0.012, 0.500], point estimate 0.100)",
+                "label": "M-INVAR recall (all)",
+                "n": 6.0,
+                "point": 0.10000000000000002,
+                "successes": 0.6000000000000001,
+                "wilson_lower": 0.012191461909959733,
+                "wilson_upper": 0.5000759684117726
+              }
+            }
+          },
+          "real": {
+            "classification_counts": {
+              "missed": 6,
+              "untestable_no_clause_evaluated": 2
+            },
+            "n_drawn": 8,
+            "recall": {
+              "n_tools": 4,
+              "per_tool": {
+                "modify_pending_order_items": {
+                  "claim": "M-INVAR recall (real):modify_pending_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-INVAR recall (real):modify_pending_order_items",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "modify_pending_order_payment": {
+                  "claim": "M-INVAR recall (real):modify_pending_order_payment >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
+                  "label": "M-INVAR recall (real):modify_pending_order_payment",
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
+                },
+                "update_reservation_baggages": {
+                  "claim": "M-INVAR recall (real):update_reservation_baggages >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-INVAR recall (real):update_reservation_baggages",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "update_reservation_flights": {
+                  "claim": "M-INVAR recall (real):update_reservation_flights >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-INVAR recall (real):update_reservation_flights",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-INVAR recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+                "label": "M-INVAR recall (real)",
+                "n": 8.0,
+                "point": 0.0,
+                "successes": 0.0,
+                "wilson_lower": 0.0,
+                "wilson_upper": 0.32440756488388023
+              }
+            }
+          },
+          "toy": {
+            "classification_counts": {
+              "detected": 1,
+              "missed": 1
+            },
+            "n_drawn": 2,
+            "recall": {
+              "n_tools": 2,
+              "per_tool": {
+                "release_lock": {
+                  "claim": "M-INVAR recall (toy):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-INVAR recall (toy):release_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "resize_inventory": {
+                  "claim": "M-INVAR recall (toy):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-INVAR recall (toy):resize_inventory",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                }
+              },
+              "pooled": {
+                "claim": "M-INVAR recall (toy) >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
+                "label": "M-INVAR recall (toy)",
+                "n": 2.0,
+                "point": 0.5,
+                "successes": 1.0,
+                "wilson_lower": 0.09453120573423074,
+                "wilson_upper": 0.9054687942657693
+              }
+            }
+          }
+        },
+        "M-PARTIAL": {
+          "all": {
+            "classification_counts": {
+              "detected": 9,
+              "error": 2,
+              "missed": 11,
+              "untestable_no_clause_evaluated": 3
+            },
+            "n_drawn": 25,
+            "recall": {
+              "n_tools": 13,
+              "per_tool": {
+                "book_reservation": {
+                  "claim": "M-PARTIAL recall (all):book_reservation >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):book_reservation",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "cancel_pending_order": {
+                  "claim": "M-PARTIAL recall (all):cancel_pending_order >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):cancel_pending_order",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (all):exchange_delivered_order_items >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):exchange_delivered_order_items",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-PARTIAL recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "release_item": {
+                  "claim": "M-PARTIAL recall (all):release_item >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (all):release_item",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "reserve_hotel": {
+                  "claim": "M-PARTIAL recall (all):reserve_hotel >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (all):reserve_hotel",
+                  "n": 4,
+                  "point": 1.0,
+                  "successes": 4,
+                  "wilson_lower": 0.5101091635454027,
+                  "wilson_upper": 1.0
+                },
+                "reserve_item": {
+                  "claim": "M-PARTIAL recall (all):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):reserve_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "resume_line": {
+                  "claim": "M-PARTIAL recall (all):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (all):resume_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "return_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (all):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):return_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "suspend_line": {
+                  "claim": "M-PARTIAL recall (all):suspend_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (all):suspend_line",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "transfer": {
+                  "claim": "M-PARTIAL recall (all):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):transfer",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "update_reservation_baggages": {
+                  "claim": "M-PARTIAL recall (all):update_reservation_baggages >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):update_reservation_baggages",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "update_reservation_flights": {
+                  "claim": "M-PARTIAL recall (all):update_reservation_flights >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):update_reservation_flights",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-PARTIAL recall (all) >= 0.160 (n=13; Wilson 95% CI [0.160, 0.623], point estimate 0.360)",
+                "label": "M-PARTIAL recall (all)",
+                "n": 13.0,
+                "point": 0.36,
+                "successes": 4.68,
+                "wilson_lower": 0.16047512097623348,
+                "wilson_upper": 0.6233915832829419
+              }
+            }
+          },
+          "real": {
+            "classification_counts": {
+              "detected": 7,
+              "error": 2,
+              "missed": 8,
+              "untestable_no_clause_evaluated": 3
+            },
+            "n_drawn": 20,
+            "recall": {
+              "n_tools": 10,
+              "per_tool": {
+                "book_reservation": {
+                  "claim": "M-PARTIAL recall (real):book_reservation >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):book_reservation",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "cancel_pending_order": {
+                  "claim": "M-PARTIAL recall (real):cancel_pending_order >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):cancel_pending_order",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (real):exchange_delivered_order_items >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):exchange_delivered_order_items",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-PARTIAL recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "reserve_hotel": {
+                  "claim": "M-PARTIAL recall (real):reserve_hotel >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (real):reserve_hotel",
+                  "n": 4,
+                  "point": 1.0,
+                  "successes": 4,
+                  "wilson_lower": 0.5101091635454027,
+                  "wilson_upper": 1.0
+                },
+                "resume_line": {
+                  "claim": "M-PARTIAL recall (real):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (real):resume_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "return_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (real):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):return_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "suspend_line": {
+                  "claim": "M-PARTIAL recall (real):suspend_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (real):suspend_line",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "update_reservation_baggages": {
+                  "claim": "M-PARTIAL recall (real):update_reservation_baggages >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):update_reservation_baggages",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "update_reservation_flights": {
+                  "claim": "M-PARTIAL recall (real):update_reservation_flights >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):update_reservation_flights",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                }
+              },
+              "pooled": {
+                "claim": "M-PARTIAL recall (real) >= 0.137 (n=10; Wilson 95% CI [0.137, 0.646], point estimate 0.350)",
+                "label": "M-PARTIAL recall (real)",
+                "n": 10.0,
+                "point": 0.35,
+                "successes": 3.5,
+                "wilson_lower": 0.13693056347003557,
+                "wilson_upper": 0.6463292764888311
+              }
+            }
+          },
+          "toy": {
+            "classification_counts": {
+              "detected": 2,
+              "missed": 3
+            },
+            "n_drawn": 5,
+            "recall": {
+              "n_tools": 3,
+              "per_tool": {
+                "release_item": {
+                  "claim": "M-PARTIAL recall (toy):release_item >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (toy):release_item",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "reserve_item": {
+                  "claim": "M-PARTIAL recall (toy):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (toy):reserve_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "transfer": {
+                  "claim": "M-PARTIAL recall (toy):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (toy):transfer",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                }
+              },
+              "pooled": {
+                "claim": "M-PARTIAL recall (toy) >= 0.085 (n=3; Wilson 95% CI [0.085, 0.828], point estimate 0.400)",
+                "label": "M-PARTIAL recall (toy)",
+                "n": 3.0,
+                "point": 0.4000000000000001,
+                "successes": 1.2000000000000002,
+                "wilson_lower": 0.08478455027622112,
+                "wilson_upper": 0.8275148560747881
+              }
+            }
+          }
+        },
+        "M-PHANTOM": {
+          "all": {
+            "classification_counts": {
+              "detected": 25
+            },
+            "n_drawn": 25,
+            "recall": {
+              "n_tools": 25,
+              "per_tool": {
+                "add_reminder": {
+                  "claim": "M-PHANTOM recall (all):add_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):add_reminder",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "add_user_to_channel": {
+                  "claim": "M-PHANTOM recall (all):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):add_user_to_channel",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "cancel_pending_order": {
+                  "claim": "M-PHANTOM recall (all):cancel_pending_order >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):cancel_pending_order",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "create_calendar": {
+                  "claim": "M-PHANTOM recall (all):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):create_calendar",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "disable_roaming": {
+                  "claim": "M-PHANTOM recall (all):disable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):disable_roaming",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "enable_roaming": {
+                  "claim": "M-PHANTOM recall (all):enable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):enable_roaming",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PHANTOM recall (all):exchange_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):exchange_delivered_order_items",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "freeze_account": {
+                  "claim": "M-PHANTOM recall (all):freeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):freeze_account",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_address": {
+                  "claim": "M-PHANTOM recall (all):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):modify_pending_order_address",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_payment": {
+                  "claim": "M-PHANTOM recall (all):modify_pending_order_payment >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):modify_pending_order_payment",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "release_item": {
+                  "claim": "M-PHANTOM recall (all):release_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):release_item",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "release_lock": {
+                  "claim": "M-PHANTOM recall (all):release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):release_lock",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "remove_reminder": {
+                  "claim": "M-PHANTOM recall (all):remove_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):remove_reminder",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "reserve_hotel": {
+                  "claim": "M-PHANTOM recall (all):reserve_hotel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):reserve_hotel",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "resize_inventory": {
+                  "claim": "M-PHANTOM recall (all):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):resize_inventory",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "resume_line": {
+                  "claim": "M-PHANTOM recall (all):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):resume_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "return_delivered_order_items": {
+                  "claim": "M-PHANTOM recall (all):return_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):return_delivered_order_items",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "send_money": {
+                  "claim": "M-PHANTOM recall (all):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):send_money",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "suspend_line": {
+                  "claim": "M-PHANTOM recall (all):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):suspend_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "tag_item": {
+                  "claim": "M-PHANTOM recall (all):tag_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):tag_item",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "transfer": {
+                  "claim": "M-PHANTOM recall (all):transfer >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):transfer",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "unfreeze_account": {
+                  "claim": "M-PHANTOM recall (all):unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):unfreeze_account",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "update_reservation_baggages": {
+                  "claim": "M-PHANTOM recall (all):update_reservation_baggages >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):update_reservation_baggages",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "update_reservation_passengers": {
+                  "claim": "M-PHANTOM recall (all):update_reservation_passengers >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):update_reservation_passengers",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "withdraw": {
+                  "claim": "M-PHANTOM recall (all):withdraw >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):withdraw",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                }
+              },
+              "pooled": {
+                "claim": "M-PHANTOM recall (all) >= 0.867 (n=25; Wilson 95% CI [0.867, 1.000], point estimate 1.000)",
+                "label": "M-PHANTOM recall (all)",
+                "n": 25.0,
+                "point": 1.0,
+                "successes": 25.0,
+                "wilson_lower": 0.8668077490609515,
+                "wilson_upper": 0.9999999999999999
+              }
+            }
+          },
+          "real": {
+            "classification_counts": {
+              "detected": 17
+            },
+            "n_drawn": 17,
+            "recall": {
+              "n_tools": 17,
+              "per_tool": {
+                "add_reminder": {
+                  "claim": "M-PHANTOM recall (real):add_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):add_reminder",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "add_user_to_channel": {
+                  "claim": "M-PHANTOM recall (real):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):add_user_to_channel",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "cancel_pending_order": {
+                  "claim": "M-PHANTOM recall (real):cancel_pending_order >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):cancel_pending_order",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "create_calendar": {
+                  "claim": "M-PHANTOM recall (real):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):create_calendar",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "disable_roaming": {
+                  "claim": "M-PHANTOM recall (real):disable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):disable_roaming",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "enable_roaming": {
+                  "claim": "M-PHANTOM recall (real):enable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):enable_roaming",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PHANTOM recall (real):exchange_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):exchange_delivered_order_items",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_address": {
+                  "claim": "M-PHANTOM recall (real):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):modify_pending_order_address",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_payment": {
+                  "claim": "M-PHANTOM recall (real):modify_pending_order_payment >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):modify_pending_order_payment",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "remove_reminder": {
+                  "claim": "M-PHANTOM recall (real):remove_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):remove_reminder",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "reserve_hotel": {
+                  "claim": "M-PHANTOM recall (real):reserve_hotel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):reserve_hotel",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "resume_line": {
+                  "claim": "M-PHANTOM recall (real):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):resume_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "return_delivered_order_items": {
+                  "claim": "M-PHANTOM recall (real):return_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):return_delivered_order_items",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "send_money": {
+                  "claim": "M-PHANTOM recall (real):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):send_money",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "suspend_line": {
+                  "claim": "M-PHANTOM recall (real):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):suspend_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "update_reservation_baggages": {
+                  "claim": "M-PHANTOM recall (real):update_reservation_baggages >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):update_reservation_baggages",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "update_reservation_passengers": {
+                  "claim": "M-PHANTOM recall (real):update_reservation_passengers >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):update_reservation_passengers",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                }
+              },
+              "pooled": {
+                "claim": "M-PHANTOM recall (real) >= 0.816 (n=17; Wilson 95% CI [0.816, 1.000], point estimate 1.000)",
+                "label": "M-PHANTOM recall (real)",
+                "n": 17.0,
+                "point": 1.0,
+                "successes": 17.0,
+                "wilson_lower": 0.8156818649911483,
+                "wilson_upper": 1.0
+              }
+            }
+          },
+          "toy": {
+            "classification_counts": {
+              "detected": 8
+            },
+            "n_drawn": 8,
+            "recall": {
+              "n_tools": 8,
+              "per_tool": {
+                "freeze_account": {
+                  "claim": "M-PHANTOM recall (toy):freeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):freeze_account",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "release_item": {
+                  "claim": "M-PHANTOM recall (toy):release_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):release_item",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "release_lock": {
+                  "claim": "M-PHANTOM recall (toy):release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):release_lock",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "resize_inventory": {
+                  "claim": "M-PHANTOM recall (toy):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):resize_inventory",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "tag_item": {
+                  "claim": "M-PHANTOM recall (toy):tag_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):tag_item",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "transfer": {
+                  "claim": "M-PHANTOM recall (toy):transfer >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):transfer",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "unfreeze_account": {
+                  "claim": "M-PHANTOM recall (toy):unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):unfreeze_account",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "withdraw": {
+                  "claim": "M-PHANTOM recall (toy):withdraw >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):withdraw",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                }
+              },
+              "pooled": {
+                "claim": "M-PHANTOM recall (toy) >= 0.676 (n=8; Wilson 95% CI [0.676, 1.000], point estimate 1.000)",
+                "label": "M-PHANTOM recall (toy)",
+                "n": 8.0,
+                "point": 1.0,
+                "successes": 8.0,
+                "wilson_lower": 0.6755924351161198,
+                "wilson_upper": 1.0
+              }
+            }
+          }
+        },
+        "M-PRECOND": {
+          "all": {
+            "classification_counts": {
+              "detected": 7,
+              "error": 3,
+              "missed": 15
+            },
+            "n_drawn": 25,
+            "recall": {
+              "n_tools": 18,
+              "per_tool": {
+                "acquire_lock": {
+                  "claim": "M-PRECOND recall (all):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):acquire_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "add_user_to_channel": {
+                  "claim": "M-PRECOND recall (all):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (all):add_user_to_channel",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "book_reservation": {
+                  "claim": "M-PRECOND recall (all):book_reservation >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):book_reservation",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "deposit": {
+                  "claim": "M-PRECOND recall (all):deposit >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
+                  "label": "M-PRECOND recall (all):deposit",
+                  "n": 3,
+                  "point": 0.6666666666666666,
+                  "successes": 2,
+                  "wilson_lower": 0.2076596008020477,
+                  "wilson_upper": 0.9385080552796037
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PRECOND recall (all):exchange_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):exchange_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_pending_order_address": {
+                  "claim": "M-PRECOND recall (all):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (all):modify_pending_order_address",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-PRECOND recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_pending_order_payment": {
+                  "claim": "M-PRECOND recall (all):modify_pending_order_payment >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):modify_pending_order_payment",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "release_item": {
+                  "claim": "M-PRECOND recall (all):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):release_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "release_lock": {
+                  "claim": "M-PRECOND recall (all):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):release_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "reserve_item": {
+                  "claim": "M-PRECOND recall (all):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):reserve_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "resize_inventory": {
+                  "claim": "M-PRECOND recall (all):resize_inventory >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):resize_inventory",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "return_delivered_order_items": {
+                  "claim": "M-PRECOND recall (all):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):return_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "set_wifi_status": {
+                  "claim": "M-PRECOND recall (all):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):set_wifi_status",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "suspend_line": {
+                  "claim": "M-PRECOND recall (all):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (all):suspend_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "tag_item": {
+                  "claim": "M-PRECOND recall (all):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):tag_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "transfer": {
+                  "claim": "M-PRECOND recall (all):transfer >= 0.061 (n=3; Wilson 95% CI [0.061, 0.792], point estimate 0.333)",
+                  "label": "M-PRECOND recall (all):transfer",
+                  "n": 3,
+                  "point": 0.3333333333333333,
+                  "successes": 1,
+                  "wilson_lower": 0.06149194472039621,
+                  "wilson_upper": 0.7923403991979522
+                },
+                "withdraw": {
+                  "claim": "M-PRECOND recall (all):withdraw >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
+                  "label": "M-PRECOND recall (all):withdraw",
+                  "n": 2,
+                  "point": 0.5,
+                  "successes": 1,
+                  "wilson_lower": 0.09453120573423074,
+                  "wilson_upper": 0.9054687942657693
+                }
+              },
+              "pooled": {
+                "claim": "M-PRECOND recall (all) >= 0.143 (n=25; Wilson 95% CI [0.143, 0.476], point estimate 0.280)",
+                "label": "M-PRECOND recall (all)",
+                "n": 25.0,
+                "point": 0.28,
+                "successes": 7.000000000000001,
+                "wilson_lower": 0.14283853850956563,
+                "wilson_upper": 0.47576605190361576
+              }
+            }
+          },
+          "real": {
+            "classification_counts": {
+              "detected": 3,
+              "error": 1,
+              "missed": 7
+            },
+            "n_drawn": 11,
+            "recall": {
+              "n_tools": 9,
+              "per_tool": {
+                "add_user_to_channel": {
+                  "claim": "M-PRECOND recall (real):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (real):add_user_to_channel",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "book_reservation": {
+                  "claim": "M-PRECOND recall (real):book_reservation >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):book_reservation",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PRECOND recall (real):exchange_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):exchange_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_pending_order_address": {
+                  "claim": "M-PRECOND recall (real):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (real):modify_pending_order_address",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-PRECOND recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_pending_order_payment": {
+                  "claim": "M-PRECOND recall (real):modify_pending_order_payment >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):modify_pending_order_payment",
+                  "n": 3,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
+                },
+                "return_delivered_order_items": {
+                  "claim": "M-PRECOND recall (real):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):return_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "set_wifi_status": {
+                  "claim": "M-PRECOND recall (real):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):set_wifi_status",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "suspend_line": {
+                  "claim": "M-PRECOND recall (real):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (real):suspend_line",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                }
+              },
+              "pooled": {
+                "claim": "M-PRECOND recall (real) >= 0.088 (n=9; Wilson 95% CI [0.088, 0.594], point estimate 0.273)",
+                "label": "M-PRECOND recall (real)",
+                "n": 9.0,
+                "point": 0.2727272727272727,
+                "successes": 2.454545454545454,
+                "wilson_lower": 0.0878178547052808,
+                "wilson_upper": 0.5936117127581483
+              }
+            }
+          },
+          "toy": {
+            "classification_counts": {
+              "detected": 4,
+              "error": 2,
+              "missed": 8
+            },
+            "n_drawn": 14,
+            "recall": {
+              "n_tools": 9,
+              "per_tool": {
+                "acquire_lock": {
+                  "claim": "M-PRECOND recall (toy):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):acquire_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "deposit": {
+                  "claim": "M-PRECOND recall (toy):deposit >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
+                  "label": "M-PRECOND recall (toy):deposit",
+                  "n": 3,
+                  "point": 0.6666666666666666,
+                  "successes": 2,
+                  "wilson_lower": 0.2076596008020477,
+                  "wilson_upper": 0.9385080552796037
+                },
+                "release_item": {
+                  "claim": "M-PRECOND recall (toy):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):release_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "release_lock": {
+                  "claim": "M-PRECOND recall (toy):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):release_lock",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "reserve_item": {
+                  "claim": "M-PRECOND recall (toy):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):reserve_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "resize_inventory": {
+                  "claim": "M-PRECOND recall (toy):resize_inventory >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):resize_inventory",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "tag_item": {
+                  "claim": "M-PRECOND recall (toy):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):tag_item",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "transfer": {
+                  "claim": "M-PRECOND recall (toy):transfer >= 0.061 (n=3; Wilson 95% CI [0.061, 0.792], point estimate 0.333)",
+                  "label": "M-PRECOND recall (toy):transfer",
+                  "n": 3,
+                  "point": 0.3333333333333333,
+                  "successes": 1,
+                  "wilson_lower": 0.06149194472039621,
+                  "wilson_upper": 0.7923403991979522
+                },
+                "withdraw": {
+                  "claim": "M-PRECOND recall (toy):withdraw >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
+                  "label": "M-PRECOND recall (toy):withdraw",
+                  "n": 2,
+                  "point": 0.5,
+                  "successes": 1,
+                  "wilson_lower": 0.09453120573423074,
+                  "wilson_upper": 0.9054687942657693
+                }
+              },
+              "pooled": {
+                "claim": "M-PRECOND recall (toy) >= 0.117 (n=14; Wilson 95% CI [0.117, 0.546], point estimate 0.286)",
+                "label": "M-PRECOND recall (toy)",
+                "n": 14.0,
+                "point": 0.2857142857142857,
+                "successes": 4.0,
+                "wilson_lower": 0.11721378644576919,
+                "wilson_upper": 0.5464908432989318
+              }
+            }
+          }
+        },
+        "M-RESET": {
+          "classification_counts": {
+            "untestable_no_checker_path": 5
+          },
+          "n_drawn": 5,
+          "real_n": 0,
+          "reason": "no_reset_path_checker: dynamic.harness.run_contract never calls Adapter.reset() or evaluates a contract's reset: clause -- confirmed by inspection, not assumed. Every M-RESET mutant is therefore UNTESTABLE by the currently-wired checker, structurally, not empirically -- reporting a Wilson interval on 0/N here would misrepresent 'the checker never had a code path to try' as 'the checker tried and missed every time'.",
+          "status": "UNTESTABLE_STRUCTURAL",
+          "toy_n": 5
+        }
+      },
+      "pool_sizes": {
+        "M-IGNARG": {
+          "drawn": 25,
+          "pool_size": 106,
+          "requested": 25
+        },
+        "M-INVAR": {
+          "drawn": 10,
+          "pool_size": 10,
+          "requested": 25
+        },
+        "M-PARTIAL": {
+          "drawn": 25,
+          "pool_size": 36,
+          "requested": 25
+        },
+        "M-PHANTOM": {
+          "drawn": 25,
+          "pool_size": 35,
+          "requested": 25
+        },
+        "M-PRECOND": {
+          "drawn": 25,
+          "pool_size": 126,
+          "requested": 25
+        },
+        "M-RESET": {
+          "drawn": 5,
+          "pool_size": 5,
+          "requested": 25
+        }
+      }
+    }
+  },
+  "contract_coverage": {
+    "agentdojo": {
+      "biconditional_true_adopted": 1,
+      "mean_sentence_operationalized_fraction": 1.0,
+      "mean_state_write_covered_fraction": 0.7555555555555555,
+      "n_contracts": 7,
+      "n_with_sentence_data": 7,
+      "n_with_state_write_data": 6,
+      "reports": [
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "add_user_to_channel"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\add_user_to_channel.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 31,
+                "text": "Add a user to a given channel."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "add_user_to_channel",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "user_channels",
+                "line": 40
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "add_user_to_channel",
+            "uncovered": []
+          },
+          "tool": "add_user_to_channel"
+        },
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "create_file"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\create_file.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 85,
+                "text": "Create a new file in the cloud drive."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "create_file",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "create_file",
+            "uncovered": []
+          },
+          "tool": "create_file"
+        },
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "invite_user_to_slack"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\invite_user_to_slack.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 94,
+                "text": "Invites a user to the Slack workspace."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "invite_user_to_slack",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "users",
+                "line": 101
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 0.3333333333333333,
+            "state_write_total": 3,
+            "tool": "invite_user_to_slack",
+            "uncovered": [
+              {
+                "field": "user_inbox",
+                "line": 102
+              },
+              {
+                "field": "user_channels",
+                "line": 103
+              }
+            ]
+          },
+          "tool": "invite_user_to_slack"
+        },
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "reserve_car_rental"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\reserve_car_rental.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 389,
+                "text": "Makes a reservation for a car rental with the provided details."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "reserve_car_rental",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "contact_information",
+                "line": 395
+              },
+              {
+                "field": "reservation_type",
+                "line": 396
+              },
+              {
+                "field": "title",
+                "line": 397
+              },
+              {
+                "field": "start_time",
+                "line": 398
+              },
+              {
+                "field": "end_time",
+                "line": 399
+              }
+            ],
+            "state_write_covered": 5,
+            "state_write_fraction": 1.0,
+            "state_write_total": 5,
+            "tool": "reserve_car_rental",
+            "uncovered": []
+          },
+          "tool": "reserve_car_rental"
+        },
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "reserve_hotel"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\reserve_hotel.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 346,
+                "text": "Makes a reservation for a hotel with the provided details.."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "reserve_hotel",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "reservation_type",
+                "line": 352
+              },
+              {
+                "field": "title",
+                "line": 353
+              },
+              {
+                "field": "start_time",
+                "line": 354
+              },
+              {
+                "field": "end_time",
+                "line": 355
+              }
+            ],
+            "state_write_covered": 4,
+            "state_write_fraction": 0.8,
+            "state_write_total": 5,
+            "tool": "reserve_hotel",
+            "uncovered": [
+              {
+                "field": "contact_information",
+                "line": 351
+              }
+            ]
+          },
+          "tool": "reserve_hotel"
+        },
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "send_money"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\send_money.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 59,
+                "text": "Sends a transaction to the recipient."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "send_money",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "transactions",
+                "line": 75
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "send_money",
+            "uncovered": []
+          },
+          "tool": "send_money"
+        },
+        {
+          "benchmark": "agentdojo",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The tool returns exactly one message, unconditionally, whenever the transaction id exists (lines 149-151), and raises before any mutation otherwise (line 147). It never reports partial success and never advertises any effect as deferred, so a returned success message is the interface's only signal that every field the caller supplied was actually applied.\n",
+            "tool": "update_scheduled_transaction"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\agentdojo\\update_scheduled_transaction.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 125,
+                "text": "Update a scheduled transaction."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "update_scheduled_transaction",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "amount",
+                "line": 139
+              },
+              {
+                "field": "recurring",
+                "line": 145
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 0.4,
+            "state_write_total": 5,
+            "tool": "update_scheduled_transaction",
+            "uncovered": [
+              {
+                "field": "recipient",
+                "line": 137
+              },
+              {
+                "field": "subject",
+                "line": 141
+              },
+              {
+                "field": "date",
+                "line": 143
+              }
+            ]
+          },
+          "tool": "update_scheduled_transaction"
+        }
+      ]
+    },
+    "mm-toolsandbox": {
+      "biconditional_true_adopted": 0,
+      "mean_sentence_operationalized_fraction": 0.3333333333333333,
+      "mean_state_write_covered_fraction": null,
+      "n_contracts": 5,
+      "n_with_sentence_data": 5,
+      "n_with_state_write_data": 0,
+      "reports": [
+        {
+          "benchmark": "mm-toolsandbox",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "add_reminder"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\mmtoolsandbox\\add_reminder.yaml",
+          "sentence": {
+            "covered": [],
+            "sentence_fraction": 0.0,
+            "sentence_operationalized": 0,
+            "sentence_total": 1,
+            "tool": "add_reminder",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 67,
+                "text": "Add a reminder"
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "add_reminder",
+            "uncovered": []
+          },
+          "tool": "add_reminder"
+        },
+        {
+          "benchmark": "mm-toolsandbox",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "create_calendar"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\mmtoolsandbox\\create_calendar.yaml",
+          "sentence": {
+            "covered": [],
+            "sentence_fraction": 0.0,
+            "sentence_operationalized": 0,
+            "sentence_total": 2,
+            "tool": "create_calendar",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 62,
+                "text": "Create a new calendar."
+              },
+              {
+                "kind": "summary",
+                "line": 64,
+                "text": "Calendar events can be added to this calendar using the uuid this function returns."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "create_calendar",
+            "uncovered": []
+          },
+          "tool": "create_calendar"
+        },
+        {
+          "benchmark": "mm-toolsandbox",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "remove_reminder"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\mmtoolsandbox\\remove_reminder.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 315,
+                "text": "Remove a reminder given its unique identifier"
+              },
+              {
+                "kind": "raises",
+                "line": 321,
+                "text": "If the provided reminder_id was not found"
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 2,
+            "sentence_total": 2,
+            "tool": "remove_reminder",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "remove_reminder",
+            "uncovered": []
+          },
+          "tool": "remove_reminder"
+        },
+        {
+          "benchmark": "mm-toolsandbox",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "set_wifi_status"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\mmtoolsandbox\\set_wifi_status.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "raises",
+                "line": 210,
+                "text": "If wifi is already turned on / off"
+              },
+              {
+                "kind": "raises",
+                "line": 211,
+                "text": "If low battery mode is on, in which case we are not allowed to turn on wifi"
+              }
+            ],
+            "sentence_fraction": 0.6666666666666666,
+            "sentence_operationalized": 2,
+            "sentence_total": 3,
+            "tool": "set_wifi_status",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 204,
+                "text": "Enable / Disable wifi"
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "set_wifi_status",
+            "uncovered": []
+          },
+          "tool": "set_wifi_status"
+        },
+        {
+          "benchmark": "mm-toolsandbox",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "venmo_social"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\mmtoolsandbox\\venmo_social.yaml",
+          "sentence": {
+            "covered": [],
+            "sentence_fraction": 0.0,
+            "sentence_operationalized": 0,
+            "sentence_total": 18,
+            "tool": "venmo_social",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 372,
+                "text": "Browse and interact with the Venmo social feed."
+              },
+              {
+                "kind": "summary",
+                "line": 374,
+                "text": "Domains and actions:"
+              },
+              {
+                "kind": "summary",
+                "line": 375,
+                "text": "friend:"
+              },
+              {
+                "kind": "summary",
+                "line": 376,
+                "text": "add - Add a friend. Requires user_email."
+              },
+              {
+                "kind": "summary",
+                "line": 377,
+                "text": "remove - Remove a friend. Requires user_email."
+              },
+              {
+                "kind": "summary",
+                "line": 378,
+                "text": "search - Search friends. Optional: query, page_index, page_limit."
+              },
+              {
+                "kind": "summary",
+                "line": 379,
+                "text": "like:"
+              },
+              {
+                "kind": "summary",
+                "line": 380,
+                "text": "toggle - Like or unlike. Requires entity_type (transaction/comment),"
+              },
+              {
+                "kind": "summary",
+                "line": 381,
+                "text": "entity_id, and like (true=like, false=unlike)."
+              },
+              {
+                "kind": "summary",
+                "line": 382,
+                "text": "comment:"
+              },
+              {
+                "kind": "summary",
+                "line": 383,
+                "text": "create - Post a comment. Requires transaction_id, comment."
+              },
+              {
+                "kind": "summary",
+                "line": 384,
+                "text": "show - View comment details. Requires comment_id."
+              },
+              {
+                "kind": "summary",
+                "line": 385,
+                "text": "update - Update a comment. Requires comment_id, comment."
+              },
+              {
+                "kind": "summary",
+                "line": 386,
+                "text": "delete - Delete a comment. Requires comment_id."
+              },
+              {
+                "kind": "summary",
+                "line": 387,
+                "text": "list - List comments on a transaction. Requires transaction_id."
+              },
+              {
+                "kind": "summary",
+                "line": 388,
+                "text": "Optional: page_index, page_limit, sort_by."
+              },
+              {
+                "kind": "summary",
+                "line": 389,
+                "text": "feed:"
+              },
+              {
+                "kind": "summary",
+                "line": 390,
+                "text": "show - Show social feed. Optional: page_index, page_limit."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "venmo_social",
+            "uncovered": []
+          },
+          "tool": "venmo_social"
+        }
+      ]
+    },
+    "tau2-bench": {
+      "biconditional_true_adopted": 18,
+      "mean_sentence_operationalized_fraction": 0.42155388471177946,
+      "mean_state_write_covered_fraction": 0.744360902255639,
+      "n_contracts": 19,
+      "n_with_sentence_data": 19,
+      "n_with_state_write_data": 19,
+      "reports": [
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise in book_reservation (missing flight/date, unavailable flight, insufficient seats, unknown/insufficient payment method, mismatched payment total -- lines 217-301) occurs strictly before the mutation block at lines 304-318 (payment deduction, seat deduction, and the two db writes). No raise is reachable after the first db write, so a non-error return is the interface's only signal that the whole booking -- seats, payment, and the two db writes -- was applied. No effect on this tool is advertised as deferred.\n",
+            "tool": "book_reservation"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\book_reservation.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 202,
+                "text": "Book a reservation."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 1,
+            "sentence_total": 1,
+            "tool": "book_reservation",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "reservations",
+                "line": 316
+              },
+              {
+                "field": "reservations",
+                "line": 317
+              },
+              {
+                "field": "flights",
+                "line": 265
+              }
+            ],
+            "state_write_covered": 3,
+            "state_write_fraction": 0.5,
+            "state_write_total": 6,
+            "tool": "book_reservation",
+            "uncovered": [
+              {
+                "field": "available_seats",
+                "line": 315
+              },
+              {
+                "field": "amount",
+                "line": 309
+              },
+              {
+                "field": "payment_methods",
+                "line": 311
+              }
+            ]
+          },
+          "tool": "book_reservation"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Both raises (non-pending order at line 178, invalid reason at line 182) occur before the refund/status-mutation block (lines 185-203); there is no raise after it. A non-error return is therefore the interface's only signal that the whole cancellation -- gift-card refund where applicable, status, cancel_reason, and payment_history -- was applied. No effect on this tool is advertised as deferred.\n",
+            "tool": "cancel_pending_order"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\cancel_pending_order.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 163,
+                "text": "the order status will be changed to 'cancelled' and the payment will be refunded."
+              }
+            ],
+            "sentence_fraction": 0.14285714285714285,
+            "sentence_operationalized": 1,
+            "sentence_total": 7,
+            "tool": "cancel_pending_order",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 160,
+                "text": "Cancel a pending order. If the order is already processed or delivered,"
+              },
+              {
+                "kind": "summary",
+                "line": 161,
+                "text": "it cannot be cancelled. The agent needs to explain the cancellation detail"
+              },
+              {
+                "kind": "summary",
+                "line": 162,
+                "text": "and ask for explicit user confirmation (yes/no) to proceed. If the user confirms,"
+              },
+              {
+                "kind": "summary",
+                "line": 164,
+                "text": "The refund will be added to the user's gift card balance immediately if the payment"
+              },
+              {
+                "kind": "summary",
+                "line": 165,
+                "text": "was made using a gift card, otherwise the refund would take 5-7 business days to process."
+              },
+              {
+                "kind": "summary",
+                "line": 166,
+                "text": "The function returns the order details after the cancellation."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 201
+              },
+              {
+                "field": "cancel_reason",
+                "line": 202
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 0.4,
+            "state_write_total": 5,
+            "tool": "cancel_pending_order",
+            "uncovered": [
+              {
+                "field": "payment_history",
+                "line": 203
+              },
+              {
+                "field": "balance",
+                "line": 197
+              },
+              {
+                "field": "balance",
+                "line": 198
+              }
+            ]
+          },
+          "tool": "cancel_pending_order"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The tool returns the mutated reservation object on the success path and raises on every declared failure, so a returned reservation is the interface's only signal that the whole cancellation was applied. No effect on this tool is advertised as deferred.\n",
+            "tool": "cancel_reservation"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\cancel_reservation.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 341,
+                "text": "Cancel the whole reservation."
+              }
+            ],
+            "sentence_fraction": 0.5,
+            "sentence_operationalized": 1,
+            "sentence_total": 2,
+            "tool": "cancel_reservation",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 350,
+                "text": "If the reservation is not found."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 364
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 0.5,
+            "state_write_total": 2,
+            "tool": "cancel_reservation",
+            "uncovered": [
+              {
+                "field": "payment_history",
+                "line": 363
+              }
+            ]
+          },
+          "tool": "cancel_reservation"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Both return paths -- the early \"already disabled\" no-op (line 583) and the normal path (lines 585-589) -- leave roaming_enabled == False; there is no path where the call succeeds without that being the case, and the idempotent early return does not break the biconditional because eff.roaming_disabled asserts a final STATE, not a state DELTA. No effect on this tool is advertised as deferred.\n",
+            "tool": "disable_roaming"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\disable_roaming.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "raises",
+                "line": 578,
+                "text": "If customer or line not found."
+              }
+            ],
+            "sentence_fraction": 0.5,
+            "sentence_operationalized": 1,
+            "sentence_total": 2,
+            "tool": "disable_roaming",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 568,
+                "text": "Disables international roaming on a line."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "roaming_enabled",
+                "line": 585
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "disable_roaming",
+            "uncovered": []
+          },
+          "tool": "disable_roaming"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Both return paths -- the early \"already enabled\" no-op (line 557) and the normal path (lines 559-563) -- leave roaming_enabled == True; there is no path where the call succeeds without that being the case, and the idempotent early return does not break the biconditional because eff.roaming_enabled asserts a final STATE, not a state DELTA. No effect on this tool is advertised as deferred.\n",
+            "tool": "enable_roaming"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\enable_roaming.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "raises",
+                "line": 552,
+                "text": "If customer or line not found."
+              }
+            ],
+            "sentence_fraction": 0.5,
+            "sentence_operationalized": 1,
+            "sentence_total": 2,
+            "tool": "enable_roaming",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 542,
+                "text": "Enables international roaming on a line."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "roaming_enabled",
+                "line": 559
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "enable_roaming",
+            "uncovered": []
+          },
+          "tool": "enable_roaming"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise (non-delivered order, missing/duplicate item ids, unavailable new item, insufficient gift-card balance -- lines 241-275) occurs before the mutation block at lines 278-282 (status, exchange_items, exchange_new_items, exchange_payment_method_id, exchange_price_difference); no raise is reachable after it. No effect on this tool is advertised as deferred -- the recorded exchange fields ARE the whole advertised effect of a successful call; the physical item swap and payment settlement are advertised as a separate, later process (see frame.items_unchanged above and the notes below).\n",
+            "tool": "exchange_delivered_order_items"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\exchange_delivered_order_items.yaml",
+          "sentence": {
+            "covered": [],
+            "sentence_fraction": 0.0,
+            "sentence_operationalized": 0,
+            "sentence_total": 7,
+            "tool": "exchange_delivered_order_items",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 215,
+                "text": "Exchange items in a delivered order to new items of the same product type."
+              },
+              {
+                "kind": "summary",
+                "line": 216,
+                "text": "For a delivered order, return or exchange can be only done once by the agent."
+              },
+              {
+                "kind": "summary",
+                "line": 217,
+                "text": "The agent needs to explain the exchange detail and ask for explicit user confirmation (yes/no) to proceed."
+              },
+              {
+                "kind": "raises",
+                "line": 233,
+                "text": "If the order is not delivered."
+              },
+              {
+                "kind": "raises",
+                "line": 234,
+                "text": "If the items to be exchanged do not exist."
+              },
+              {
+                "kind": "raises",
+                "line": 235,
+                "text": "If the new items do not exist or do not match the old items."
+              },
+              {
+                "kind": "raises",
+                "line": 236,
+                "text": "If the number of items to be exchanged does not match."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 278
+              },
+              {
+                "field": "exchange_payment_method_id",
+                "line": 281
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 0.4,
+            "state_write_total": 5,
+            "tool": "exchange_delivered_order_items",
+            "uncovered": [
+              {
+                "field": "exchange_items",
+                "line": 279
+              },
+              {
+                "field": "exchange_new_items",
+                "line": 280
+              },
+              {
+                "field": "exchange_price_difference",
+                "line": 282
+              }
+            ]
+          },
+          "tool": "exchange_delivered_order_items"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The single raise (line 441) precedes the only mutating statement (order.address = ..., lines 444-451); there is no raise after it. No effect on this tool is advertised as deferred.\n",
+            "tool": "modify_pending_order_address"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\modify_pending_order_address.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 421,
+                "text": "Modify the shipping address of a pending order. The agent needs to explain the modification detail and ask for explicit user confirmation (yes/no) to proceed."
+              }
+            ],
+            "sentence_fraction": 0.5,
+            "sentence_operationalized": 1,
+            "sentence_total": 2,
+            "tool": "modify_pending_order_address",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 436,
+                "text": "If the order is not pending."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "address",
+                "line": 444
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "modify_pending_order_address",
+            "uncovered": []
+          },
+          "tool": "modify_pending_order_address"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise (non-pending order, missing/duplicate item ids, id equal to its own replacement, unavailable new item, insufficient gift-card balance -- lines 483-518) occurs before the payment and item-swap block at lines 521-540; no raise is reachable after it. No effect on this tool is advertised as deferred.\n",
+            "tool": "modify_pending_order_items"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\modify_pending_order_items.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 462,
+                "text": "Modify items in a pending order to new items of the same product type. For a pending order, this function can only be called once. The agent needs to explain the exchange detail and ask for explicit user confirmation (yes/no) to proceed."
+              }
+            ],
+            "sentence_fraction": 0.2,
+            "sentence_operationalized": 1,
+            "sentence_total": 5,
+            "tool": "modify_pending_order_items",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 474,
+                "text": "If the order is not pending."
+              },
+              {
+                "kind": "raises",
+                "line": 475,
+                "text": "If the items to be modified do not exist."
+              },
+              {
+                "kind": "raises",
+                "line": 476,
+                "text": "If the new items do not exist or do not match the old items."
+              },
+              {
+                "kind": "raises",
+                "line": 477,
+                "text": "If the number of items to be modified does not match."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 540
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 0.14285714285714285,
+            "state_write_total": 7,
+            "tool": "modify_pending_order_items",
+            "uncovered": [
+              {
+                "field": "payment_history",
+                "line": 521
+              },
+              {
+                "field": "balance",
+                "line": 529
+              },
+              {
+                "field": "balance",
+                "line": 530
+              },
+              {
+                "field": "item_id",
+                "line": 537
+              },
+              {
+                "field": "price",
+                "line": 538
+              },
+              {
+                "field": "options",
+                "line": 539
+              }
+            ]
+          },
+          "tool": "modify_pending_order_items"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise (non-pending order, unknown payment method, payment history not exactly one payment, new method identical to the old one, insufficient gift-card balance -- lines 569-591) occurs before the mutation block at lines 594-620; no raise is reachable after it. No effect on this tool is advertised as deferred.\n",
+            "tool": "modify_pending_order_payment"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\modify_pending_order_payment.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 550,
+                "text": "Modify the payment method of a pending order. The agent needs to explain the modification detail and ask for explicit user confirmation (yes/no) to proceed."
+              }
+            ],
+            "sentence_fraction": 0.2,
+            "sentence_operationalized": 1,
+            "sentence_total": 5,
+            "tool": "modify_pending_order_payment",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 560,
+                "text": "If the order is not pending."
+              },
+              {
+                "kind": "raises",
+                "line": 561,
+                "text": "If the payment method does not exist."
+              },
+              {
+                "kind": "raises",
+                "line": 562,
+                "text": "If the payment history has more than one payment."
+              },
+              {
+                "kind": "raises",
+                "line": 563,
+                "text": "If the new payment method is the same as the current one."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "payment_history",
+                "line": 594
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 0.2,
+            "state_write_total": 5,
+            "tool": "modify_pending_order_payment",
+            "uncovered": [
+              {
+                "field": "balance",
+                "line": 611
+              },
+              {
+                "field": "balance",
+                "line": 612
+              },
+              {
+                "field": "balance",
+                "line": 619
+              },
+              {
+                "field": "balance",
+                "line": 620
+              }
+            ]
+          },
+          "tool": "modify_pending_order_payment"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The only raise (user not found, propagated from _get_user) precedes the single mutating statement (user.address = ..., lines 653-660); there is no raise after it. No effect on this tool is advertised as deferred.\n",
+            "tool": "modify_user_address"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\modify_user_address.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 635,
+                "text": "Modify the default address of a user. The agent needs to explain the modification detail and ask for explicit user confirmation (yes/no) to proceed."
+              },
+              {
+                "kind": "raises",
+                "line": 650,
+                "text": "If the user is not found."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 2,
+            "sentence_total": 2,
+            "tool": "modify_user_address",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "address",
+                "line": 653
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "modify_user_address",
+            "uncovered": []
+          },
+          "tool": "modify_user_address"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": false,
+            "justification": null,
+            "tool": "refuel_data"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\refuel_data.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "checks",
+                "line": 613,
+                "text": "Line status must be Active"
+              },
+              {
+                "kind": "checks",
+                "line": 613,
+                "text": "Customer owns the line"
+              },
+              {
+                "kind": "logic",
+                "line": 614,
+                "text": "Adds data to the line"
+              },
+              {
+                "kind": "logic",
+                "line": 614,
+                "text": "charges customer based on the plan's refueling rate"
+              },
+              {
+                "kind": "raises",
+                "line": 625,
+                "text": "If customer, line, or plan not found, or if checks fail."
+              }
+            ],
+            "sentence_fraction": 0.8333333333333334,
+            "sentence_operationalized": 5,
+            "sentence_total": 6,
+            "tool": "refuel_data",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 612,
+                "text": "Refuels data for a specific line, adding to the customer's bill."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "data_refueling_gb",
+                "line": 641
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "refuel_data",
+            "uncovered": []
+          },
+          "tool": "refuel_data"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The one enforced precondition raise (line 320) precedes the only mutating statements (lines 322-323); there is no raise after them. No effect on this tool is advertised as deferred.\n",
+            "tool": "resume_line"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\resume_line.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "logic",
+                "line": 302,
+                "text": "Sets line status to Active"
+              },
+              {
+                "kind": "logic",
+                "line": 302,
+                "text": "clears suspension_start_date"
+              }
+            ],
+            "sentence_fraction": 0.4,
+            "sentence_operationalized": 2,
+            "sentence_total": 5,
+            "tool": "resume_line",
+            "uncovered": [
+              {
+                "kind": "checks",
+                "line": 301,
+                "text": "Line status must be Suspended or Pending Activation"
+              },
+              {
+                "kind": "summary",
+                "line": 300,
+                "text": "Resumes a suspended line."
+              },
+              {
+                "kind": "raises",
+                "line": 312,
+                "text": "If customer or line not found, or if line is not suspended or pending activation."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 322
+              },
+              {
+                "field": "suspension_start_date",
+                "line": 323
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 1.0,
+            "state_write_total": 2,
+            "tool": "resume_line",
+            "uncovered": []
+          },
+          "tool": "resume_line"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise (non-delivered order, payment method not original-or-gift-card, missing item ids -- lines 691-707) occurs before the mutation block at lines 710-712 (status, return_items, return_payment_method_id); no raise is reachable after it. No effect on this tool is advertised as deferred -- the recorded return-request fields ARE the whole advertised effect of a successful call.\n",
+            "tool": "return_delivered_order_items"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\return_delivered_order_items.yaml",
+          "sentence": {
+            "covered": [],
+            "sentence_fraction": 0.0,
+            "sentence_operationalized": 0,
+            "sentence_total": 7,
+            "tool": "return_delivered_order_items",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 670,
+                "text": "Return some items of a delivered order."
+              },
+              {
+                "kind": "summary",
+                "line": 671,
+                "text": "The order status will be changed to 'return requested'."
+              },
+              {
+                "kind": "summary",
+                "line": 672,
+                "text": "The agent needs to explain the return detail and ask for explicit user confirmation (yes/no) to proceed."
+              },
+              {
+                "kind": "summary",
+                "line": 673,
+                "text": "The user will receive follow-up email for how and where to return the item."
+              },
+              {
+                "kind": "raises",
+                "line": 685,
+                "text": "If the order is not delivered."
+              },
+              {
+                "kind": "raises",
+                "line": 686,
+                "text": "If the payment method is not the original payment method or a gift card."
+              },
+              {
+                "kind": "raises",
+                "line": 687,
+                "text": "If the items to be returned do not exist."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 710
+              },
+              {
+                "field": "return_payment_method_id",
+                "line": 712
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 0.6666666666666666,
+            "state_write_total": 3,
+            "tool": "return_delivered_order_items",
+            "uncovered": [
+              {
+                "field": "return_items",
+                "line": 711
+              }
+            ]
+          },
+          "tool": "return_delivered_order_items"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The only two return paths are the success message immediately after the certificate is added to the user's payment_methods (line 512-513) and the \"Too many certificates\" raise (line 514), which is reachable only when the loop finds no free certificate_N slot and therefore never executed the mutating branch. There is no path that returns without having just performed the add, and no path that mutates and then raises. No effect on this tool is advertised as deferred.\n",
+            "tool": "send_certificate"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\send_certificate.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "raises",
+                "line": 500,
+                "text": "If the user is not found."
+              }
+            ],
+            "sentence_fraction": 0.5,
+            "sentence_operationalized": 1,
+            "sentence_total": 2,
+            "tool": "send_certificate",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 490,
+                "text": "Send a certificate to a user. Be careful!"
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "payment_methods",
+                "line": 512
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "send_certificate",
+            "uncovered": []
+          },
+          "tool": "send_certificate"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise (customer not found at line 382, another bill already awaiting payment at line 388, bill not found for customer at line 390) occurs before the single mutating statement (bill.status = BillStatus.AWAITING_PAYMENT, line 392); there is no raise after it. No effect on this tool is advertised as deferred.\n",
+            "tool": "send_payment_request"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\send_payment_request.yaml",
+          "sentence": {
+            "covered": [],
+            "sentence_fraction": 0.0,
+            "sentence_operationalized": 0,
+            "sentence_total": 9,
+            "tool": "send_payment_request",
+            "uncovered": [
+              {
+                "kind": "logic",
+                "line": 368,
+                "text": "Sets bill status to AWAITING_PAYMENT"
+              },
+              {
+                "kind": "logic",
+                "line": 368,
+                "text": "notifies customer"
+              },
+              {
+                "kind": "summary",
+                "line": 363,
+                "text": "Sends a payment request to the customer for a specific bill."
+              },
+              {
+                "kind": "summary",
+                "line": 365,
+                "text": "- Customer exists"
+              },
+              {
+                "kind": "summary",
+                "line": 366,
+                "text": "- Bill exists and belongs to the customer"
+              },
+              {
+                "kind": "summary",
+                "line": 367,
+                "text": "- No other bills are already awaiting payment for this customer"
+              },
+              {
+                "kind": "summary",
+                "line": 369,
+                "text": "Warning: This method does not check if the bill is already PAID."
+              },
+              {
+                "kind": "summary",
+                "line": 370,
+                "text": "Always check the bill status before calling this method."
+              },
+              {
+                "kind": "raises",
+                "line": 380,
+                "text": "If customer not found, bill not found, or if another bill is already awaiting payment."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 392
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "send_payment_request",
+            "uncovered": []
+          },
+          "tool": "send_payment_request"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The one enforced precondition raise (line 284) precedes the only mutating statements (lines 286-287); there is no raise after them. No effect on this tool is advertised as deferred.\n",
+            "tool": "suspend_line"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\suspend_line.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "logic",
+                "line": 268,
+                "text": "Sets line status to Suspended"
+              },
+              {
+                "kind": "logic",
+                "line": 268,
+                "text": "records suspension_start_date"
+              }
+            ],
+            "sentence_fraction": 0.4,
+            "sentence_operationalized": 2,
+            "sentence_total": 5,
+            "tool": "suspend_line",
+            "uncovered": [
+              {
+                "kind": "checks",
+                "line": 267,
+                "text": "Line status must be Active"
+              },
+              {
+                "kind": "summary",
+                "line": 266,
+                "text": "Suspends a specific line (max 6 months)."
+              },
+              {
+                "kind": "raises",
+                "line": 279,
+                "text": "If customer or line not found, or if line is not active."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "status",
+                "line": 286
+              },
+              {
+                "field": "suspension_start_date",
+                "line": 287
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 1.0,
+            "state_write_total": 2,
+            "tool": "suspend_line",
+            "uncovered": []
+          },
+          "tool": "suspend_line"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "_payment_for_update (called at line 581) raises on every declared payment failure before it performs its own gift-card deduction (tools.py:162-176: all three checks precede the balance mutation), and update_reservation_baggages itself raises nowhere after that call returns. The total_baggages/nonfree_baggages assignment (lines 586-587) is therefore always reached once a non-error return is possible, so success and full effect application are coincident. No effect on this tool is advertised as deferred.\n",
+            "tool": "update_reservation_baggages"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\update_reservation_baggages.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 556,
+                "text": "Update the baggage information of a reservation."
+              },
+              {
+                "kind": "raises",
+                "line": 568,
+                "text": "If the reservation is not found."
+              }
+            ],
+            "sentence_fraction": 0.3333333333333333,
+            "sentence_operationalized": 2,
+            "sentence_total": 6,
+            "tool": "update_reservation_baggages",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 569,
+                "text": "If the user is not found."
+              },
+              {
+                "kind": "raises",
+                "line": 570,
+                "text": "If the payment method is not found."
+              },
+              {
+                "kind": "raises",
+                "line": 571,
+                "text": "If the certificate cannot be used to update reservation."
+              },
+              {
+                "kind": "raises",
+                "line": 572,
+                "text": "If the gift card balance is not enough."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "total_baggages",
+                "line": 586
+              },
+              {
+                "field": "nonfree_baggages",
+                "line": 587
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 0.6666666666666666,
+            "state_write_total": 3,
+            "tool": "update_reservation_baggages",
+            "uncovered": [
+              {
+                "field": "payment_history",
+                "line": 583
+              }
+            ]
+          },
+          "tool": "update_reservation_baggages"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "Every raise in the per-flight loop (lines 653-662) and inside _payment_for_update (tools.py:162-176, called at line 681) occurs before the reservation.flights / reservation.cabin assignment at lines 686-687, and no raise is reachable afterward. The frame.flights_table_unchanged clause above covers the one effect this tool advertises it does NOT apply synchronously (the flight database's seat counts); it is a frame assertion, not a listed effect, so it does not need advertised_deferred and does not participate in this biconditional at all -- the biconditional only governs eff.cabin_updated, which is unconditionally applied on every non-error return.\n",
+            "tool": "update_reservation_flights"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\update_reservation_flights.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 600,
+                "text": "Update the flight information of a reservation."
+              },
+              {
+                "kind": "raises",
+                "line": 613,
+                "text": "If the reservation is not found."
+              }
+            ],
+            "sentence_fraction": 0.3333333333333333,
+            "sentence_operationalized": 2,
+            "sentence_total": 6,
+            "tool": "update_reservation_flights",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 614,
+                "text": "If the user is not found."
+              },
+              {
+                "kind": "raises",
+                "line": 615,
+                "text": "If the payment method is not found."
+              },
+              {
+                "kind": "raises",
+                "line": 616,
+                "text": "If the certificate cannot be used to update reservation."
+              },
+              {
+                "kind": "raises",
+                "line": 617,
+                "text": "If the gift card balance is not enough."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "flights",
+                "line": 686
+              },
+              {
+                "field": "cabin",
+                "line": 687
+              }
+            ],
+            "state_write_covered": 2,
+            "state_write_fraction": 0.6666666666666666,
+            "state_write_total": 3,
+            "tool": "update_reservation_flights",
+            "uncovered": [
+              {
+                "field": "payment_history",
+                "line": 683
+              }
+            ]
+          },
+          "tool": "update_reservation_flights"
+        },
+        {
+          "benchmark": "tau2-bench",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "The only raise (line 716, on a passenger-count mismatch) precedes the single mutating statement (reservation.passengers = deepcopy(passengers), line 717); there is no raise after it and no other mutation in the function. No effect on this tool is advertised as deferred.\n",
+            "tool": "update_reservation_passengers"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\tau2\\update_reservation_passengers.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 697,
+                "text": "Update the passenger information of a reservation."
+              },
+              {
+                "kind": "raises",
+                "line": 708,
+                "text": "If the number of passengers does not match."
+              }
+            ],
+            "sentence_fraction": 0.6666666666666666,
+            "sentence_operationalized": 2,
+            "sentence_total": 3,
+            "tool": "update_reservation_passengers",
+            "uncovered": [
+              {
+                "kind": "raises",
+                "line": 707,
+                "text": "If the reservation is not found."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "passengers",
+                "line": 717
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "update_reservation_passengers",
+            "uncovered": []
+          },
+          "tool": "update_reservation_passengers"
+        }
+      ]
+    },
+    "toy": {
+      "biconditional_true_adopted": 11,
+      "mean_sentence_operationalized_fraction": 0.9469696969696969,
+      "mean_state_write_covered_fraction": 1.0,
+      "n_contracts": 11,
+      "n_with_sentence_data": 11,
+      "n_with_state_write_data": 2,
+      "reports": [
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "acquire_lock returns the updated (held_by, count) pair on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "acquire_lock"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\acquire_lock.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 205,
+                "text": "Acquire `lock_id` for `holder`. If the lock is currently unheld, it becomes held by"
+              },
+              {
+                "kind": "summary",
+                "line": 206,
+                "text": "`holder` with count 1. If it is already held by `holder`, acquisition is reentrant and"
+              },
+              {
+                "kind": "summary",
+                "line": 207,
+                "text": "count increases by 1. Acquiring a lock held by a different holder is rejected."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 3,
+            "sentence_total": 3,
+            "tool": "acquire_lock",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "acquire_lock",
+            "uncovered": []
+          },
+          "tool": "acquire_lock"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "deposit returns the updated account on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred, so a returned account is the interface's only signal that the balance update was applied.\n",
+            "tool": "deposit"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\deposit.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 86,
+                "text": "Deposit `amount` into `account_id`. The account must exist and must not be frozen,"
+              },
+              {
+                "kind": "summary",
+                "line": 87,
+                "text": "and `amount` must be positive. On success, the account's balance increases by exactly"
+              },
+              {
+                "kind": "summary",
+                "line": 88,
+                "text": "`amount` and the updated account is returned."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 3,
+            "sentence_total": 3,
+            "tool": "deposit",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "deposit",
+            "uncovered": []
+          },
+          "tool": "deposit"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "freeze_account returns {frozen: true} on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "freeze_account"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\freeze_account.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 145,
+                "text": "Freeze `account_id`, blocking further deposits, withdrawals, and transfers on it."
+              },
+              {
+                "kind": "summary",
+                "line": 146,
+                "text": "The account must exist and must not already be frozen."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 2,
+            "sentence_total": 2,
+            "tool": "freeze_account",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "freeze_account",
+            "uncovered": []
+          },
+          "tool": "freeze_account"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "release_item returns the updated reserved count on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "release_item"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\release_item.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 191,
+                "text": "The item must exist, `qty` must be positive, and the item's reserved count must be at"
+              },
+              {
+                "kind": "summary",
+                "line": 192,
+                "text": "least `qty`. On success, reserved decreases by `qty` and an audit log entry is appended."
+              }
+            ],
+            "sentence_fraction": 0.6666666666666666,
+            "sentence_operationalized": 2,
+            "sentence_total": 3,
+            "tool": "release_item",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 190,
+                "text": "Release `qty` previously reserved units of `item_id` back to available inventory."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "state",
+                "line": 201
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "release_item",
+            "uncovered": []
+          },
+          "tool": "release_item"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "release_lock returns the updated (held_by, count) pair on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred. This is the compensating half of acquire_lock and is the contract that must catch an M-INVAR mutant that deletes the `held_by = None` clear-on-zero write.\n",
+            "tool": "release_lock"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\release_lock.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 218,
+                "text": "Release one level of `lock_id` held by `holder`. The lock must exist, must be held by"
+              },
+              {
+                "kind": "summary",
+                "line": 219,
+                "text": "`holder`, and its count must be at least 1. Count decreases by 1; when count reaches 0"
+              },
+              {
+                "kind": "summary",
+                "line": 220,
+                "text": "the lock becomes unheld (held_by is cleared) -- the compensating write that reverses"
+              }
+            ],
+            "sentence_fraction": 0.75,
+            "sentence_operationalized": 3,
+            "sentence_total": 4,
+            "tool": "release_lock",
+            "uncovered": [
+              {
+                "kind": "summary",
+                "line": 221,
+                "text": "acquire_lock's `held_by = holder`."
+              }
+            ]
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "release_lock",
+            "uncovered": []
+          },
+          "tool": "release_lock"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "reserve_item returns the updated reserved count on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "reserve_item"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\reserve_item.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 167,
+                "text": "Reserve `qty` units of `item_id` on behalf of `account_id`. The item and the account"
+              },
+              {
+                "kind": "summary",
+                "line": 168,
+                "text": "must exist, `qty` must be positive, and the item's available quantity (qty - reserved)"
+              },
+              {
+                "kind": "summary",
+                "line": 169,
+                "text": "must be at least `qty`. On success, the item's reserved count increases by `qty` and an"
+              },
+              {
+                "kind": "summary",
+                "line": 170,
+                "text": "audit log entry recording the reservation is appended."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 4,
+            "sentence_total": 4,
+            "tool": "reserve_item",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [
+              {
+                "field": "state",
+                "line": 184
+              }
+            ],
+            "state_write_covered": 1,
+            "state_write_fraction": 1.0,
+            "state_write_total": 1,
+            "tool": "reserve_item",
+            "uncovered": []
+          },
+          "tool": "reserve_item"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "resize_inventory returns the updated item on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred. Three argument-conditioned branches all funnel through the same single return, so the biconditional reading is exactly as strong here as for a single-branch tool.\n",
+            "tool": "resize_inventory"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\resize_inventory.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 239,
+                "text": "Adjust `item_id`'s quantity according to `mode`. `mode` must be one of 'add',"
+              },
+              {
+                "kind": "summary",
+                "line": 240,
+                "text": "'remove', or 'set'. 'add' increases qty by `delta`; 'remove' decreases qty by `delta` and"
+              },
+              {
+                "kind": "summary",
+                "line": 241,
+                "text": "requires the result stay at or above the item's reserved count; 'set' sets qty to"
+              },
+              {
+                "kind": "summary",
+                "line": 242,
+                "text": "`delta` directly and likewise requires `delta` be at least the reserved count. `delta`"
+              },
+              {
+                "kind": "summary",
+                "line": 243,
+                "text": "must be non-negative in every mode. Returns the updated item."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 5,
+            "sentence_total": 5,
+            "tool": "resize_inventory",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "resize_inventory",
+            "uncovered": []
+          },
+          "tool": "resize_inventory"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "tag_item returns the full updated tag list on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "tag_item"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\tag_item.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 267,
+                "text": "Add `tag` to `item_id`'s tag list. The item must exist, `tag` must be a non-empty"
+              },
+              {
+                "kind": "summary",
+                "line": 268,
+                "text": "string, and `tag` must not already be present on the item -- tags are unique per item."
+              },
+              {
+                "kind": "summary",
+                "line": 269,
+                "text": "On success, `tag` is appended to the item's tag list."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 3,
+            "sentence_total": 3,
+            "tool": "tag_item",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "tag_item",
+            "uncovered": []
+          },
+          "tool": "tag_item"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "transfer returns a confirmation object on the only success path and raises ToyError on every declared failure, applying both halves of the transfer atomically; no effect is advertised as deferred.\n",
+            "tool": "transfer"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\transfer.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 116,
+                "text": "Transfer `amount` from `from_account` to `to_account`. Both accounts must exist and"
+              },
+              {
+                "kind": "summary",
+                "line": 117,
+                "text": "must not be frozen, the two account ids must differ, `amount` must be positive, and"
+              },
+              {
+                "kind": "summary",
+                "line": 118,
+                "text": "`from_account` must hold a balance of at least `amount`. On success, `from_account`'s"
+              },
+              {
+                "kind": "summary",
+                "line": 119,
+                "text": "balance decreases by `amount` and `to_account`'s balance increases by the same amount."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 4,
+            "sentence_total": 4,
+            "tool": "transfer",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "transfer",
+            "uncovered": []
+          },
+          "tool": "transfer"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "unfreeze_account returns {frozen: false} on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "unfreeze_account"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\unfreeze_account.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 156,
+                "text": "Unfreeze `account_id`, restoring normal operation. The account must exist and must"
+              },
+              {
+                "kind": "summary",
+                "line": 157,
+                "text": "currently be frozen."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 2,
+            "sentence_total": 2,
+            "tool": "unfreeze_account",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "unfreeze_account",
+            "uncovered": []
+          },
+          "tool": "unfreeze_account"
+        },
+        {
+          "benchmark": "toy",
+          "biconditional": {
+            "biconditional": true,
+            "justification": "withdraw returns the updated account on the only success path and raises ToyError on every declared failure; no effect is advertised as deferred.\n",
+            "tool": "withdraw"
+          },
+          "contract": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\spec\\contracts\\toy\\withdraw.yaml",
+          "sentence": {
+            "covered": [
+              {
+                "kind": "summary",
+                "line": 100,
+                "text": "Withdraw `amount` from `account_id`. The account must exist, must not be frozen, and"
+              },
+              {
+                "kind": "summary",
+                "line": 101,
+                "text": "must hold a balance of at least `amount`; `amount` must be positive. On success, the"
+              },
+              {
+                "kind": "summary",
+                "line": 102,
+                "text": "account's balance decreases by exactly `amount` and the updated account is returned."
+              }
+            ],
+            "sentence_fraction": 1.0,
+            "sentence_operationalized": 3,
+            "sentence_total": 3,
+            "tool": "withdraw",
+            "uncovered": []
+          },
+          "state_write": {
+            "covered": [],
+            "state_write_covered": 0,
+            "state_write_fraction": null,
+            "state_write_total": 0,
+            "tool": "withdraw",
+            "uncovered": []
+          },
+          "tool": "withdraw"
+        }
+      ]
+    }
+  },
+  "open_world": {
+    "tau2-telecom": {
+      "adjudication_note": "Only mechanical rule 2 (declared-volatile field) applied. Rule 1 (interface-invisible) and the pre-registered 20% second-annotator dual-adjudication sample both require a human annotator and were NOT performed in this automated run -- flagged here rather than silently assumed. The adjudicated rate above is therefore a conservative one: a human pass could remove more escapes via rule 1, never fewer.",
+      "ambiguous_flagged_for_human_review": [],
+      "behaviorally_live_fraction_of_pairs": 0.023487544483985764,
+      "escape_decomposition": {
+        "clause_gap": 16
+      },
+      "escape_rate_adjudicated": {
+        "claim": "tau2-telecom escape rate (adjudicated, rule-2 only) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
+        "label": "tau2-telecom escape rate (adjudicated, rule-2 only)",
+        "n": 33,
+        "point": 0.48484848484848486,
+        "successes": 16,
+        "wilson_lower": 0.32504042108133696,
+        "wilson_upper": 0.6478162455108585
+      },
+      "escape_rate_raw": {
+        "claim": "tau2-telecom escape rate (raw) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
+        "label": "tau2-telecom escape rate (raw)",
+        "n": 33,
+        "point": 0.48484848484848486,
+        "successes": 16,
+        "wilson_lower": 0.32504042108133696,
+        "wilson_upper": 0.6478162455108585
+      },
+      "escape_reason_codes": {
+        "checker_evaluated_and_did_not_flag": 16
+      },
+      "n_behaviorally_live": 33,
+      "n_escapes_adjudicated": 16,
+      "n_escapes_raw": 16,
+      "n_mutation_tool_pairs": 1405,
+      "n_mutations_scored": 281,
+      "n_reclassified_equivalent_by_rule2": 0,
+      "per_tool": {
+        "n_tools": 5,
+        "per_tool": {
+          "disable_roaming": {
+            "claim": "tau2-telecom escape rate:disable_roaming >= 0.158 (n=7; Wilson 95% CI [0.158, 0.750], point estimate 0.429)",
+            "label": "tau2-telecom escape rate:disable_roaming",
+            "n": 7,
+            "point": 0.42857142857142855,
+            "successes": 3,
+            "wilson_lower": 0.15821985525146975,
+            "wilson_upper": 0.7495416354723428
+          },
+          "enable_roaming": {
+            "claim": "tau2-telecom escape rate:enable_roaming >= 0.097 (n=6; Wilson 95% CI [0.097, 0.700], point estimate 0.333)",
+            "label": "tau2-telecom escape rate:enable_roaming",
+            "n": 6,
+            "point": 0.3333333333333333,
+            "successes": 2,
+            "wilson_lower": 0.09677141110578041,
+            "wilson_upper": 0.700006684861608
+          },
+          "resume_line": {
+            "claim": "tau2-telecom escape rate:resume_line >= 0.646 (n=7; Wilson 95% CI [0.646, 1.000], point estimate 1.000)",
+            "label": "tau2-telecom escape rate:resume_line",
+            "n": 7,
+            "point": 1.0,
+            "successes": 7,
+            "wilson_lower": 0.6456695649333126,
+            "wilson_upper": 1.0
+          },
+          "send_payment_request": {
+            "claim": "tau2-telecom escape rate:send_payment_request >= 0.158 (n=7; Wilson 95% CI [0.158, 0.750], point estimate 0.429)",
+            "label": "tau2-telecom escape rate:send_payment_request",
+            "n": 7,
+            "point": 0.42857142857142855,
+            "successes": 3,
+            "wilson_lower": 0.15821985525146975,
+            "wilson_upper": 0.7495416354723428
+          },
+          "suspend_line": {
+            "claim": "tau2-telecom escape rate:suspend_line >= 0.030 (n=6; Wilson 95% CI [0.030, 0.564], point estimate 0.167)",
+            "label": "tau2-telecom escape rate:suspend_line",
+            "n": 6,
+            "point": 0.16666666666666666,
+            "successes": 1,
+            "wilson_lower": 0.030053369748306635,
+            "wilson_upper": 0.5635028221864702
+          }
+        },
+        "pooled": {
+          "claim": "tau2-telecom escape rate >= 0.253 (n=13.4465; Wilson 95% CI [0.253, 0.724], point estimate 0.485)",
+          "label": "tau2-telecom escape rate",
+          "n": 13.446487284676982,
+          "point": 0.4848484848484849,
+          "successes": 6.519508986510052,
+          "wilson_lower": 0.2526065603704042,
+          "wilson_upper": 0.7238238779723968
+        }
+      }
+    },
+    "toy": {
+      "adjudication_note": "Only mechanical rule 2 (declared-volatile field) applied. Rule 1 (interface-invisible) and the pre-registered 20% second-annotator dual-adjudication sample both require a human annotator and were NOT performed in this automated run -- flagged here rather than silently assumed. The adjudicated rate above is therefore a conservative one: a human pass could remove more escapes via rule 1, never fewer.",
+      "ambiguous_flagged_for_human_review": [],
+      "behaviorally_live_fraction_of_pairs": 0.05657114624505929,
+      "escape_decomposition": {
+        "checker_crashed_uncategorized": 20,
+        "clause_gap": 119,
+        "probe_gap": 90
+      },
+      "escape_rate_adjudicated": {
+        "claim": "toy escape rate (adjudicated, rule-2 only) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+        "label": "toy escape rate (adjudicated, rule-2 only)",
+        "n": 229,
+        "point": 1.0,
+        "successes": 229,
+        "wilson_lower": 0.9835018263493515,
+        "wilson_upper": 0.9999999999999999
+      },
+      "escape_rate_raw": {
+        "claim": "toy escape rate (raw) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+        "label": "toy escape rate (raw)",
+        "n": 229,
+        "point": 1.0,
+        "successes": 229,
+        "wilson_lower": 0.9835018263493515,
+        "wilson_upper": 0.9999999999999999
+      },
+      "escape_reason_codes": {
+        "checker_crashed_or_probe_run_failed": 20,
+        "checker_evaluated_and_did_not_flag": 209
+      },
+      "n_behaviorally_live": 229,
+      "n_escapes_adjudicated": 229,
+      "n_escapes_raw": 229,
+      "n_mutation_tool_pairs": 4048,
+      "n_mutations_scored": 368,
+      "n_reclassified_equivalent_by_rule2": 0,
+      "per_tool": {
+        "n_tools": 11,
+        "per_tool": {
+          "acquire_lock": {
+            "claim": "toy escape rate:acquire_lock >= 0.839 (n=20; Wilson 95% CI [0.839, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:acquire_lock",
+            "n": 20,
+            "point": 1.0,
+            "successes": 20,
+            "wilson_lower": 0.8388748419471806,
+            "wilson_upper": 1.0
+          },
+          "deposit": {
+            "claim": "toy escape rate:deposit >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:deposit",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "freeze_account": {
+            "claim": "toy escape rate:freeze_account >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:freeze_account",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "release_item": {
+            "claim": "toy escape rate:release_item >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:release_item",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "release_lock": {
+            "claim": "toy escape rate:release_lock >= 0.839 (n=20; Wilson 95% CI [0.839, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:release_lock",
+            "n": 20,
+            "point": 1.0,
+            "successes": 20,
+            "wilson_lower": 0.8388748419471806,
+            "wilson_upper": 1.0
+          },
+          "reserve_item": {
+            "claim": "toy escape rate:reserve_item >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:reserve_item",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "resize_inventory": {
+            "claim": "toy escape rate:resize_inventory >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:resize_inventory",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "tag_item": {
+            "claim": "toy escape rate:tag_item >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:tag_item",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "transfer": {
+            "claim": "toy escape rate:transfer >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:transfer",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "unfreeze_account": {
+            "claim": "toy escape rate:unfreeze_account >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:unfreeze_account",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          },
+          "withdraw": {
+            "claim": "toy escape rate:withdraw >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "label": "toy escape rate:withdraw",
+            "n": 21,
+            "point": 1.0,
+            "successes": 21,
+            "wilson_lower": 0.8453609810751531,
+            "wilson_upper": 1.0
+          }
+        },
+        "pooled": {
+          "claim": "toy escape rate >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+          "label": "toy escape rate",
+          "n": 229.0,
+          "point": 1.0,
+          "successes": 229.0,
+          "wilson_lower": 0.9835018263493515,
+          "wilson_upper": 0.9999999999999999
+        }
+      }
+    }
+  },
+  "provenance": {
+    "closed_world_seed": 20260902,
+    "closed_world_source": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\report\\mutation_closed_world_raw.jsonl",
+    "generated_by": "experiments/build_mutation_report.py",
+    "git_commit": "9f6d6bae6854ba7a2a522930e4a967b5d3776598"
+  }
+}

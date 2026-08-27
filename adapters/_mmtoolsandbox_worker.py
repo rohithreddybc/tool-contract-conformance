@@ -373,6 +373,66 @@ def _cmd_source(args: dict) -> dict:
     raise KeyError(f"tool {tool!r} not found in any in-scope scenario {IN_SCOPE_SCENARIOS}")
 
 
+# Mutation-experiment-only (adapters/base.py's `patch_tool`/`unpatch_tool`). tool_sandbox tier
+# tools are plain module-level functions (calendar/reminder/setting), looked up by
+# `getattr(module, tool, None)` fresh on every `_cmd_invoke` call (see above) -- so patching the
+# MODULE ATTRIBUTE, not any per-`ExecutionContext` object, is both necessary (there is no
+# per-instance seam here the way tau2's `env.tools` is) and sufficient (every live env's
+# `_cmd_invoke` re-resolves the tool by name on every call, so a module-level swap takes effect
+# immediately for every already-live env too). Process-wide until `_cmd_unpatch_tool` restores
+# it, like AgentDojo's Function.run patch -- see that worker's identical rationale.
+_PATCHED_ORIGINALS: dict[str, tuple] = {}  # tool name -> (module, original callable)
+
+
+def _find_tool_sandbox_module(tool: str):
+    for module in TOOL_SANDBOX_MODULES:
+        fn = getattr(module, tool, None)
+        if fn is not None and getattr(fn, "is_tool", False):
+            return module
+    return None
+
+
+def _cmd_patch_tool(args: dict) -> dict:
+    """Compile `mutant_source` (a standalone, decorator-free `def <tool>(...): ...` snippet)
+    against the ORIGINAL (unwrapped) implementation's own `__globals__`, copy over the
+    `is_tool`/`visible_to` marker attributes `_agent_visible_tools`/`_cmd_invoke` read (so the
+    patched function is still discovered as a tool), and set it as the module attribute `tool`
+    resolves to. Only the tool_sandbox tier is covered -- `venmo_boundary`'s two tools
+    (`venmo_social`, `venmo_transact`) are dispatch facades onto an unavailable AppWorld bridge,
+    not something a mutant's post-state could be scored against via this worker's `_cmd_snapshot`
+    in the same way, and `venmo_social` is a confirmed-finding anchor tool excluded from the
+    mutation corpus regardless (detector_analysis_plan.md sec 3)."""
+    tool = args["tool"]
+    module = _find_tool_sandbox_module(tool)
+    if module is None:
+        raise KeyError(f"tool {tool!r} not found in any tool_sandbox module")
+    original = getattr(module, tool)
+    if tool not in _PATCHED_ORIGINALS:
+        _PATCHED_ORIGINALS[tool] = (module, original)
+    real = _unwrap(original)
+    globals_ns = real.__globals__
+    ns: dict = {}
+    exec(compile(args["source"], f"<mutant:{tool}>", "exec"), globals_ns, ns)
+    new_func = ns[tool]
+    for attr in ("is_tool", "visible_to"):
+        if hasattr(original, attr):
+            setattr(new_func, attr, getattr(original, attr))
+    setattr(module, tool, new_func)
+    return {}
+
+
+def _cmd_unpatch_tool(args: dict) -> dict:
+    """Restore the module attribute saved by the first `_cmd_patch_tool` call for `tool`. A
+    no-op if `tool` was never patched, matching adapters/base.py's `unpatch_tool` contract."""
+    tool = args["tool"]
+    stash = _PATCHED_ORIGINALS.pop(tool, None)
+    if stash is None:
+        return {}
+    module, original = stash
+    setattr(module, tool, original)
+    return {}
+
+
 _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "ping": _cmd_ping,
     "list_tools": _cmd_list_tools,
@@ -381,6 +441,8 @@ _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "invoke": _cmd_invoke,
     "reset": _cmd_reset,
     "source": _cmd_source,
+    "patch_tool": _cmd_patch_tool,
+    "unpatch_tool": _cmd_unpatch_tool,
 }
 
 

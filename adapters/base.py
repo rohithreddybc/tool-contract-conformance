@@ -122,3 +122,31 @@ class Adapter(ABC):
         name if it is unique across in-scope domains, or "domain:tool_name" to disambiguate
         (several tau2 tool names, e.g. "transfer_to_human_agents", recur across domains)."""
         raise NotImplementedError
+
+    # -- mutation-experiment-only extensions -------------------------------------------------
+    # Added for experiments/run_mutation_*.py (detector_analysis_plan.md): swap ONE tool's live
+    # implementation for a mutant's, so the frozen checker (adapters/contract_check.py, core/)
+    # can be run against it completely unmodified via dynamic.harness.run_contract. Neither
+    # method is abstract -- these are new, additive capabilities the four concrete adapters below
+    # implement; nothing in the checker itself calls them.
+
+    def patch_tool(self, env: EnvHandle, tool: str, mutant_source: str) -> None:
+        """Install `mutant_source` -- a standalone, decorator-free `def <tool>(...): ...`
+        snippet, typically produced by one of mutation/operators.py's six functions or one of
+        mutation/equivalence.py's single-function refactor generators, unparsed and stripped of
+        its decorator_list -- as the live implementation of `tool`.
+
+        Scope varies by adapter and is documented on each override: some scope the patch to just
+        `env` (discarded once that EnvHandle is discarded, so `unpatch_tool` is a no-op there);
+        others must patch a process-wide shared object (a cached suite/module), in which case the
+        patch persists across every EnvHandle until `unpatch_tool` undoes it. Callers that need
+        adapter-agnostic behaviour should always call `unpatch_tool` when done with one mutant,
+        never rely on which scoping a given adapter happens to use.
+        """
+        raise NotImplementedError(f"{type(self).__name__} does not support patch_tool")
+
+    def unpatch_tool(self, tool: str) -> None:
+        """Undo a prior process-wide `patch_tool` call for `tool`, restoring the original
+        implementation. A no-op for an adapter whose `patch_tool` scopes to one EnvHandle only
+        (see that override's docstring) -- always safe to call regardless."""
+        return None

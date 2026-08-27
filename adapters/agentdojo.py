@@ -219,3 +219,12 @@ class AgentDojoAdapter(Adapter):
     def source(self, tool: str) -> SourceRef:
         result = self._send({"cmd": "source", "args": {"tool": tool}})
         return SourceRef.from_dict(result["source"])
+
+    def patch_tool(self, env: EnvHandle, tool: str, mutant_source: str) -> None:
+        """Process-wide, not scoped to `env` -- see adapters/_agentdojo_worker.py's
+        `_cmd_patch_tool` docstring. Callers must call `unpatch_tool` when done with this
+        mutant."""
+        self._send({"cmd": "patch_tool", "args": {"env_id": env.env_id, "tool": tool, "source": mutant_source}})
+
+    def unpatch_tool(self, tool: str) -> None:
+        self._send({"cmd": "unpatch_tool", "args": {"tool": tool}})

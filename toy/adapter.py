@@ -129,3 +129,21 @@ class ToyAdapter(Adapter):
             raise ToyAdapterError(f"unknown tool: {tool}")
         start, end = TOOL_SOURCE_RANGES[tool]
         return SourceRef(file=BANK_FILE, start_line=start, end_line=end)
+
+    def patch_tool(self, env: EnvHandle, tool: str, mutant_source: str) -> None:
+        """Scoped to `env` alone: `mutant_source` is exec'd against toy.bank's own module
+        globals (so a mutant that still reads a module-level name resolves it identically to the
+        original), bound to THIS ONE ToyBank instance, and set as an instance attribute -- which
+        Python's attribute lookup prefers over the class's own method for every subsequent call
+        on this instance, leaving every other ToyBank instance (including a fresh one from
+        another `fresh_env()` call) untouched. `unpatch_tool` is therefore a no-op here -- see
+        its docstring."""
+        import toy.bank as bank_module
+
+        bank = self._get(env)
+        if tool not in MUTATING_TOOLS:
+            raise ToyAdapterError(f"unknown tool: {tool}")
+        ns: dict = {}
+        exec(compile(mutant_source, f"<mutant:{tool}>", "exec"), vars(bank_module), ns)
+        new_func = ns[tool]
+        setattr(bank, tool, new_func.__get__(bank, type(bank)))

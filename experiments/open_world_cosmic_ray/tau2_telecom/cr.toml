@@ -1,0 +1,8 @@
+[cosmic-ray]
+module-path = "C:/Users/rohit/AppData/Local/Temp/claude/C--Users-rohit-Documents-Research-Papers-ResearchPaper20-ToolContractConformance/9cf6d4f6-3c7b-43d3-9b4d-5f3b45276ebb/scratchpad/cr_tau2_real/src/tau2/domains/telecom/tools.py"
+timeout = 60.0
+excluded-modules = []
+test-command = "C:/Users/rohit/Documents/Research Papers/ResearchPaper20-ToolContractConformance/.venv-tau2/Scripts/python.exe C:/Users/rohit/AppData/Local/Temp/claude/C--Users-rohit-Documents-Research-Papers-ResearchPaper20-ToolContractConformance/9cf6d4f6-3c7b-43d3-9b4d-5f3b45276ebb/scratchpad/cr_tau2_real/test_command.py"
+
+[cosmic-ray.distributor]
+name = "local"

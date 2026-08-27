@@ -428,6 +428,65 @@ def _cmd_source(args: dict) -> dict:
     raise ValueError(f"tool name {tool!r} is ambiguous across suites ({suites}) with DIFFERENT implementations")
 
 
+# Mutation-experiment-only (adapters/base.py's `patch_tool`/`unpatch_tool`). Unlike tau2's
+# per-environment `env.tools` instance, AgentDojo's registered tools are `Function` pydantic
+# objects held on the CACHED suite object (`_suite()` / `_INTROSPECT_SUITES`) and shared, by
+# object identity, across every `fresh_env()` call for that suite -- `_cmd_fresh_env` builds
+# `FunctionsRuntime(suite.tools)` from that same shared list every time. There is no per-instance
+# scoping seam analogous to tau2's `env.tools`, so a patch here is process-wide by construction
+# until `_cmd_unpatch_tool` restores it -- callers (mutation/*) must always unpatch before moving
+# to the next mutant/tool, and adapters/base.py's docstring says so generically.
+_PATCHED_ORIGINALS: dict[str, Callable] = {}  # tool name -> original Function.run, for unpatch
+
+
+def _functions_named(tool: str) -> list:
+    """Every registered `Function` named `tool`, across every in-scope suite -- plural because a
+    handful of tools (send_email, create_calendar_event, cancel_calendar_event) are the SAME
+    function shared across suites (see `_cmd_source`'s docstring), and ALL of a shared tool's
+    registrations must be patched together or an env built from a not-yet-patched suite would
+    still run the original."""
+    out = []
+    for suite_name in IN_SCOPE_SUITES:
+        for f in _suite(suite_name).tools:
+            if f.name == tool:
+                out.append(f)
+    return out
+
+
+def _cmd_patch_tool(args: dict) -> dict:
+    """Compile `mutant_source` (a standalone, decorator-free `def <tool>(...): ...` snippet)
+    against the ORIGINAL implementation's own `__globals__`, then set it as `Function.run` on
+    every registration of `tool` found across the in-scope suites. `Function` is a plain
+    (non-frozen) pydantic `BaseModel` with no `validate_assignment`, so `f.run = new_func` is an
+    ordinary attribute set, not a validated one."""
+    tool = args["tool"]
+    matches = _functions_named(tool)
+    if not matches:
+        raise KeyError(f"tool {tool!r} not found in any in-scope suite {IN_SCOPE_SUITES}")
+    if tool not in _PATCHED_ORIGINALS:
+        _PATCHED_ORIGINALS[tool] = matches[0].run
+    globals_ns = _PATCHED_ORIGINALS[tool].__globals__
+    ns: dict = {}
+    exec(compile(args["source"], f"<mutant:{tool}>", "exec"), globals_ns, ns)
+    new_func = ns[tool]
+    for f in matches:
+        f.run = new_func
+    return {}
+
+
+def _cmd_unpatch_tool(args: dict) -> dict:
+    """Restore every registration of `tool` to the implementation saved by the first
+    `_cmd_patch_tool` call for it. A no-op (not an error) if `tool` was never patched, matching
+    adapters/base.py's `unpatch_tool` contract ("always safe to call")."""
+    tool = args["tool"]
+    original = _PATCHED_ORIGINALS.pop(tool, None)
+    if original is None:
+        return {}
+    for f in _functions_named(tool):
+        f.run = original
+    return {}
+
+
 _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "ping": _cmd_ping,
     "list_tools": _cmd_list_tools,
@@ -436,6 +495,8 @@ _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "invoke": _cmd_invoke,
     "reset": _cmd_reset,
     "source": _cmd_source,
+    "patch_tool": _cmd_patch_tool,
+    "unpatch_tool": _cmd_unpatch_tool,
 }
 
 

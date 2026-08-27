@@ -235,6 +235,47 @@ def _cmd_source(args: dict) -> dict:
     return {"source": _source_ref(matches[0][1])}
 
 
+def _cmd_patch_tool(args: dict) -> dict:
+    """Mutation-experiment-only (adapters/base.py's `patch_tool`; see its docstring): install a
+    mutated implementation of `tool` on ONE live environment's `env.tools` instance.
+    `env.tools.tools` (toolkit.py's `ToolKitBase.tools` property) is recomputed on every access
+    via `getattr(self, name)`, never stored, so an ordinary instance attribute set here
+    (`setattr(env.tools, tool, bound_mutant)`) shadows the class method for `getattr` lookups on
+    THIS instance only -- Python attribute resolution checks the instance `__dict__` before a
+    non-data-descriptor (a plain method) defined on the class. Every other live environment
+    (including a fresh one from another `fresh_env()` call) is unaffected, so `_cmd_unpatch_tool`
+    has nothing process-wide to undo.
+
+    `mutant_source` is exec'd against the ORIGINAL bound method's own `__globals__` (its
+    defining module's real globals, e.g. `tau2.domains.airline.tools`'s namespace) so every name
+    the mutant body still reads (`ValueError`, a sibling helper, an imported class, ...) resolves
+    exactly as it did before mutation -- see adapters/base.py's `patch_tool` docstring for why
+    `mutant_source` is decorator-free (there is nothing here to reapply: `is_tool`'s marker
+    attributes are copied onto the new function object directly, not re-run as a decorator)."""
+    env = _live_env(args["env_id"])
+    tool = args["tool"]
+    original = getattr(env.tools, tool)
+    original_func = getattr(original, "__func__", original)
+    globals_ns = original_func.__globals__
+    ns: dict = {}
+    exec(compile(args["source"], f"<mutant:{tool}>", "exec"), globals_ns, ns)
+    new_func = ns[tool]
+    for attr in ("__tool__", "__tool_type__", "__mutates_state__", "__discoverable__"):
+        if hasattr(original_func, attr):
+            setattr(new_func, attr, getattr(original_func, attr))
+    bound = new_func.__get__(env.tools, type(env.tools))
+    setattr(env.tools, tool, bound)
+    return {}
+
+
+def _cmd_unpatch_tool(args: dict) -> dict:
+    """No-op: see _cmd_patch_tool's docstring -- the patch it installs is scoped to one
+    already-live env.tools instance, never to the class or module, so there is nothing
+    process-wide to restore. Present so the harness-side `unpatch_tool` call (uniform across
+    every adapter, per adapters/base.py) always has a handler to reach."""
+    return {}
+
+
 _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "ping": _cmd_ping,
     "list_tools": _cmd_list_tools,
@@ -243,6 +284,8 @@ _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "invoke": _cmd_invoke,
     "reset": _cmd_reset,
     "source": _cmd_source,
+    "patch_tool": _cmd_patch_tool,
+    "unpatch_tool": _cmd_unpatch_tool,
 }
 
 
