@@ -14,7 +14,14 @@ source:
 
 signature:
   args:
-    reminder_id: { type: str, effective: false }
+    reminder_id:
+      type: str
+      effective: false
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+        line: 318
+        quote: "String format unique identifier of the reminder to be removed"
 
 preconditions:
   - id: pre.reminder_exists

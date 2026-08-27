@@ -29,8 +29,22 @@ source:
 
 signature:
   args:
-    user: { type: str, effective: true }
-    user_email: { type: str, effective: true }
+    user:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/slack.py
+        line: 96
+        quote: "The user to invite."
+    user_email:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/slack.py
+        line: 97
+        quote: "The user email where invite should be sent."
 
 preconditions:
   - id: pre.user_not_already_present
@@ -72,3 +86,13 @@ notes: >
   post.slack.user_inbox, post.slack.user_channels all unaffected by which user_email was
   supplied) -> VIOLATES, defect_class IGNORED_ARGUMENT, no tool-specific assertion beyond the
   clause id `arg.user_email` and the generic verdict/defect_class fields.
+
+  spec/GRAMMAR-GAPS.md's third entry recorded that `arg.user_email` was structurally capped at
+  INFERRED tier because no `signature.args.user_email.provenance` had ever been populated on this
+  contract -- not because the evidence was weak, but because nothing had graded it. That gap is
+  closed above: `user_email`'s docstring quote (line 97, already cited by this file's header
+  comment before the field existed to hold it) is now recorded as the argument's own `provenance`,
+  surface `docstring`. Since `arg.<name>` is the ONLY clause id this finding can ever be reported
+  against (see the header comment), this is what lets `core.model.headline_tier()` place it at
+  AGENT_VISIBLE instead of INFERRED -- the quote was always genuine; only the field to record it
+  in was missing.

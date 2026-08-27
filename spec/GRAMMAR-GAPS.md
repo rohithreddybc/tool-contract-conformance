@@ -102,6 +102,11 @@ left for a follow-up rather than applied here.
 ## `arg.<name>` clause ids can never land above INFERRED tier under the shipped AgentDojo/
 ## MM-ToolSandbox contracts, even when the argument is genuinely docstring-documented
 
+**RESOLVED 2026-08-26** for all 12 AgentDojo/MM-ToolSandbox contracts. See amendment at the
+bottom of this entry. The gap as originally found is left below unedited, since it is still the
+correct description of why the gap existed and what would have been wrong about fixing it
+alongside the headline_tier wiring itself.
+
 Found while wiring `core.model.headline_tier()` through `dynamic/harness.py` (the two adapters'
 contracts, plus the check-8 threading). Not a schema or grammar limitation -- `ArgSpec` already
 carries an optional `provenance` field (schema.json argSpec $defs, `core/model.py`'s `ArgSpec`
@@ -138,3 +143,41 @@ a weakening. Recorded here instead, as a real result about this contract batch's
 `Contract.signature.args[...].provenance` needs to be populated as a matter of course whenever an
 argument's own documentation is the ONLY grounds for a future finding that has no effect-clause
 counterpart, or that finding cannot be headline-eligible no matter how faithfully check 8 is run.
+
+### Amendment 2026-08-26 -- backfilled, in a change separate from the headline_tier wiring
+
+The objection above was specifically to backfilling provenance "in the same change that wires up
+headline_tier" -- doing it there would have been indistinguishable from tuning a contract to hit
+a tier chosen in advance. That change has long since landed and shipped; this is a later, separate
+change, made for its own stated reason (closing a probe gap named in
+`detector_analysis_plan.md` sec 4.3, and this structural cap on Finding 8 named here), not to move
+any one finding's tier.
+
+Every `signature.args.<name>` entry across all 12 AgentDojo/MM-ToolSandbox contracts was checked
+against the tool's own docstring at its pinned commit. The result is unqualified in this batch:
+**every single argument in all 12 contracts turned out to have a genuine, verbatim, per-argument
+docstring line** (AgentDojo's `:param name: ...` convention and MM-ToolSandbox's `Args:`-block
+convention both document parameters individually, with no undocumented argument found anywhere in
+this batch). Each entry now carries `provenance: {surface: docstring, file, line, quote}` citing
+that exact line, verified the same way check4_provenance verifies it (the quote is a substring of
+the cited source line at the pinned commit) -- `python spec/validate.py` was re-run per benchmark
+with `--repo-root` and the matching `tests/fixtures/*_state.json` `--state-schema`, and all 12
+files pass all 8 checks with zero skips, unchanged from before this amendment.
+
+No argument was left without provenance in this batch, so the "leave it absent, do not invent a
+surface" rule this file otherwise emphasizes had no case to apply to here -- it remains the rule
+for the NEXT contract that has a genuinely undocumented argument, and nothing above should be read
+as license to invent a quote where none exists.
+
+**Consequence for Finding 8.** `arg.user_email` now resolves `AGENT_VISIBLE` (docstring surface,
+`check8_passed` true by default for a surface check 8 does not test) instead of `INFERRED`.
+Finding 8 is therefore now headline-eligible on its own clause -- the structural cap this entry
+originally described no longer applies to it. `arg.end_time` (Finding 6) and `arg.sort_by`
+(Finding 7) also now resolve `AGENT_VISIBLE` directly at the `arg.*` clause, which changes nothing
+about their headline-eligibility (both already reached it via their same-named effect clause) but
+removes the asymmetry this entry noted between them and `user_email`.
+
+**What remains.** This amendment is scoped to the 12 shipped AgentDojo/MM-ToolSandbox contracts
+only, per the change that produced it. tau2 and toy contracts were not touched and were not
+audited for the same gap here; if any of their `signature.args` entries are similarly
+under-provenanced, that is a separate, unverified question this amendment does not answer.

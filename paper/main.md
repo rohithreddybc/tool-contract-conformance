@@ -20,8 +20,13 @@ Rohith Reddy, Wenbin Zhang
 
 <!-- PLACEHOLDER — drafted last, after report/render.py tables exist.
 Committed shape (PAPER-OUTLINE.md, abstract rule):
-  - leads with the count that survives inspection: 5 HEADLINE-ELIGIBLE tool-layer cells
-    across 4 benchmarks. Superseded 2026-08-21: an earlier version of this block said 7 cells.
+  - leads with the count that survives inspection: 4 HEADLINE-ELIGIBLE tool-layer cells
+    across 4 benchmarks, counted from report/findings.jsonl, which is the artifact of record.
+    Superseded twice: this block said 7 cells, then 5. AgentDojo's Phantom Effect cell went
+    on 2026-08-26 because the biconditional re-tag never fires -- the fixture masks one half
+    of the defect, so both halves are confirmed in separate calls but never simultaneously.
+    A probe-and-fixture gap, reported as one; a fixture chosen to make it fire would be
+    tuning the instrument to produce the result.
     Two of the seven cannot carry a headline — tau2's Partial Effect is maintainer_annotation
     grounded and excluded by our own tiering rule, and MedAgentBench's Ungrounded Oracle is an
     evaluator-layer property, not one of the six tool-layer classes. Both are reported, adjacent

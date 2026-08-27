@@ -40,12 +40,57 @@ source:
 
 signature:
   args:
-    domain: { type: str, effective: false, probe_values: ["comment", "friend"] }
-    action: { type: str, effective: false, probe_values: ["list", "show"] }
-    transaction_id: { type: int, effective: true }
-    page_index: { type: int, effective: true }
-    page_limit: { type: int, effective: true }
-    sort_by: { type: str, effective: true, probe_values: ["-date", "+amount"] }
+    domain:
+      type: str
+      effective: false
+      probe_values: ["comment", "friend"]
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 393
+        quote: "The social domain."
+    action:
+      type: str
+      effective: false
+      probe_values: ["list", "show"]
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 394
+        quote: "The specific action within the domain."
+    transaction_id:
+      type: int
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 402
+        quote: "Transaction ID (for comment create/list)."
+    page_index:
+      type: int
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 397
+        quote: "Page index for pagination."
+    page_limit:
+      type: int
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 398
+        quote: "Results per page."
+    sort_by:
+      type: str
+      effective: true
+      probe_values: ["-date", "+amount"]
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 405
+        quote: "Sort attribute with +/- prefix (for comment list)."
 
 effects:
   - id: eff.transaction_id_forwarded

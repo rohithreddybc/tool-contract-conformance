@@ -40,7 +40,7 @@ from adapters.tau2 import Tau2Adapter, Tau2AdapterError
 from core.canonical import CanonicalConfig, canonical_equal, diff
 from core.model import Contract, HeadlineTier, headline_tier
 from core.verdict import ClauseVerdict, DefectClass, Verdict, Witness
-from dynamic.probes import build_dynamic_probe_plan
+from dynamic.probes import build_dynamic_probe_plan, joint_falsy_argument_names
 from spec.validate import (
     _classify_tool_return,
     _git_show,
@@ -397,6 +397,38 @@ def run_contract(
         for ec in contract.effects:
             cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=ec.id, reason_code="no_observable_state")
             rows.append(_row(kind="effect", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin="effect_happy_path_not_found"))
+
+    # -- joint-falsy probe: dynamic/probes.py's generic fix for the probe gap
+    #    detector_analysis_plan.md sec 4.3 names -- see generate_joint_falsy_probe's docstring.
+    #    Only meaningful when the contract actually has 2+ falsy-eligible effective arguments;
+    #    for every other contract this block is a silent no-op (not applicable, not a gap), so
+    #    only tools this strategy can possibly say something about ever grow a row from it.
+    #    Guarded the same way as the effect happy-path probe above: a failed call never reached
+    #    the tool's effect code, so grading it would manufacture a false verdict out of a call
+    #    the tool itself rejected. ------------------------------------------------------------
+    if len(joint_falsy_argument_names(contract)) >= 2:
+        if plan.joint_falsy_probe is not None:
+            rec = _invoke_fresh(adapter, scenario_id, contract.tool, plan.joint_falsy_probe.args)
+            if rec.success:
+                for cv in check_effects(contract, rec.pre, rec.post, rec.args, rec.result, cfg=cfg):
+                    rows.append(_row(kind="effect", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin=plan.joint_falsy_probe.origin))
+            else:
+                for ec in contract.effects:
+                    cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=ec.id, reason_code="no_observable_state")
+                    rows.append(
+                        _row(
+                            kind="effect", contract=contract, scenario_id=scenario_id, cv=cv,
+                            probe_origin="joint_falsy_effect_call_failed", extra={"call_error": rec.error},
+                        )
+                    )
+        else:
+            # A probe gap, not a clause gap: the contract has 2+ falsy-eligible effective
+            # arguments, but no joint assignment forcing all of them falsy at once also
+            # satisfied every declared precondition in the sampled set. Reported per clause so
+            # it is countable, mirroring "effect_happy_path_not_found" above.
+            for ec in contract.effects:
+                cv = ClauseVerdict(verdict=Verdict.UNTESTABLE, clause_id=ec.id, reason_code="no_observable_state")
+                rows.append(_row(kind="effect", contract=contract, scenario_id=scenario_id, cv=cv, probe_origin="joint_falsy_effect_not_found"))
 
     # -- Ignored Argument: one check_ignored_argument call per effective argument that got a
     #    usable variant set. --------------------------------------------------------------------

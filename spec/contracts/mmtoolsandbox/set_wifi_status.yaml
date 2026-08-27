@@ -22,7 +22,14 @@ source:
 
 signature:
   args:
-    "on": { type: bool, effective: true }
+    "on":
+      type: bool
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/setting.py
+        line: 207
+        quote: "If we want to turn on wifi"
 
 preconditions:
   - id: pre.state_actually_changes

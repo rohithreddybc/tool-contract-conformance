@@ -35,7 +35,24 @@ Seven cells exist, but two cannot carry a headline, and the paper states this be
 | AgentDojo | Phantom Effect | **Yes** |
 | MM-ToolSandbox | Ignored Argument | **Yes** |
 
-**5 headline-eligible tool-layer cells across 4 benchmarks**, plus one maintainer-annotated cell reported separately, plus one evaluator-layer result that is the paper's strongest single finding and is not a tool-layer class at all.
+**Revised again 2026-08-26 against `report/findings.jsonl`, which is the artifact of record. The number is 4, not 5.**
+
+The harness now drives all four benchmarks and emits 207 rows with 11 VIOLATES. Counting headline-eligible cells from the report rather than from intention:
+
+| Cell | Demonstrated | Tier |
+|---|---|---|
+| MedAgentBench / Phantom Effect | Statically — MedAgentBench is a static case study by design, it has no adapter | agent_visible |
+| tau2-bench / Unenforced Precondition | `refuel_data`, `pre.line_active` | agent_visible |
+| AgentDojo / Ignored Argument | `reserve_car_rental`, `update_scheduled_transaction`, `invite_user_to_slack` | agent_visible |
+| MM-ToolSandbox / Ignored Argument | `venmo_social` | agent_visible |
+
+**4 headline-eligible cells across 4 benchmarks**, plus one maintainer-annotated cell (tau2 Partial Effect) and one evaluator-layer result (Ungrounded Oracle) reported separately.
+
+**Why the fifth cell went.** AgentDojo's Phantom Effect was counted on the strength of Finding 5 satisfying two classes at once. The contract expresses it correctly — `success_signal.biconditional: true`, so when every effect clause fails while the tool reports success, `check_effects` re-tags to Phantom Effect. It never fires. The banking fixture's transaction id 7 already carries `recurring: False`, so `eff.recurring_propagated` conforms trivially on that record, and the probes demonstrate the `recurring` half and the `amount` half in separate calls without ever tripping both in one. Both halves are now confirmed individually — `eff.recurring_propagated` and `eff.amount_propagated` both VIOLATE — but the biconditional re-tag needs them simultaneous.
+
+This is a probe-and-fixture gap in the §4.3 sense, not a defect in the contract, and it is reported as one. A fixture chosen so the defect fires would be tuning the instrument to produce the result, which is the thing this project exists to catch other people doing.
+
+**On the trend.** The count has gone 8 instances → 7 cells → 5 headline-eligible → 4 demonstrated. Every revision was downward and every one came from applying our own rules more strictly, never from losing evidence. Assume 4 is the number. If a later change appears to raise it, the burden is on that change.
 
 This is a real reduction from the number previously quoted and it is the correct one. A headline of 7 holds only until someone asks which seven, at which point two fall over and the entire count reads as inflated. Five that survive inspection beat seven that do not, and five across four benchmarks still clears the kill gate on its own terms. Every number in the abstract must be the one that survives a reviewer opening the table.
 

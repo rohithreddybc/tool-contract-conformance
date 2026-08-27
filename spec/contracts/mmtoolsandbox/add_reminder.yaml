@@ -25,10 +25,39 @@ source:
 
 signature:
   args:
-    content: { type: str, effective: true }
-    reminder_datetime: { type: str, effective: true, probe_values: ["2026-04-17T10:00:00+00:00", "2026-05-02T08:30:00+00:00"] }
-    latitude: { type: float, effective: true }
-    longitude: { type: float, effective: true }
+    content:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+        line: 70
+        quote: "Content of the reminder"
+    reminder_datetime:
+      type: str
+      effective: true
+      probe_values: ["2026-04-17T10:00:00+00:00", "2026-05-02T08:30:00+00:00"]
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+        line: 71
+        quote: "When the user wants to be reminded."
+    latitude:
+      type: float
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+        line: 72
+        quote: "Latitude of the location associated with this reminder"
+    longitude:
+      type: float
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/reminder.py
+        line: 73
+        quote: "Longitude of the location associated with this reminder"
 
 effects:
   - id: eff.reminder_added

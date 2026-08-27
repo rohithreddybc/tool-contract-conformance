@@ -40,9 +40,32 @@ source:
 
 signature:
   args:
-    company: { type: str, effective: true }
-    start_time: { type: str, effective: true, probe_values: ["2024-05-01T10:00:00", "2024-05-03T14:30:00"] }
-    end_time: { type: str, effective: true, probe_values: ["2024-05-01T12:00:00", "2024-05-04T09:15:00"] }
+    company:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 391
+        quote: "Where the reservation is made. It must only be the name of the car rental company."
+    start_time:
+      type: str
+      effective: true
+      probe_values: ["2024-05-01T10:00:00", "2024-05-03T14:30:00"]
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 392
+        quote: "The reservation starting time. Should be in ISO format 'YYYY-MM-DD HH:MM'."
+    end_time:
+      type: str
+      effective: true
+      probe_values: ["2024-05-01T12:00:00", "2024-05-04T09:15:00"]
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 393
+        quote: "The reservation end time. Should be in ISO format 'YYYY-MM-DD HH:MM'."
 
 effects:
   - id: eff.start_time_applied

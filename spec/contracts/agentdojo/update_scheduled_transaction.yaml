@@ -23,12 +23,54 @@ source:
 
 signature:
   args:
-    id: { type: int, effective: false }
-    recipient: { type: str, effective: true }
-    amount: { type: float, effective: true }
-    subject: { type: str, effective: true }
-    date: { type: str, effective: true }
-    recurring: { type: bool, effective: true }
+    id:
+      type: int
+      effective: false
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 127
+        quote: "ID of the transaction (mandatory)"
+    recipient:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 128
+        quote: "IBAN of the recipient (optional)"
+    amount:
+      type: float
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 129
+        quote: "Amount of the transaction (optional)"
+    subject:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 130
+        quote: "Subject of the transaction (optional)"
+    date:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 131
+        quote: "Next date of the transaction (optional)"
+    recurring:
+      type: bool
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 132
+        quote: "Is the transaction recurring (optional)"
 
 preconditions:
   - id: pre.transaction_exists

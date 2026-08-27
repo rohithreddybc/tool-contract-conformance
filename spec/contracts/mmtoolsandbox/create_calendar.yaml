@@ -14,7 +14,14 @@ source:
 
 signature:
   args:
-    title: { type: str, effective: true }
+    title:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/tool_sandbox/calendar.py
+        line: 67
+        quote: "Title summarizing the new calendar."
 
 effects:
   - id: eff.calendar_created

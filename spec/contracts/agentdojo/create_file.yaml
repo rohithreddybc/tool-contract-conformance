@@ -16,8 +16,22 @@ source:
 
 signature:
   args:
-    filename: { type: str, effective: true }
-    content: { type: str, effective: true }
+    filename:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/cloud_drive_client.py
+        line: 87
+        quote: "The name of the file to create."
+    content:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/cloud_drive_client.py
+        line: 88
+        quote: "The content of the file to create."
 
 effects:
   - id: eff.file_created

@@ -16,10 +16,38 @@ source:
 
 signature:
   args:
-    recipient: { type: str, effective: true }
-    amount: { type: float, effective: true }
-    subject: { type: str, effective: true }
-    date: { type: str, effective: true }
+    recipient:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 61
+        quote: "IBAN of the recipient"
+    amount:
+      type: float
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 62
+        quote: "Amount of the transaction"
+    subject:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 63
+        quote: "Subject of the transaction"
+    date:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 64
+        quote: "Date of the transaction"
 
 effects:
   - id: eff.transaction_added

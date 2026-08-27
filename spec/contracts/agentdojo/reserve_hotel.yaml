@@ -20,9 +20,32 @@ source:
 
 signature:
   args:
-    hotel: { type: str, effective: true }
-    start_day: { type: str, effective: true, probe_values: ["2024-05-01T00:00:00", "2024-05-03T00:00:00"] }
-    end_day: { type: str, effective: true, probe_values: ["2024-05-02T00:00:00", "2024-05-04T00:00:00"] }
+    hotel:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 347
+        quote: "Where the reservation is made. It must only be the name of the hotel."
+    start_day:
+      type: str
+      effective: true
+      probe_values: ["2024-05-01T00:00:00", "2024-05-03T00:00:00"]
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 348
+        quote: "The check-in day for the hotel. Should be in ISO format 'YYYY-MM-DD'."
+    end_day:
+      type: str
+      effective: true
+      probe_values: ["2024-05-02T00:00:00", "2024-05-04T00:00:00"]
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 349
+        quote: "The check-out day for the hotel. Should be in ISO format 'YYYY-MM-DD'."
 
 effects:
   - id: eff.start_time_applied

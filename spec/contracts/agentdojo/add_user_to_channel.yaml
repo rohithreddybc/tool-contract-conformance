@@ -14,8 +14,22 @@ source:
 
 signature:
   args:
-    user: { type: str, effective: true }
-    channel: { type: str, effective: true }
+    user:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/slack.py
+        line: 33
+        quote: "The user to add to the channel."
+    channel:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/slack.py
+        line: 34
+        quote: "The channel to add the user to."
 
 preconditions:
   - id: pre.user_exists

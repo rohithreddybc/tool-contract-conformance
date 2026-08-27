@@ -61,6 +61,8 @@ __all__ = [
     "generate_precondition_probes",
     "generate_effect_probe",
     "generate_ignored_argument_probes",
+    "joint_falsy_argument_names",
+    "generate_joint_falsy_probe",
     "build_dynamic_probe_plan",
 ]
 
@@ -91,13 +93,17 @@ class DynamicProbePlan:
     """The full sec-1-build-spec probe set for one contract, bundled for dynamic/harness.py's
     convenience: precondition satisfy/violate probes, the effect happy-path probe (None if the
     search found no joint assignment satisfying every precondition -- the harness reports that as
-    UNTESTABLE rather than guessing), and per-effective-argument Ignored Argument variant sets
+    UNTESTABLE rather than guessing), per-effective-argument Ignored Argument variant sets
     (an argument is absent from this dict if fewer than two distinct-valued variants could be
-    built for it)."""
+    built for it), and the joint-falsy probe (None if the contract has fewer than two falsy-
+    eligible `effective: true` arguments -- not applicable, not a gap -- or if no joint
+    assignment with every such argument set falsy at once could be found satisfying every
+    precondition; see `generate_joint_falsy_probe`)."""
 
     precondition_probes: tuple = ()
     effect_probe: Optional[Probe] = None
     ignored_argument_probes: dict = field(default_factory=dict)
+    joint_falsy_probe: Optional[Probe] = None
 
 
 # ---------------------------------------------------------------------------------------------
@@ -525,18 +531,99 @@ def generate_ignored_argument_probes(
 
 
 # ---------------------------------------------------------------------------------------------
+# 4. Joint-falsy probe: every falsy-eligible `effective: true` argument set falsy AT ONCE.
+#
+# Generic fix for the probe gap detector_analysis_plan.md sec 4.3 names: a clause the contract
+# already covers, that the checker's own probes never drove the tool into the state to expose.
+# `generate_ignored_argument_probes` above only ever varies ONE argument at a time (every OTHER
+# argument held at a fixed, non-falsy base value) -- so a tool that truthiness-guards SEVERAL
+# arguments (`if amount:` / `if recurring:`, Python truthiness rather than an `is not None`
+# check -- the exact shape static_check's own `truthiness_guard` check looks for on the static
+# side) only ever has ONE guarded argument at a time set to its falsy value in any single probed
+# call. Every OTHER guarded argument's own effect clause still conforms in that call, because
+# that argument's own base value is non-falsy and was in fact applied -- so the checker never
+# observes the state where EVERY testable effect clause fails simultaneously, which is exactly
+# the state `success_signal.biconditional` needs to re-tag a violation Phantom Effect rather than
+# Ignored Argument/Partial Effect. This strategy is the generic fix: drive every falsy-eligible
+# effective argument to its falsy value in the SAME call.
+#
+# Tool-agnostic by construction: `joint_falsy_argument_names` reads only `signature.args.<name>`
+# (`effective` and `type`), never a tool name, a benchmark name, or a clause id. It fires for any
+# contract with two or more such arguments; a single one is already exercised by the falsy value
+# ordinarily present among `generate_ignored_argument_probes`'s own harvested/synthesized
+# candidates for that one argument (`_SYNTH_EXTRA`'s bool entries include False, and 0/""/0.0
+# are frequently present in a live snapshot's own pool) -- it takes at least two argument
+# simultaneously falsy to reach a state the one-at-a-time strategy cannot reach at all.
+# ---------------------------------------------------------------------------------------------
+
+# A separate, purpose-built table from mutation/probes.py's `_ZERO_EMPTY_BY_TYPE` and this
+# module's own `_SYNTH_EXTRA` -- see the module docstring's separation note. This one is not a
+# boundary triad or a diversity floor; it names the one falsy value Python truthiness treats as
+# indistinguishable from "argument not supplied" for each of the four scalar builtin types.
+_FALSY_BY_TYPE = {
+    "int": 0,
+    "float": 0.0,
+    "bool": False,
+    "str": "",
+}
+
+
+def joint_falsy_argument_names(contract: Contract) -> list:
+    """`effective: true` arguments of `contract` whose declared `type` is one `_FALSY_BY_TYPE`
+    names -- pure signature inspection, no snapshot needed, so a caller can decide applicability
+    (2 or more such names) before ever searching for a probe. Order follows
+    `contract.signature.args`'s own declaration order."""
+    return [
+        name
+        for name, spec in contract.signature.args.items()
+        if spec.effective and spec.type in _FALSY_BY_TYPE
+    ]
+
+
+def generate_joint_falsy_probe(
+    contract: Contract, pre: Any, *, seed: int = 3, k: int = _DEFAULT_K
+) -> Optional[Probe]:
+    """One args-dict, drawn from the same joint-sampled combination pool `generate_effect_probe`
+    searches (`_joint_combinations`), with every name in `joint_falsy_argument_names(contract)`
+    overridden to its `_FALSY_BY_TYPE` value in that SAME combo -- so the probe both targets the
+    joint-falsy state and stays a call the tool is expected to actually accept (only a combo
+    still satisfying every declared precondition AFTER the override is returned; a call rejected
+    before the tool's effect code runs is not a probe of the effect layer at all). Returns None
+    if fewer than two falsy-eligible `effective: true` arguments exist (not applicable to this
+    contract -- not a gap) or if no combo in the sampled set satisfies every precondition once
+    those arguments are forced falsy (a genuine probe gap, left for the harness to report as
+    UNTESTABLE rather than guessed around, matching `generate_effect_probe`'s own discipline)."""
+    falsy_names = joint_falsy_argument_names(contract)
+    if len(falsy_names) < 2:
+        return None
+    combos = _joint_combinations(contract, pre, seed=seed, k=k)
+    compiled_preconditions = [compile_predicate(pc.predicate) for pc in contract.preconditions]
+    for combo in combos:
+        candidate = dict(combo)
+        for name in falsy_names:
+            candidate[name] = _FALSY_BY_TYPE[contract.signature.args[name].type]
+        try:
+            if all(evaluate(cp, pre, pre, candidate, {}) for cp in compiled_preconditions):
+                return Probe(tool=contract.tool, args=candidate, origin="joint_falsy_effect")
+        except (PathError, PredicateTypeError):
+            continue
+    return None
+
+
+# ---------------------------------------------------------------------------------------------
 # Assembly
 # ---------------------------------------------------------------------------------------------
 
 
 def build_dynamic_probe_plan(contract: Contract, pre: Any, *, seed: int = 0) -> DynamicProbePlan:
     """The full probe plan dynamic/harness.py needs for one contract against one live pre-
-    snapshot: precondition satisfy/violate probes, the effect happy-path probe, and per-
-    effective-argument Ignored Argument variant sets. `seed` is forwarded (offset by a fixed,
-    documented amount per sub-generator, so the three searches never share a draw sequence) --
-    see the individual functions' own `seed` defaults."""
+    snapshot: precondition satisfy/violate probes, the effect happy-path probe, per-
+    effective-argument Ignored Argument variant sets, and the joint-falsy probe. `seed` is
+    forwarded (offset by a fixed, documented amount per sub-generator, so the four searches
+    never share a draw sequence) -- see the individual functions' own `seed` defaults."""
     return DynamicProbePlan(
         precondition_probes=tuple(generate_precondition_probes(contract, pre, seed=seed)),
         effect_probe=generate_effect_probe(contract, pre, seed=seed + 1),
         ignored_argument_probes=generate_ignored_argument_probes(contract, pre, seed=seed + 2),
+        joint_falsy_probe=generate_joint_falsy_probe(contract, pre, seed=seed + 3),
     )
