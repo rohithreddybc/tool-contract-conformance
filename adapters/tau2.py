@@ -182,10 +182,29 @@ class Tau2Adapter(Adapter):
                     f"tau2 worker process is not accepting input (exit code {self._proc.poll()}): {e}"
                 ) from e
 
-            line = self._proc.stdout.readline()
-            if line == "":
-                rc = self._proc.poll()
-                raise Tau2AdapterError(f"tau2 worker process closed its output unexpectedly (exit code {rc})")
+            # Skip any line that isn't a marked protocol reply (adapters/_tau2_worker.py's
+            # _reply() prefixes every line it writes with _REPLY_MARKER). Needed in practice for
+            # the record_trajectory path: on a failed live model call, litellm writes its own
+            # multi-line "Give Feedback" / "LiteLLM.Info" banner straight to stdout -- not
+            # through logging, so it isn't suppressed by the loguru level filter, and stdout is
+            # the only piped stream this protocol reads line-by-line (stderr is inherited, not
+            # piped -- see _ensure_started's docstring). Bounded so a truly wedged process still
+            # raises instead of looping forever.
+            _REPLY_MARKER = "\x01"
+            skipped = 0
+            while True:
+                line = self._proc.stdout.readline()
+                if line == "":
+                    rc = self._proc.poll()
+                    raise Tau2AdapterError(f"tau2 worker process closed its output unexpectedly (exit code {rc})")
+                if line.startswith(_REPLY_MARKER):
+                    line = line[len(_REPLY_MARKER):]
+                    break
+                skipped += 1
+                if skipped > 10000:
+                    raise Tau2AdapterError(
+                        "tau2 worker: gave up after 10000 non-protocol lines on stdout without a reply"
+                    )
             try:
                 resp = json.loads(line)
             except json.JSONDecodeError as e:
@@ -221,14 +240,97 @@ class Tau2Adapter(Adapter):
         result = self._send({"cmd": "fresh_env", "args": {"scenario_id": scenario_id}})
         return EnvHandle(env_id=result["env_id"], domain=result["domain"], scenario_id=result["scenario_id"])
 
+    def fresh_task_env(self, domain: str, task_id: str) -> EnvHandle:
+        """Agent-impact-experiment extension (ARCHITECTURE-FINAL.md sec 6, experiments/ab_run.py):
+        a live environment initialized from ONE task's own `initial_state`, not the domain's bare
+        on-disk default -- see adapters/_tau2_worker.py's `_cmd_fresh_task_env` docstring. Unlike
+        `fresh_env`, `scenario_id` here is split into (domain, task_id) rather than encoded as a
+        single string, since task IDs can themselves contain ':' (see tasks.json)."""
+        result = self._send({"cmd": "fresh_task_env", "args": {"domain": domain, "task_id": task_id}})
+        return EnvHandle(env_id=result["env_id"], domain=result["domain"], scenario_id=result["scenario_id"])
+
     def snapshot(self, env: EnvHandle) -> dict:
         result = self._send({"cmd": "snapshot", "args": {"env_id": env.env_id}})
         return result["snapshot"]
 
-    def invoke(self, env: EnvHandle, tool: str, args: dict) -> ToolResult:
-        result = self._send({"cmd": "invoke", "args": {"env_id": env.env_id, "tool": tool, "args": args}})
+    def invoke(self, env: EnvHandle, tool: str, args: dict, *, requestor: str = "assistant") -> ToolResult:
+        result = self._send(
+            {"cmd": "invoke", "args": {"env_id": env.env_id, "tool": tool, "args": args, "requestor": requestor}}
+        )
         r = result["result"]
         return ToolResult(raw=r["raw"], success=r["success"], error=r["error"])
+
+    def record_trajectory(
+        self,
+        domain: str,
+        task_id: str,
+        *,
+        agent: Optional[str] = None,
+        user: Optional[str] = None,
+        llm_agent: Optional[str] = None,
+        llm_user: Optional[str] = None,
+        llm_args_agent: Optional[dict] = None,
+        llm_args_user: Optional[dict] = None,
+        seed: Optional[int] = None,
+        max_steps: Optional[int] = None,
+        max_errors: Optional[int] = None,
+    ) -> dict:
+        """Run tau2's own orchestrator (LLMAgent + UserSimulator, a REAL model call via litellm)
+        once against task `task_id` in `domain`, and return the recorded trajectory. See
+        adapters/_tau2_worker.py's `_cmd_record_trajectory` docstring: this is the one call in
+        the whole adapter that is not deterministic and not free, and experiments/ab_run.py must
+        call it AT MOST ONCE per task (experiments/analysis_plan.md sec 4, no re-rolls).
+
+        Any argument left as None falls back to tau2's own config.py default (DEFAULT_LLM_AGENT,
+        DEFAULT_SEED, temperature 0.0 for both agent and user, ...) -- passing nothing at all
+        already satisfies "fixed model, fixed prompts, fixed seeds, temperature 0."
+
+        Raises Tau2AdapterError (wrapping whatever the worker reported -- a missing API key, a
+        provider error, ...) if the live model call fails. Does not retry and does not fabricate
+        a fallback trajectory; the caller decides what "recording failed" means for its report.
+        """
+        args: dict = {"domain": domain, "task_id": task_id}
+        for key, value in (
+            ("agent", agent),
+            ("user", user),
+            ("llm_agent", llm_agent),
+            ("llm_user", llm_user),
+            ("llm_args_agent", llm_args_agent),
+            ("llm_args_user", llm_args_user),
+            ("seed", seed),
+            ("max_steps", max_steps),
+            ("max_errors", max_errors),
+        ):
+            if value is not None:
+                args[key] = value
+        return self._send({"cmd": "record_trajectory", "args": args})
+
+    def replay_and_score(
+        self,
+        domain: str,
+        task_id: str,
+        messages: list,
+        *,
+        patch: Optional[dict] = None,
+        strict_replay: bool = False,
+    ) -> dict:
+        """Tier-1 replay (ARCHITECTURE-FINAL.md sec 6): re-execute a recorded trajectory's tool
+        calls against a fresh task-scoped environment and score the result with tau2's own
+        evaluator (tau2.evaluator.evaluator_env.EnvironmentEvaluator, unmodified). No model in
+        this call. `patch`, if given, is `{"tool": <name>, "source": <decorator-free function
+        source>}` -- the same shape `patch_tool` accepts. Call this twice with the identical
+        `messages` (once with patch=None, once with the finding's patch) and compare the two
+        `reward_info["reward"]` values to read the flip -- see
+        adapters/_tau2_worker.py's `_cmd_replay_and_score` docstring."""
+        args: dict = {
+            "domain": domain,
+            "task_id": task_id,
+            "messages": messages,
+            "strict_replay": strict_replay,
+        }
+        if patch is not None:
+            args["patch"] = patch
+        return self._send({"cmd": "replay_and_score", "args": args})
 
     def reset(self, env: EnvHandle) -> None:
         self._send({"cmd": "reset", "args": {"env_id": env.env_id}})

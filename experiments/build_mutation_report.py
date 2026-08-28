@@ -40,6 +40,18 @@ OPEN_WORLD_RAW = {
 OUT_JSON = REPORT_DIR / "mutation_scores.json"
 OUT_MD = REPORT_DIR / "mutation_summary.md"
 
+# checker-freeze-v2 refreeze only: v1's raw jsonl, preserved with a `_v1` suffix per CLAUDE.md's
+# refreeze instruction before this script's normal inputs (CLOSED_WORLD_RAW / OPEN_WORLD_RAW
+# above) were overwritten with fresh v2 data. Used ONLY to build the sec-5-below "v1 vs v2"
+# comparison section, by re-running the SAME scoring functions on the OLD rows -- never hand-
+# copied from the old mutation_summary.md -- so the comparison is computed with the identical
+# statistical methodology on both sides, not transcribed.
+CLOSED_WORLD_RAW_V1 = REPORT_DIR / "mutation_closed_world_raw_v1.jsonl"
+OPEN_WORLD_RAW_V1 = {
+    "toy": REPORT_DIR / "mutation_open_world_toy_raw_v1.jsonl",
+    "tau2-telecom": REPORT_DIR / "mutation_open_world_tau2_raw_v1.jsonl",
+}
+
 DEFECT_OPERATORS = ("M-PHANTOM", "M-PRECOND", "M-IGNARG", "M-PARTIAL", "M-INVAR", "M-RESET")
 
 
@@ -109,7 +121,15 @@ def build_closed_world_recall(rows: list) -> dict:
 
     pool_rows = [r for r in rows if r.get("kind") == "operator_pool_size"]
     for r in pool_rows:
-        out["pool_sizes"][r["operator"]] = {"pool_size": r["pool_size"], "drawn": r["drawn"], "requested": r["requested"]}
+        out["pool_sizes"][r["operator"]] = {
+            "pool_size": r["pool_size"], "drawn": r["drawn"], "requested": r["requested"],
+            # Refreeze-only fields (present only in a v2-generated raw jsonl; see
+            # experiments/run_mutation_closed_world.py's V1_BACKUP_PATH note): whether this
+            # operator's draw pool, after excluding v1's already-drawn sites, was non-empty
+            # ("fresh sites") or had to fall back to the full current pool because v1 had already
+            # exhausted it ("reused_full_pool": true -- M-RESET and M-INVAR in this corpus).
+            "unused_pool_size": r.get("unused_pool_size"), "reused_full_pool": r.get("reused_full_pool"),
+        }
 
     for operator in DEFECT_OPERATORS:
         op_rows = [r for r in defects if r["operator"] == operator]
@@ -328,6 +348,88 @@ def build_coverage_section() -> dict:
 
 
 # =================================================================================================
+# v1 vs v2 comparison (checker-freeze-v2 refreeze only) -- CLAUDE.md's "write a short comparison
+# ... so the paper can state what the refreeze changed". Built by re-running THIS file's own
+# scoring functions on v1's preserved raw rows, never by re-typing v1's old headline numbers, so
+# both sides of the comparison share one code path.
+# =================================================================================================
+
+
+def build_v1_v2_comparison(v2_result: dict) -> Optional[dict]:
+    v1_closed_rows = load_jsonl(CLOSED_WORLD_RAW_V1)
+    if not v1_closed_rows:
+        return None
+    v1_recall = build_closed_world_recall(v1_closed_rows)
+    v1_precision = build_precision(v1_closed_rows)
+
+    per_operator = {}
+    for op in DEFECT_OPERATORS:
+        v1_real = v1_recall["by_operator"].get(op, {}).get("real", {})
+        v2_real = v2_result["closed_world"]["recall"]["by_operator"].get(op, {}).get("real", {})
+        v1_pool = v1_recall["pool_sizes"].get(op, {})
+        v2_pool = v2_result["closed_world"]["recall"]["pool_sizes"].get(op, {})
+        per_operator[op] = {
+            "v1": {
+                "n_drawn": v1_real.get("n_drawn", 0),
+                "classification_counts": v1_real.get("classification_counts", {}),
+                "recall_claim": (v1_real.get("recall") or {}).get("pooled", {}).get("claim"),
+                "pool_size": v1_pool.get("pool_size"),
+            },
+            "v2": {
+                "n_drawn": v2_real.get("n_drawn", 0),
+                "classification_counts": v2_real.get("classification_counts", {}),
+                "recall_claim": (v2_real.get("recall") or {}).get("pooled", {}).get("claim"),
+                "pool_size": v2_pool.get("pool_size"),
+                "unused_pool_size": v2_pool.get("unused_pool_size"),
+                "reused_full_pool": v2_pool.get("reused_full_pool"),
+            },
+        }
+
+    open_world = {}
+    for name, v1_path in OPEN_WORLD_RAW_V1.items():
+        v1_rows = load_jsonl(v1_path)
+        v1_section = build_open_world_section(name, v1_rows) if v1_rows else None
+        v2_section = v2_result["open_world"].get(name)
+        open_world[name] = {
+            "v1": None if v1_section is None else {
+                "n_mutations_scored": v1_section["n_mutations_scored"],
+                "n_behaviorally_live": v1_section["n_behaviorally_live"],
+                "escape_rate_raw_claim": (v1_section.get("escape_rate_raw") or {}).get("claim"),
+                "escape_decomposition": v1_section["escape_decomposition"],
+            },
+            "v2": None if not v2_section or v2_section.get("status") == "no data" else {
+                "n_mutations_scored": v2_section["n_mutations_scored"],
+                "n_behaviorally_live": v2_section["n_behaviorally_live"],
+                "escape_rate_raw_claim": (v2_section.get("escape_rate_raw") or {}).get("claim"),
+                "escape_decomposition": v2_section["escape_decomposition"],
+            },
+        }
+
+    return {
+        "per_operator_recall_real": per_operator,
+        "precision": {
+            "v1_claim": (v1_precision.get("precision") or {}).get("pooled", {}).get("claim"),
+            "v2_claim": (v2_result["closed_world"]["precision"].get("precision") or {}).get("pooled", {}).get("claim"),
+            "v1_tp_fp": {"tp": v1_precision["tp"], "fp": v1_precision["fp"], "n_flags": v1_precision["n_flags"]},
+            "v2_tp_fp": {
+                "tp": v2_result["closed_world"]["precision"]["tp"],
+                "fp": v2_result["closed_world"]["precision"]["fp"],
+                "n_flags": v2_result["closed_world"]["precision"]["n_flags"],
+            },
+        },
+        "open_world": open_world,
+        "note": (
+            "v1 was scored against checker-freeze-v1, which had no code path for M-RESET or "
+            "M-INVAR (both hard-UNTESTABLE structurally, not weak detection), never evaluated any "
+            "frame clause, and silently skipped 17 of 19 tau2 contracts behind a two-entry lookup "
+            "table. v2 (checker-freeze-v2) fixes all four; the mutant sample was invalidated and "
+            "rescored per detector_analysis_plan.md sec 8. M-RESET and M-INVAR's v2 columns above "
+            "are this refreeze's first REAL per-operator data for those two classes."
+        ),
+    }
+
+
+# =================================================================================================
 # Main
 # =================================================================================================
 
@@ -362,6 +464,8 @@ def main() -> int:
             result["open_world"][name] = build_open_world_section(name, rows)
         else:
             result["open_world"][name] = {"status": "no data", "path": str(path)}
+
+    result["v1_vs_v2_comparison"] = build_v1_v2_comparison(result)
 
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT_JSON, "w", encoding="utf-8") as fh:
@@ -401,6 +505,7 @@ def write_markdown_summary(result: dict) -> None:
         "immediately below each headline row as a debug/sanity reference, never as evidence.\n"
     )
     rec = result["closed_world"]["recall"]
+    reused_ops = sorted(op for op, ps in rec.get("pool_sizes", {}).items() if ps.get("reused_full_pool"))
     lines.append("### Headline recall (real tools only)\n")
     lines.append("| Operator | Recall (Wilson lower bound) | n drawn | detected | missed | untestable | error |")
     lines.append("|---|---|---|---|---|---|---|")
@@ -409,11 +514,21 @@ def write_markdown_summary(result: dict) -> None:
         s = entry.get("real", {})
         cc = s.get("classification_counts", {})
         recall_str = _fmt_rate(s.get("recall")) if s.get("recall") else "no data"
+        star = "*" if op in reused_ops else ""
         lines.append(
-            f"| {op} | {recall_str} | {s.get('n_drawn', 0)} | {cc.get('detected', 0)} | "
+            f"| {op}{star} | {recall_str} | {s.get('n_drawn', 0)} | {cc.get('detected', 0)} | "
             f"{cc.get('missed', 0)} | {cc.get('untestable_no_clause_evaluated', 0)} | {cc.get('error', 0)} |"
         )
     lines.append("")
+    if reused_ops:
+        lines.append(
+            f"\\* {', '.join(reused_ops)}: v1 had already drawn every site in this operator's "
+            "entire enumerated pool (pool size <= v1's draw count), so the refreeze's "
+            "unused-pool for it was empty and this run fell back to v1's SAME site pool, scored "
+            "fresh against the checker-freeze-v2 checker -- the one documented exception to "
+            "\"freshly drawn sites\" in this run, per experiments/run_mutation_closed_world.py's "
+            "V1_BACKUP_PATH note. See the v1-vs-v2 comparison section below.\n"
+        )
 
     lines.append("### Toy-domain recall (debug reference, NOT headline)\n")
     lines.append("| Operator | Recall (Wilson lower bound) | n drawn | detected | missed | untestable | error |")
@@ -466,6 +581,39 @@ def write_markdown_summary(result: dict) -> None:
             f"{f'{sw:.3f}' if sw is not None else 'n/a'} | {cov['biconditional_true_adopted']}/{cov['n_contracts']} |"
         )
     lines.append("")
+
+    cmp = result.get("v1_vs_v2_comparison")
+    if cmp:
+        lines.append("## v1 vs v2 comparison (checker-freeze-v1 to checker-freeze-v2 refreeze)\n")
+        lines.append(cmp["note"] + "\n")
+        lines.append("### Closed-world recall (real tools only), per operator\n")
+        lines.append("| Operator | v1 pool | v1 n drawn | v1 recall | v2 pool | v2 n drawn | v2 recall | v2 reused v1 pool? |")
+        lines.append("|---|---|---|---|---|---|---|---|")
+        for op in DEFECT_OPERATORS:
+            row = cmp["per_operator_recall_real"][op]
+            v1, v2 = row["v1"], row["v2"]
+            lines.append(
+                f"| {op} | {v1.get('pool_size', 'n/a')} | {v1['n_drawn']} | {v1['recall_claim'] or 'no data'} | "
+                f"{v2.get('pool_size', 'n/a')} | {v2['n_drawn']} | {v2['recall_claim'] or 'no data'} | "
+                f"{'yes' if v2.get('reused_full_pool') else 'no'} |"
+            )
+        lines.append("")
+        prec_cmp = cmp["precision"]
+        lines.append(
+            f"**Precision:** v1 {prec_cmp['v1_claim'] or 'no data'} (TP={prec_cmp['v1_tp_fp']['tp']}, "
+            f"FP={prec_cmp['v1_tp_fp']['fp']}, n_flags={prec_cmp['v1_tp_fp']['n_flags']}) vs v2 "
+            f"{prec_cmp['v2_claim'] or 'no data'} (TP={prec_cmp['v2_tp_fp']['tp']}, "
+            f"FP={prec_cmp['v2_tp_fp']['fp']}, n_flags={prec_cmp['v2_tp_fp']['n_flags']})\n"
+        )
+        lines.append("### Open-world escape rate (raw), per benchmark\n")
+        lines.append("| Benchmark | v1 n_scored | v1 n_live | v1 escape rate (raw) | v2 n_scored | v2 n_live | v2 escape rate (raw) |")
+        lines.append("|---|---|---|---|---|---|---|")
+        for name, ow in cmp["open_world"].items():
+            v1o, v2o = ow["v1"], ow["v2"]
+            v1_str = (str(v1o["n_mutations_scored"]), str(v1o["n_behaviorally_live"]), v1o["escape_rate_raw_claim"] or "no data") if v1o else ("n/a", "n/a", "no data")
+            v2_str = (str(v2o["n_mutations_scored"]), str(v2o["n_behaviorally_live"]), v2o["escape_rate_raw_claim"] or "no data") if v2o else ("n/a", "n/a", "no data")
+            lines.append(f"| {name} | {v1_str[0]} | {v1_str[1]} | {v1_str[2]} | {v2_str[0]} | {v2_str[1]} | {v2_str[2]} |")
+        lines.append("")
 
     OUT_MD.write_text("\n".join(lines), encoding="utf-8")
 

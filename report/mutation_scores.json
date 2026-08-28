@@ -6,103 +6,31 @@
       "false_positive_mutants": [],
       "fp": 0,
       "n_equivalence_controls_scored": 24,
-      "n_flags": 48,
+      "n_flags": 24,
       "precision": {
-        "n_tools": 27,
+        "n_tools": 15,
         "per_tool": {
-          "add_reminder": {
-            "claim": "precision:add_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:add_reminder",
-            "n": 1,
+          "acquire_lock": {
+            "claim": "precision:acquire_lock >= 0.439 (n=3; Wilson 95% CI [0.439, 1.000], point estimate 1.000)",
+            "label": "precision:acquire_lock",
+            "n": 3,
             "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
+            "successes": 3,
+            "wilson_lower": 0.4385029682449546,
             "wilson_upper": 1.0
           },
           "add_user_to_channel": {
-            "claim": "precision:add_user_to_channel >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "claim": "precision:add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
             "label": "precision:add_user_to_channel",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
-            "wilson_upper": 1.0
-          },
-          "cancel_pending_order": {
-            "claim": "precision:cancel_pending_order >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:cancel_pending_order",
             "n": 1,
             "point": 1.0,
             "successes": 1,
             "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "create_calendar": {
-            "claim": "precision:create_calendar >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-            "label": "precision:create_calendar",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
             "wilson_upper": 1.0
           },
           "deposit": {
-            "claim": "precision:deposit >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "claim": "precision:deposit >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
             "label": "precision:deposit",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
-            "wilson_upper": 1.0
-          },
-          "disable_roaming": {
-            "claim": "precision:disable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:disable_roaming",
-            "n": 1,
-            "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "enable_roaming": {
-            "claim": "precision:enable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:enable_roaming",
-            "n": 1,
-            "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "exchange_delivered_order_items": {
-            "claim": "precision:exchange_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:exchange_delivered_order_items",
-            "n": 1,
-            "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "freeze_account": {
-            "claim": "precision:freeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:freeze_account",
-            "n": 1,
-            "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "modify_pending_order_address": {
-            "claim": "precision:modify_pending_order_address >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
-            "label": "precision:modify_pending_order_address",
-            "n": 4,
-            "point": 1.0,
-            "successes": 4,
-            "wilson_lower": 0.5101091635454027,
-            "wilson_upper": 1.0
-          },
-          "modify_pending_order_payment": {
-            "claim": "precision:modify_pending_order_payment >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:modify_pending_order_payment",
             "n": 1,
             "point": 1.0,
             "successes": 1,
@@ -118,15 +46,6 @@
             "wilson_lower": 0.34238022750665303,
             "wilson_upper": 1.0
           },
-          "release_item": {
-            "claim": "precision:release_item >= 0.439 (n=3; Wilson 95% CI [0.439, 1.000], point estimate 1.000)",
-            "label": "precision:release_item",
-            "n": 3,
-            "point": 1.0,
-            "successes": 3,
-            "wilson_lower": 0.4385029682449546,
-            "wilson_upper": 1.0
-          },
           "release_lock": {
             "claim": "precision:release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
             "label": "precision:release_lock",
@@ -136,85 +55,76 @@
             "wilson_lower": 0.20654931437723745,
             "wilson_upper": 1.0
           },
-          "remove_reminder": {
-            "claim": "precision:remove_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:remove_reminder",
+          "reserve_item": {
+            "claim": "precision:reserve_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:reserve_item",
             "n": 1,
             "point": 1.0,
             "successes": 1,
             "wilson_lower": 0.20654931437723745,
             "wilson_upper": 1.0
           },
-          "reserve_hotel": {
-            "claim": "precision:reserve_hotel >= 0.566 (n=5; Wilson 95% CI [0.566, 1.000], point estimate 1.000)",
-            "label": "precision:reserve_hotel",
-            "n": 5,
-            "point": 1.0,
-            "successes": 5,
-            "wilson_lower": 0.5655175352168251,
-            "wilson_upper": 1.0
-          },
-          "resize_inventory": {
-            "claim": "precision:resize_inventory >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-            "label": "precision:resize_inventory",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
-            "wilson_upper": 1.0
-          },
-          "resume_line": {
-            "claim": "precision:resume_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-            "label": "precision:resume_line",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
-            "wilson_upper": 1.0
-          },
-          "return_delivered_order_items": {
-            "claim": "precision:return_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:return_delivered_order_items",
-            "n": 1,
-            "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "send_money": {
-            "claim": "precision:send_money >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-            "label": "precision:send_money",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
-            "wilson_upper": 1.0
-          },
-          "suspend_line": {
-            "claim": "precision:suspend_line >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
-            "label": "precision:suspend_line",
+          "reset": {
+            "claim": "precision:reset >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+            "label": "precision:reset",
             "n": 4,
             "point": 1.0,
             "successes": 4,
             "wilson_lower": 0.5101091635454027,
             "wilson_upper": 1.0
           },
-          "tag_item": {
-            "claim": "precision:tag_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:tag_item",
+          "resize_inventory": {
+            "claim": "precision:resize_inventory >= 0.439 (n=3; Wilson 95% CI [0.439, 1.000], point estimate 1.000)",
+            "label": "precision:resize_inventory",
+            "n": 3,
+            "point": 1.0,
+            "successes": 3,
+            "wilson_lower": 0.4385029682449546,
+            "wilson_upper": 1.0
+          },
+          "resume_line": {
+            "claim": "precision:resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:resume_line",
             "n": 1,
             "point": 1.0,
             "successes": 1,
             "wilson_lower": 0.20654931437723745,
             "wilson_upper": 1.0
           },
-          "transfer": {
-            "claim": "precision:transfer >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-            "label": "precision:transfer",
+          "send_certificate": {
+            "claim": "precision:send_certificate >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+            "label": "precision:send_certificate",
             "n": 2,
             "point": 1.0,
             "successes": 2,
             "wilson_lower": 0.34238022750665303,
+            "wilson_upper": 1.0
+          },
+          "send_payment_request": {
+            "claim": "precision:send_payment_request >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:send_payment_request",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "set_wifi_status": {
+            "claim": "precision:set_wifi_status >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:set_wifi_status",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
+            "wilson_upper": 1.0
+          },
+          "suspend_line": {
+            "claim": "precision:suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:suspend_line",
+            "n": 1,
+            "point": 1.0,
+            "successes": 1,
+            "wilson_lower": 0.20654931437723745,
             "wilson_upper": 1.0
           },
           "unfreeze_account": {
@@ -226,113 +136,86 @@
             "wilson_lower": 0.20654931437723745,
             "wilson_upper": 1.0
           },
-          "update_reservation_baggages": {
-            "claim": "precision:update_reservation_baggages >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:update_reservation_baggages",
+          "update_reservation_flights": {
+            "claim": "precision:update_reservation_flights >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "label": "precision:update_reservation_flights",
             "n": 1,
             "point": 1.0,
             "successes": 1,
             "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "update_reservation_passengers": {
-            "claim": "precision:update_reservation_passengers >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-            "label": "precision:update_reservation_passengers",
-            "n": 1,
-            "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
-            "wilson_upper": 1.0
-          },
-          "withdraw": {
-            "claim": "precision:withdraw >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-            "label": "precision:withdraw",
-            "n": 2,
-            "point": 1.0,
-            "successes": 2,
-            "wilson_lower": 0.34238022750665303,
             "wilson_upper": 1.0
           }
         },
         "pooled": {
-          "claim": "precision >= 0.926 (n=48; Wilson 95% CI [0.926, 1.000], point estimate 1.000)",
+          "claim": "precision >= 0.862 (n=24; Wilson 95% CI [0.862, 1.000], point estimate 1.000)",
           "label": "precision",
-          "n": 48.0,
+          "n": 24.0,
           "point": 1.0,
-          "successes": 48.0,
-          "wilson_lower": 0.9258998703338824,
-          "wilson_upper": 0.9999999999999999
+          "successes": 24.0,
+          "wilson_lower": 0.8620237953250198,
+          "wilson_upper": 1.0
         }
       },
-      "tp": 48
+      "tp": 24
     },
     "recall": {
       "by_operator": {
         "M-IGNARG": {
           "all": {
             "classification_counts": {
-              "detected": 6,
-              "error": 3,
-              "missed": 13,
-              "untestable_no_clause_evaluated": 3
+              "detected": 5,
+              "error": 5,
+              "missed": 14,
+              "untestable_no_clause_evaluated": 1
             },
             "n_drawn": 25,
             "recall": {
-              "n_tools": 19,
+              "n_tools": 16,
               "per_tool": {
-                "acquire_lock": {
-                  "claim": "M-IGNARG recall (all):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):acquire_lock",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "add_reminder": {
-                  "claim": "M-IGNARG recall (all):add_reminder >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):add_reminder",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "book_reservation": {
-                  "claim": "M-IGNARG recall (all):book_reservation >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):book_reservation",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
-                },
-                "cancel_pending_order": {
-                  "claim": "M-IGNARG recall (all):cancel_pending_order >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):cancel_pending_order",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "create_calendar": {
-                  "claim": "M-IGNARG recall (all):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-IGNARG recall (all):create_calendar",
+                "add_user_to_channel": {
+                  "claim": "M-IGNARG recall (all):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (all):add_user_to_channel",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
+                "book_reservation": {
+                  "claim": "M-IGNARG recall (all):book_reservation >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):book_reservation",
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-IGNARG recall (all):exchange_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):exchange_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "freeze_account": {
+                  "claim": "M-IGNARG recall (all):freeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):freeze_account",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
                 "modify_pending_order_address": {
-                  "claim": "M-IGNARG recall (all):modify_pending_order_address >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "claim": "M-IGNARG recall (all):modify_pending_order_address >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
                   "label": "M-IGNARG recall (all):modify_pending_order_address",
-                  "n": 2,
-                  "point": 1.0,
-                  "successes": 2,
-                  "wilson_lower": 0.34238022750665303,
-                  "wilson_upper": 1.0
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
                 },
                 "modify_pending_order_items": {
                   "claim": "M-IGNARG recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -344,26 +227,17 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "modify_user_address": {
-                  "claim": "M-IGNARG recall (all):modify_user_address >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
+                  "claim": "M-IGNARG recall (all):modify_user_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
                   "label": "M-IGNARG recall (all):modify_user_address",
-                  "n": 3,
-                  "point": 0.6666666666666666,
-                  "successes": 2,
-                  "wilson_lower": 0.2076596008020477,
-                  "wilson_upper": 0.9385080552796037
-                },
-                "release_item": {
-                  "claim": "M-IGNARG recall (all):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):release_item",
                   "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 },
-                "release_lock": {
-                  "claim": "M-IGNARG recall (all):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):release_lock",
+                "remove_reminder": {
+                  "claim": "M-IGNARG recall (all):remove_reminder >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):remove_reminder",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
@@ -379,27 +253,45 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "send_certificate": {
-                  "claim": "M-IGNARG recall (all):send_certificate >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):send_certificate",
-                  "n": 1,
+                "reserve_item": {
+                  "claim": "M-IGNARG recall (all):reserve_item >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):reserve_item",
+                  "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_upper": 0.6576197724933469
                 },
-                "send_money": {
-                  "claim": "M-IGNARG recall (all):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-IGNARG recall (all):send_money",
+                "resize_inventory": {
+                  "claim": "M-IGNARG recall (all):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (all):resize_inventory",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "set_wifi_status": {
-                  "claim": "M-IGNARG recall (all):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):set_wifi_status",
+                "return_delivered_order_items": {
+                  "claim": "M-IGNARG recall (all):return_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):return_delivered_order_items",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                },
+                "send_certificate": {
+                  "claim": "M-IGNARG recall (all):send_certificate >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (all):send_certificate",
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "send_payment_request": {
+                  "claim": "M-IGNARG recall (all):send_payment_request >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):send_payment_request",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
@@ -407,44 +299,17 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "suspend_line": {
-                  "claim": "M-IGNARG recall (all):suspend_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-IGNARG recall (all):suspend_line >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
                   "label": "M-IGNARG recall (all):suspend_line",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "tag_item": {
-                  "claim": "M-IGNARG recall (all):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):tag_item",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "transfer": {
-                  "claim": "M-IGNARG recall (all):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):transfer",
                   "n": 2,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.6576197724933469
+                  "point": 0.5,
+                  "successes": 1,
+                  "wilson_lower": 0.09453120573423074,
+                  "wilson_upper": 0.9054687942657693
                 },
-                "unfreeze_account": {
-                  "claim": "M-IGNARG recall (all):unfreeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):unfreeze_account",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "withdraw": {
-                  "claim": "M-IGNARG recall (all):withdraw >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (all):withdraw",
+                "update_reservation_flights": {
+                  "claim": "M-IGNARG recall (all):update_reservation_flights >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (all):update_reservation_flights",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
@@ -453,71 +318,62 @@
                 }
               },
               "pooled": {
-                "claim": "M-IGNARG recall (all) >= 0.110 (n=22.0615; Wilson 95% CI [0.110, 0.447], point estimate 0.240)",
+                "claim": "M-IGNARG recall (all) >= 0.077 (n=18.0982; Wilson 95% CI [0.077, 0.428], point estimate 0.200)",
                 "label": "M-IGNARG recall (all)",
-                "n": 22.061528556975997,
-                "point": 0.24,
-                "successes": 5.294766853674239,
-                "wilson_lower": 0.10962948857422358,
-                "wilson_upper": 0.4474874307075638
+                "n": 18.098159509202453,
+                "point": 0.2,
+                "successes": 3.6196319018404908,
+                "wilson_lower": 0.07710269599542813,
+                "wilson_upper": 0.4279527000355812
               }
             }
           },
           "real": {
             "classification_counts": {
-              "detected": 6,
-              "error": 3,
-              "missed": 5,
-              "untestable_no_clause_evaluated": 3
+              "detected": 4,
+              "error": 5,
+              "missed": 11,
+              "untestable_no_clause_evaluated": 1
             },
-            "n_drawn": 17,
+            "n_drawn": 21,
             "recall": {
-              "n_tools": 12,
+              "n_tools": 13,
               "per_tool": {
-                "add_reminder": {
-                  "claim": "M-IGNARG recall (real):add_reminder >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (real):add_reminder",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "book_reservation": {
-                  "claim": "M-IGNARG recall (real):book_reservation >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-IGNARG recall (real):book_reservation",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
-                },
-                "cancel_pending_order": {
-                  "claim": "M-IGNARG recall (real):cancel_pending_order >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (real):cancel_pending_order",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "create_calendar": {
-                  "claim": "M-IGNARG recall (real):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-IGNARG recall (real):create_calendar",
+                "add_user_to_channel": {
+                  "claim": "M-IGNARG recall (real):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (real):add_user_to_channel",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
+                "book_reservation": {
+                  "claim": "M-IGNARG recall (real):book_reservation >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):book_reservation",
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-IGNARG recall (real):exchange_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):exchange_delivered_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
                 "modify_pending_order_address": {
-                  "claim": "M-IGNARG recall (real):modify_pending_order_address >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "claim": "M-IGNARG recall (real):modify_pending_order_address >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
                   "label": "M-IGNARG recall (real):modify_pending_order_address",
-                  "n": 2,
-                  "point": 1.0,
-                  "successes": 2,
-                  "wilson_lower": 0.34238022750665303,
-                  "wilson_upper": 1.0
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
                 },
                 "modify_pending_order_items": {
                   "claim": "M-IGNARG recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -529,13 +385,22 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "modify_user_address": {
-                  "claim": "M-IGNARG recall (real):modify_user_address >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
+                  "claim": "M-IGNARG recall (real):modify_user_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
                   "label": "M-IGNARG recall (real):modify_user_address",
-                  "n": 3,
-                  "point": 0.6666666666666666,
-                  "successes": 2,
-                  "wilson_lower": 0.2076596008020477,
-                  "wilson_upper": 0.9385080552796037
+                  "n": 1,
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
+                },
+                "remove_reminder": {
+                  "claim": "M-IGNARG recall (real):remove_reminder >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):remove_reminder",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
                 },
                 "reserve_hotel": {
                   "claim": "M-IGNARG recall (real):reserve_hotel >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -546,27 +411,27 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "send_certificate": {
-                  "claim": "M-IGNARG recall (real):send_certificate >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (real):send_certificate",
-                  "n": 1,
+                "return_delivered_order_items": {
+                  "claim": "M-IGNARG recall (real):return_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):return_delivered_order_items",
+                  "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_upper": 0.6576197724933469
                 },
-                "send_money": {
-                  "claim": "M-IGNARG recall (real):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-IGNARG recall (real):send_money",
+                "send_certificate": {
+                  "claim": "M-IGNARG recall (real):send_certificate >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (real):send_certificate",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "set_wifi_status": {
-                  "claim": "M-IGNARG recall (real):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (real):set_wifi_status",
+                "send_payment_request": {
+                  "claim": "M-IGNARG recall (real):send_payment_request >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):send_payment_request",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
@@ -574,8 +439,17 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "suspend_line": {
-                  "claim": "M-IGNARG recall (real):suspend_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-IGNARG recall (real):suspend_line >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
                   "label": "M-IGNARG recall (real):suspend_line",
+                  "n": 2,
+                  "point": 0.5,
+                  "successes": 1,
+                  "wilson_lower": 0.09453120573423074,
+                  "wilson_upper": 0.9054687942657693
+                },
+                "update_reservation_flights": {
+                  "claim": "M-IGNARG recall (real):update_reservation_flights >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (real):update_reservation_flights",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
@@ -584,96 +458,61 @@
                 }
               },
               "pooled": {
-                "claim": "M-IGNARG recall (real) >= 0.162 (n=14.2477; Wilson 95% CI [0.162, 0.607], point estimate 0.353)",
+                "claim": "M-IGNARG recall (real) >= 0.066 (n=15.1318; Wilson 95% CI [0.066, 0.441], point estimate 0.190)",
                 "label": "M-IGNARG recall (real)",
-                "n": 14.247713082619427,
-                "point": 0.35294117647058826,
-                "successes": 5.028604617395092,
-                "wilson_lower": 0.16174505484414217,
-                "wilson_upper": 0.6065968089942112
+                "n": 15.131771595900439,
+                "point": 0.19047619047619047,
+                "successes": 2.8822422087429405,
+                "wilson_lower": 0.06566988859466238,
+                "wilson_upper": 0.44061939516264426
               }
             }
           },
           "toy": {
             "classification_counts": {
-              "missed": 8
+              "detected": 1,
+              "missed": 3
             },
-            "n_drawn": 8,
+            "n_drawn": 4,
             "recall": {
-              "n_tools": 7,
+              "n_tools": 3,
               "per_tool": {
-                "acquire_lock": {
-                  "claim": "M-IGNARG recall (toy):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):acquire_lock",
+                "freeze_account": {
+                  "claim": "M-IGNARG recall (toy):freeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):freeze_account",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "release_item": {
-                  "claim": "M-IGNARG recall (toy):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):release_item",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "release_lock": {
-                  "claim": "M-IGNARG recall (toy):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):release_lock",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "tag_item": {
-                  "claim": "M-IGNARG recall (toy):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):tag_item",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "transfer": {
-                  "claim": "M-IGNARG recall (toy):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):transfer",
+                "reserve_item": {
+                  "claim": "M-IGNARG recall (toy):reserve_item >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-IGNARG recall (toy):reserve_item",
                   "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.6576197724933469
                 },
-                "unfreeze_account": {
-                  "claim": "M-IGNARG recall (toy):unfreeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):unfreeze_account",
+                "resize_inventory": {
+                  "claim": "M-IGNARG recall (toy):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-IGNARG recall (toy):resize_inventory",
                   "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "withdraw": {
-                  "claim": "M-IGNARG recall (toy):withdraw >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-IGNARG recall (toy):withdraw",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 }
               },
               "pooled": {
-                "claim": "M-IGNARG recall (toy) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+                "claim": "M-IGNARG recall (toy) >= 0.037 (n=3; Wilson 95% CI [0.037, 0.744], point estimate 0.250)",
                 "label": "M-IGNARG recall (toy)",
-                "n": 8.0,
-                "point": 0.0,
-                "successes": 0.0,
-                "wilson_lower": 0.0,
-                "wilson_upper": 0.32440756488388023
+                "n": 3.0,
+                "point": 0.25,
+                "successes": 0.75,
+                "wilson_lower": 0.03684119619498477,
+                "wilson_upper": 0.7439073196825379
               }
             }
           }
@@ -681,9 +520,8 @@
         "M-INVAR": {
           "all": {
             "classification_counts": {
-              "detected": 1,
-              "missed": 7,
-              "untestable_no_clause_evaluated": 2
+              "detected": 2,
+              "error": 8
             },
             "n_drawn": 10,
             "recall": {
@@ -708,13 +546,13 @@
                   "wilson_upper": 0.4898908364545973
                 },
                 "release_lock": {
-                  "claim": "M-INVAR recall (all):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-INVAR recall (all):release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
                   "label": "M-INVAR recall (all):release_lock",
                   "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 },
                 "resize_inventory": {
                   "claim": "M-INVAR recall (all):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
@@ -745,20 +583,19 @@
                 }
               },
               "pooled": {
-                "claim": "M-INVAR recall (all) >= 0.012 (n=6; Wilson 95% CI [0.012, 0.500], point estimate 0.100)",
+                "claim": "M-INVAR recall (all) >= 0.041 (n=6; Wilson 95% CI [0.041, 0.593], point estimate 0.200)",
                 "label": "M-INVAR recall (all)",
                 "n": 6.0,
-                "point": 0.10000000000000002,
-                "successes": 0.6000000000000001,
-                "wilson_lower": 0.012191461909959733,
-                "wilson_upper": 0.5000759684117726
+                "point": 0.20000000000000004,
+                "successes": 1.2000000000000002,
+                "wilson_lower": 0.041118469700720084,
+                "wilson_upper": 0.5930821030405792
               }
             }
           },
           "real": {
             "classification_counts": {
-              "missed": 6,
-              "untestable_no_clause_evaluated": 2
+              "error": 8
             },
             "n_drawn": 8,
             "recall": {
@@ -814,21 +651,20 @@
           },
           "toy": {
             "classification_counts": {
-              "detected": 1,
-              "missed": 1
+              "detected": 2
             },
             "n_drawn": 2,
             "recall": {
               "n_tools": 2,
               "per_tool": {
                 "release_lock": {
-                  "claim": "M-INVAR recall (toy):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-INVAR recall (toy):release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
                   "label": "M-INVAR recall (toy):release_lock",
                   "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 },
                 "resize_inventory": {
                   "claim": "M-INVAR recall (toy):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
@@ -841,13 +677,13 @@
                 }
               },
               "pooled": {
-                "claim": "M-INVAR recall (toy) >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
+                "claim": "M-INVAR recall (toy) >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
                 "label": "M-INVAR recall (toy)",
                 "n": 2.0,
-                "point": 0.5,
-                "successes": 1.0,
-                "wilson_lower": 0.09453120573423074,
-                "wilson_upper": 0.9054687942657693
+                "point": 1.0,
+                "successes": 2.0,
+                "wilson_lower": 0.34238022750665303,
+                "wilson_upper": 1.0
               }
             }
           }
@@ -855,41 +691,31 @@
         "M-PARTIAL": {
           "all": {
             "classification_counts": {
-              "detected": 9,
-              "error": 2,
-              "missed": 11,
-              "untestable_no_clause_evaluated": 3
+              "detected": 2,
+              "error": 7,
+              "missed": 2
             },
-            "n_drawn": 25,
+            "n_drawn": 11,
             "recall": {
-              "n_tools": 13,
+              "n_tools": 8,
               "per_tool": {
-                "book_reservation": {
-                  "claim": "M-PARTIAL recall (all):book_reservation >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (all):book_reservation",
+                "acquire_lock": {
+                  "claim": "M-PARTIAL recall (all):acquire_lock >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (all):acquire_lock",
+                  "n": 2,
+                  "point": 1.0,
+                  "successes": 2,
+                  "wilson_lower": 0.34238022750665303,
+                  "wilson_upper": 1.0
+                },
+                "exchange_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (all):exchange_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):exchange_delivered_order_items",
                   "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.6576197724933469
-                },
-                "cancel_pending_order": {
-                  "claim": "M-PARTIAL recall (all):cancel_pending_order >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (all):cancel_pending_order",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
-                },
-                "exchange_delivered_order_items": {
-                  "claim": "M-PARTIAL recall (all):exchange_delivered_order_items >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (all):exchange_delivered_order_items",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
                 },
                 "modify_pending_order_items": {
                   "claim": "M-PARTIAL recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -900,23 +726,14 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "release_item": {
-                  "claim": "M-PARTIAL recall (all):release_item >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-                  "label": "M-PARTIAL recall (all):release_item",
-                  "n": 2,
-                  "point": 1.0,
-                  "successes": 2,
-                  "wilson_lower": 0.34238022750665303,
-                  "wilson_upper": 1.0
-                },
                 "reserve_hotel": {
-                  "claim": "M-PARTIAL recall (all):reserve_hotel >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+                  "claim": "M-PARTIAL recall (all):reserve_hotel >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
                   "label": "M-PARTIAL recall (all):reserve_hotel",
-                  "n": 4,
-                  "point": 1.0,
-                  "successes": 4,
-                  "wilson_lower": 0.5101091635454027,
-                  "wilson_upper": 1.0
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
                 },
                 "reserve_item": {
                   "claim": "M-PARTIAL recall (all):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -928,44 +745,17 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "resume_line": {
-                  "claim": "M-PARTIAL recall (all):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "claim": "M-PARTIAL recall (all):resume_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
                   "label": "M-PARTIAL recall (all):resume_line",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "return_delivered_order_items": {
-                  "claim": "M-PARTIAL recall (all):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (all):return_delivered_order_items",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "suspend_line": {
-                  "claim": "M-PARTIAL recall (all):suspend_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-                  "label": "M-PARTIAL recall (all):suspend_line",
-                  "n": 2,
-                  "point": 1.0,
-                  "successes": 2,
-                  "wilson_lower": 0.34238022750665303,
-                  "wilson_upper": 1.0
-                },
-                "transfer": {
-                  "claim": "M-PARTIAL recall (all):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (all):transfer",
-                  "n": 2,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.6576197724933469
-                },
-                "update_reservation_baggages": {
-                  "claim": "M-PARTIAL recall (all):update_reservation_baggages >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (all):update_reservation_baggages",
+                "return_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (all):return_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (all):return_delivered_order_items",
                   "n": 2,
                   "point": 0.0,
                   "successes": 0,
@@ -983,53 +773,33 @@
                 }
               },
               "pooled": {
-                "claim": "M-PARTIAL recall (all) >= 0.160 (n=13; Wilson 95% CI [0.160, 0.623], point estimate 0.360)",
+                "claim": "M-PARTIAL recall (all) >= 0.042 (n=8; Wilson 95% CI [0.042, 0.528], point estimate 0.182)",
                 "label": "M-PARTIAL recall (all)",
-                "n": 13.0,
-                "point": 0.36,
-                "successes": 4.68,
-                "wilson_lower": 0.16047512097623348,
-                "wilson_upper": 0.6233915832829419
+                "n": 8.0,
+                "point": 0.18181818181818182,
+                "successes": 1.4545454545454546,
+                "wilson_lower": 0.04231780625978812,
+                "wilson_upper": 0.5277597350299539
               }
             }
           },
           "real": {
             "classification_counts": {
-              "detected": 7,
-              "error": 2,
-              "missed": 8,
-              "untestable_no_clause_evaluated": 3
+              "error": 7,
+              "missed": 1
             },
-            "n_drawn": 20,
+            "n_drawn": 8,
             "recall": {
-              "n_tools": 10,
+              "n_tools": 6,
               "per_tool": {
-                "book_reservation": {
-                  "claim": "M-PARTIAL recall (real):book_reservation >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (real):book_reservation",
+                "exchange_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (real):exchange_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):exchange_delivered_order_items",
                   "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.6576197724933469
-                },
-                "cancel_pending_order": {
-                  "claim": "M-PARTIAL recall (real):cancel_pending_order >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (real):cancel_pending_order",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
-                },
-                "exchange_delivered_order_items": {
-                  "claim": "M-PARTIAL recall (real):exchange_delivered_order_items >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (real):exchange_delivered_order_items",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
                 },
                 "modify_pending_order_items": {
                   "claim": "M-PARTIAL recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -1041,44 +811,26 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "reserve_hotel": {
-                  "claim": "M-PARTIAL recall (real):reserve_hotel >= 0.510 (n=4; Wilson 95% CI [0.510, 1.000], point estimate 1.000)",
+                  "claim": "M-PARTIAL recall (real):reserve_hotel >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
                   "label": "M-PARTIAL recall (real):reserve_hotel",
-                  "n": 4,
-                  "point": 1.0,
-                  "successes": 4,
-                  "wilson_lower": 0.5101091635454027,
-                  "wilson_upper": 1.0
-                },
-                "resume_line": {
-                  "claim": "M-PARTIAL recall (real):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PARTIAL recall (real):resume_line",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "return_delivered_order_items": {
-                  "claim": "M-PARTIAL recall (real):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (real):return_delivered_order_items",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "suspend_line": {
-                  "claim": "M-PARTIAL recall (real):suspend_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-                  "label": "M-PARTIAL recall (real):suspend_line",
-                  "n": 2,
-                  "point": 1.0,
-                  "successes": 2,
-                  "wilson_lower": 0.34238022750665303,
-                  "wilson_upper": 1.0
+                "resume_line": {
+                  "claim": "M-PARTIAL recall (real):resume_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):resume_line",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
                 },
-                "update_reservation_baggages": {
-                  "claim": "M-PARTIAL recall (real):update_reservation_baggages >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (real):update_reservation_baggages",
+                "return_delivered_order_items": {
+                  "claim": "M-PARTIAL recall (real):return_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PARTIAL recall (real):return_delivered_order_items",
                   "n": 2,
                   "point": 0.0,
                   "successes": 0,
@@ -1096,28 +848,28 @@
                 }
               },
               "pooled": {
-                "claim": "M-PARTIAL recall (real) >= 0.137 (n=10; Wilson 95% CI [0.137, 0.646], point estimate 0.350)",
+                "claim": "M-PARTIAL recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
                 "label": "M-PARTIAL recall (real)",
-                "n": 10.0,
-                "point": 0.35,
-                "successes": 3.5,
-                "wilson_lower": 0.13693056347003557,
-                "wilson_upper": 0.6463292764888311
+                "n": 8.0,
+                "point": 0.0,
+                "successes": 0.0,
+                "wilson_lower": 0.0,
+                "wilson_upper": 0.32440756488388023
               }
             }
           },
           "toy": {
             "classification_counts": {
               "detected": 2,
-              "missed": 3
+              "missed": 1
             },
-            "n_drawn": 5,
+            "n_drawn": 3,
             "recall": {
-              "n_tools": 3,
+              "n_tools": 2,
               "per_tool": {
-                "release_item": {
-                  "claim": "M-PARTIAL recall (toy):release_item >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
-                  "label": "M-PARTIAL recall (toy):release_item",
+                "acquire_lock": {
+                  "claim": "M-PARTIAL recall (toy):acquire_lock >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
+                  "label": "M-PARTIAL recall (toy):acquire_lock",
                   "n": 2,
                   "point": 1.0,
                   "successes": 2,
@@ -1132,25 +884,16 @@
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
-                },
-                "transfer": {
-                  "claim": "M-PARTIAL recall (toy):transfer >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
-                  "label": "M-PARTIAL recall (toy):transfer",
-                  "n": 2,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.6576197724933469
                 }
               },
               "pooled": {
-                "claim": "M-PARTIAL recall (toy) >= 0.085 (n=3; Wilson 95% CI [0.085, 0.828], point estimate 0.400)",
+                "claim": "M-PARTIAL recall (toy) >= 0.159 (n=2; Wilson 95% CI [0.159, 0.955], point estimate 0.667)",
                 "label": "M-PARTIAL recall (toy)",
-                "n": 3.0,
-                "point": 0.4000000000000001,
-                "successes": 1.2000000000000002,
-                "wilson_lower": 0.08478455027622112,
-                "wilson_upper": 0.8275148560747881
+                "n": 2.0,
+                "point": 0.6666666666666666,
+                "successes": 1.3333333333333333,
+                "wilson_lower": 0.15938182832172698,
+                "wilson_upper": 0.9547449141804907
               }
             }
           }
@@ -1158,231 +901,97 @@
         "M-PHANTOM": {
           "all": {
             "classification_counts": {
-              "detected": 25
+              "detected": 8,
+              "error": 2
             },
-            "n_drawn": 25,
+            "n_drawn": 10,
             "recall": {
-              "n_tools": 25,
+              "n_tools": 10,
               "per_tool": {
-                "add_reminder": {
-                  "claim": "M-PHANTOM recall (all):add_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):add_reminder",
+                "acquire_lock": {
+                  "claim": "M-PHANTOM recall (all):acquire_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):acquire_lock",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "add_user_to_channel": {
-                  "claim": "M-PHANTOM recall (all):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):add_user_to_channel",
+                "book_reservation": {
+                  "claim": "M-PHANTOM recall (all):book_reservation >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PHANTOM recall (all):book_reservation",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "deposit": {
+                  "claim": "M-PHANTOM recall (all):deposit >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):deposit",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "cancel_pending_order": {
-                  "claim": "M-PHANTOM recall (all):cancel_pending_order >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):cancel_pending_order",
+                "modify_pending_order_items": {
+                  "claim": "M-PHANTOM recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PHANTOM recall (all):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_user_address": {
+                  "claim": "M-PHANTOM recall (all):modify_user_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):modify_user_address",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "create_calendar": {
-                  "claim": "M-PHANTOM recall (all):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):create_calendar",
+                "reserve_item": {
+                  "claim": "M-PHANTOM recall (all):reserve_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):reserve_item",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "disable_roaming": {
-                  "claim": "M-PHANTOM recall (all):disable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):disable_roaming",
+                "send_certificate": {
+                  "claim": "M-PHANTOM recall (all):send_certificate >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):send_certificate",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "enable_roaming": {
-                  "claim": "M-PHANTOM recall (all):enable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):enable_roaming",
+                "send_payment_request": {
+                  "claim": "M-PHANTOM recall (all):send_payment_request >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):send_payment_request",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "exchange_delivered_order_items": {
-                  "claim": "M-PHANTOM recall (all):exchange_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):exchange_delivered_order_items",
+                "set_wifi_status": {
+                  "claim": "M-PHANTOM recall (all):set_wifi_status >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):set_wifi_status",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "freeze_account": {
-                  "claim": "M-PHANTOM recall (all):freeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):freeze_account",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "modify_pending_order_address": {
-                  "claim": "M-PHANTOM recall (all):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):modify_pending_order_address",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "modify_pending_order_payment": {
-                  "claim": "M-PHANTOM recall (all):modify_pending_order_payment >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):modify_pending_order_payment",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "release_item": {
-                  "claim": "M-PHANTOM recall (all):release_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):release_item",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "release_lock": {
-                  "claim": "M-PHANTOM recall (all):release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):release_lock",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "remove_reminder": {
-                  "claim": "M-PHANTOM recall (all):remove_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):remove_reminder",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "reserve_hotel": {
-                  "claim": "M-PHANTOM recall (all):reserve_hotel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):reserve_hotel",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "resize_inventory": {
-                  "claim": "M-PHANTOM recall (all):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):resize_inventory",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "resume_line": {
-                  "claim": "M-PHANTOM recall (all):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):resume_line",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "return_delivered_order_items": {
-                  "claim": "M-PHANTOM recall (all):return_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):return_delivered_order_items",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "send_money": {
-                  "claim": "M-PHANTOM recall (all):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):send_money",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "suspend_line": {
-                  "claim": "M-PHANTOM recall (all):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):suspend_line",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "tag_item": {
-                  "claim": "M-PHANTOM recall (all):tag_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):tag_item",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "transfer": {
-                  "claim": "M-PHANTOM recall (all):transfer >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):transfer",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "unfreeze_account": {
-                  "claim": "M-PHANTOM recall (all):unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):unfreeze_account",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "update_reservation_baggages": {
-                  "claim": "M-PHANTOM recall (all):update_reservation_baggages >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):update_reservation_baggages",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "update_reservation_passengers": {
-                  "claim": "M-PHANTOM recall (all):update_reservation_passengers >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):update_reservation_passengers",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "withdraw": {
-                  "claim": "M-PHANTOM recall (all):withdraw >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (all):withdraw",
+                "update_reservation_flights": {
+                  "claim": "M-PHANTOM recall (all):update_reservation_flights >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (all):update_reservation_flights",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
@@ -1391,171 +1000,82 @@
                 }
               },
               "pooled": {
-                "claim": "M-PHANTOM recall (all) >= 0.867 (n=25; Wilson 95% CI [0.867, 1.000], point estimate 1.000)",
+                "claim": "M-PHANTOM recall (all) >= 0.490 (n=10; Wilson 95% CI [0.490, 0.943], point estimate 0.800)",
                 "label": "M-PHANTOM recall (all)",
-                "n": 25.0,
-                "point": 1.0,
-                "successes": 25.0,
-                "wilson_lower": 0.8668077490609515,
-                "wilson_upper": 0.9999999999999999
+                "n": 10.0,
+                "point": 0.8,
+                "successes": 8.0,
+                "wilson_lower": 0.49016247153664183,
+                "wilson_upper": 0.9433178485456247
               }
             }
           },
           "real": {
             "classification_counts": {
-              "detected": 17
+              "detected": 5,
+              "error": 2
             },
-            "n_drawn": 17,
+            "n_drawn": 7,
             "recall": {
-              "n_tools": 17,
+              "n_tools": 7,
               "per_tool": {
-                "add_reminder": {
-                  "claim": "M-PHANTOM recall (real):add_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):add_reminder",
+                "book_reservation": {
+                  "claim": "M-PHANTOM recall (real):book_reservation >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PHANTOM recall (real):book_reservation",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_pending_order_items": {
+                  "claim": "M-PHANTOM recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PHANTOM recall (real):modify_pending_order_items",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
+                },
+                "modify_user_address": {
+                  "claim": "M-PHANTOM recall (real):modify_user_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):modify_user_address",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "add_user_to_channel": {
-                  "claim": "M-PHANTOM recall (real):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):add_user_to_channel",
+                "send_certificate": {
+                  "claim": "M-PHANTOM recall (real):send_certificate >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):send_certificate",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "cancel_pending_order": {
-                  "claim": "M-PHANTOM recall (real):cancel_pending_order >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):cancel_pending_order",
+                "send_payment_request": {
+                  "claim": "M-PHANTOM recall (real):send_payment_request >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):send_payment_request",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "create_calendar": {
-                  "claim": "M-PHANTOM recall (real):create_calendar >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):create_calendar",
+                "set_wifi_status": {
+                  "claim": "M-PHANTOM recall (real):set_wifi_status >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):set_wifi_status",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "disable_roaming": {
-                  "claim": "M-PHANTOM recall (real):disable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):disable_roaming",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "enable_roaming": {
-                  "claim": "M-PHANTOM recall (real):enable_roaming >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):enable_roaming",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "exchange_delivered_order_items": {
-                  "claim": "M-PHANTOM recall (real):exchange_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):exchange_delivered_order_items",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "modify_pending_order_address": {
-                  "claim": "M-PHANTOM recall (real):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):modify_pending_order_address",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "modify_pending_order_payment": {
-                  "claim": "M-PHANTOM recall (real):modify_pending_order_payment >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):modify_pending_order_payment",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "remove_reminder": {
-                  "claim": "M-PHANTOM recall (real):remove_reminder >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):remove_reminder",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "reserve_hotel": {
-                  "claim": "M-PHANTOM recall (real):reserve_hotel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):reserve_hotel",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "resume_line": {
-                  "claim": "M-PHANTOM recall (real):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):resume_line",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "return_delivered_order_items": {
-                  "claim": "M-PHANTOM recall (real):return_delivered_order_items >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):return_delivered_order_items",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "send_money": {
-                  "claim": "M-PHANTOM recall (real):send_money >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):send_money",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "suspend_line": {
-                  "claim": "M-PHANTOM recall (real):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):suspend_line",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "update_reservation_baggages": {
-                  "claim": "M-PHANTOM recall (real):update_reservation_baggages >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):update_reservation_baggages",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "update_reservation_passengers": {
-                  "claim": "M-PHANTOM recall (real):update_reservation_passengers >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (real):update_reservation_passengers",
+                "update_reservation_flights": {
+                  "claim": "M-PHANTOM recall (real):update_reservation_flights >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (real):update_reservation_flights",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
@@ -1564,90 +1084,45 @@
                 }
               },
               "pooled": {
-                "claim": "M-PHANTOM recall (real) >= 0.816 (n=17; Wilson 95% CI [0.816, 1.000], point estimate 1.000)",
+                "claim": "M-PHANTOM recall (real) >= 0.359 (n=7; Wilson 95% CI [0.359, 0.918], point estimate 0.714)",
                 "label": "M-PHANTOM recall (real)",
-                "n": 17.0,
-                "point": 1.0,
-                "successes": 17.0,
-                "wilson_lower": 0.8156818649911483,
-                "wilson_upper": 1.0
+                "n": 7.0,
+                "point": 0.7142857142857143,
+                "successes": 5.0,
+                "wilson_lower": 0.35893445183261935,
+                "wilson_upper": 0.9177810759959433
               }
             }
           },
           "toy": {
             "classification_counts": {
-              "detected": 8
+              "detected": 3
             },
-            "n_drawn": 8,
+            "n_drawn": 3,
             "recall": {
-              "n_tools": 8,
+              "n_tools": 3,
               "per_tool": {
-                "freeze_account": {
-                  "claim": "M-PHANTOM recall (toy):freeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):freeze_account",
+                "acquire_lock": {
+                  "claim": "M-PHANTOM recall (toy):acquire_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):acquire_lock",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "release_item": {
-                  "claim": "M-PHANTOM recall (toy):release_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):release_item",
+                "deposit": {
+                  "claim": "M-PHANTOM recall (toy):deposit >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):deposit",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
-                "release_lock": {
-                  "claim": "M-PHANTOM recall (toy):release_lock >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):release_lock",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "resize_inventory": {
-                  "claim": "M-PHANTOM recall (toy):resize_inventory >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):resize_inventory",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "tag_item": {
-                  "claim": "M-PHANTOM recall (toy):tag_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):tag_item",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "transfer": {
-                  "claim": "M-PHANTOM recall (toy):transfer >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):transfer",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "unfreeze_account": {
-                  "claim": "M-PHANTOM recall (toy):unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):unfreeze_account",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
-                "withdraw": {
-                  "claim": "M-PHANTOM recall (toy):withdraw >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PHANTOM recall (toy):withdraw",
+                "reserve_item": {
+                  "claim": "M-PHANTOM recall (toy):reserve_item >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PHANTOM recall (toy):reserve_item",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
@@ -1656,12 +1131,12 @@
                 }
               },
               "pooled": {
-                "claim": "M-PHANTOM recall (toy) >= 0.676 (n=8; Wilson 95% CI [0.676, 1.000], point estimate 1.000)",
+                "claim": "M-PHANTOM recall (toy) >= 0.439 (n=3; Wilson 95% CI [0.439, 1.000], point estimate 1.000)",
                 "label": "M-PHANTOM recall (toy)",
-                "n": 8.0,
+                "n": 3.0,
                 "point": 1.0,
-                "successes": 8.0,
-                "wilson_lower": 0.6755924351161198,
+                "successes": 3.0,
+                "wilson_lower": 0.4385029682449546,
                 "wilson_upper": 1.0
               }
             }
@@ -1670,13 +1145,13 @@
         "M-PRECOND": {
           "all": {
             "classification_counts": {
-              "detected": 7,
-              "error": 3,
-              "missed": 15
+              "detected": 3,
+              "error": 6,
+              "missed": 16
             },
             "n_drawn": 25,
             "recall": {
-              "n_tools": 18,
+              "n_tools": 15,
               "per_tool": {
                 "acquire_lock": {
                   "claim": "M-PRECOND recall (all):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -1687,15 +1162,6 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "add_user_to_channel": {
-                  "claim": "M-PRECOND recall (all):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PRECOND recall (all):add_user_to_channel",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
-                },
                 "book_reservation": {
                   "claim": "M-PRECOND recall (all):book_reservation >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
                   "label": "M-PRECOND recall (all):book_reservation",
@@ -1705,50 +1171,32 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "deposit": {
-                  "claim": "M-PRECOND recall (all):deposit >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
-                  "label": "M-PRECOND recall (all):deposit",
-                  "n": 3,
-                  "point": 0.6666666666666666,
-                  "successes": 2,
-                  "wilson_lower": 0.2076596008020477,
-                  "wilson_upper": 0.9385080552796037
-                },
-                "exchange_delivered_order_items": {
-                  "claim": "M-PRECOND recall (all):exchange_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PRECOND recall (all):exchange_delivered_order_items",
+                "cancel_pending_order": {
+                  "claim": "M-PRECOND recall (all):cancel_pending_order >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):cancel_pending_order",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "modify_pending_order_address": {
-                  "claim": "M-PRECOND recall (all):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PRECOND recall (all):modify_pending_order_address",
+                "freeze_account": {
+                  "claim": "M-PRECOND recall (all):freeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):freeze_account",
                   "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
                 },
                 "modify_pending_order_items": {
-                  "claim": "M-PRECOND recall (all):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (all):modify_pending_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
                   "label": "M-PRECOND recall (all):modify_pending_order_items",
-                  "n": 1,
+                  "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "modify_pending_order_payment": {
-                  "claim": "M-PRECOND recall (all):modify_pending_order_payment >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-PRECOND recall (all):modify_pending_order_payment",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
+                  "wilson_upper": 0.6576197724933469
                 },
                 "release_item": {
                   "claim": "M-PRECOND recall (all):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -1760,58 +1208,49 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "release_lock": {
-                  "claim": "M-PRECOND recall (all):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (all):release_lock >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
                   "label": "M-PRECOND recall (all):release_lock",
-                  "n": 1,
+                  "n": 3,
                   "point": 0.0,
                   "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
                 },
                 "reserve_item": {
-                  "claim": "M-PRECOND recall (all):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (all):reserve_item >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
                   "label": "M-PRECOND recall (all):reserve_item",
-                  "n": 1,
+                  "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_upper": 0.6576197724933469
                 },
                 "resize_inventory": {
-                  "claim": "M-PRECOND recall (all):resize_inventory >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (all):resize_inventory >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
                   "label": "M-PRECOND recall (all):resize_inventory",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "n": 2,
+                  "point": 0.5,
+                  "successes": 1,
+                  "wilson_lower": 0.09453120573423074,
+                  "wilson_upper": 0.9054687942657693
                 },
-                "return_delivered_order_items": {
-                  "claim": "M-PRECOND recall (all):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PRECOND recall (all):return_delivered_order_items",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "set_wifi_status": {
-                  "claim": "M-PRECOND recall (all):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PRECOND recall (all):set_wifi_status",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "suspend_line": {
-                  "claim": "M-PRECOND recall (all):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PRECOND recall (all):suspend_line",
+                "resume_line": {
+                  "claim": "M-PRECOND recall (all):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (all):resume_line",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
+                },
+                "send_payment_request": {
+                  "claim": "M-PRECOND recall (all):send_payment_request >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):send_payment_request",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
                 },
                 "tag_item": {
                   "claim": "M-PRECOND recall (all):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -1823,54 +1262,54 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "transfer": {
-                  "claim": "M-PRECOND recall (all):transfer >= 0.061 (n=3; Wilson 95% CI [0.061, 0.792], point estimate 0.333)",
+                  "claim": "M-PRECOND recall (all):transfer >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
                   "label": "M-PRECOND recall (all):transfer",
-                  "n": 3,
-                  "point": 0.3333333333333333,
-                  "successes": 1,
-                  "wilson_lower": 0.06149194472039621,
-                  "wilson_upper": 0.7923403991979522
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
                 },
-                "withdraw": {
-                  "claim": "M-PRECOND recall (all):withdraw >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
-                  "label": "M-PRECOND recall (all):withdraw",
-                  "n": 2,
-                  "point": 0.5,
-                  "successes": 1,
-                  "wilson_lower": 0.09453120573423074,
-                  "wilson_upper": 0.9054687942657693
-                }
-              },
-              "pooled": {
-                "claim": "M-PRECOND recall (all) >= 0.143 (n=25; Wilson 95% CI [0.143, 0.476], point estimate 0.280)",
-                "label": "M-PRECOND recall (all)",
-                "n": 25.0,
-                "point": 0.28,
-                "successes": 7.000000000000001,
-                "wilson_lower": 0.14283853850956563,
-                "wilson_upper": 0.47576605190361576
-              }
-            }
-          },
-          "real": {
-            "classification_counts": {
-              "detected": 3,
-              "error": 1,
-              "missed": 7
-            },
-            "n_drawn": 11,
-            "recall": {
-              "n_tools": 9,
-              "per_tool": {
-                "add_user_to_channel": {
-                  "claim": "M-PRECOND recall (real):add_user_to_channel >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PRECOND recall (real):add_user_to_channel",
+                "unfreeze_account": {
+                  "claim": "M-PRECOND recall (all):unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (all):unfreeze_account",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
                 },
+                "withdraw": {
+                  "claim": "M-PRECOND recall (all):withdraw >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PRECOND recall (all):withdraw",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
+                }
+              },
+              "pooled": {
+                "claim": "M-PRECOND recall (all) >= 0.035 (n=18.228; Wilson 95% CI [0.035, 0.337], point estimate 0.120)",
+                "label": "M-PRECOND recall (all)",
+                "n": 18.227990970654627,
+                "point": 0.11999999999999998,
+                "successes": 2.187358916478555,
+                "wilson_lower": 0.035292874202222074,
+                "wilson_upper": 0.3369944610657367
+              }
+            }
+          },
+          "real": {
+            "classification_counts": {
+              "detected": 1,
+              "error": 1,
+              "missed": 5
+            },
+            "n_drawn": 7,
+            "recall": {
+              "n_tools": 5,
+              "per_tool": {
                 "book_reservation": {
                   "claim": "M-PRECOND recall (real):book_reservation >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
                   "label": "M-PRECOND recall (real):book_reservation",
@@ -1880,90 +1319,63 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "exchange_delivered_order_items": {
-                  "claim": "M-PRECOND recall (real):exchange_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PRECOND recall (real):exchange_delivered_order_items",
+                "cancel_pending_order": {
+                  "claim": "M-PRECOND recall (real):cancel_pending_order >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):cancel_pending_order",
                   "n": 1,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
-                },
-                "modify_pending_order_address": {
-                  "claim": "M-PRECOND recall (real):modify_pending_order_address >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PRECOND recall (real):modify_pending_order_address",
-                  "n": 1,
-                  "point": 1.0,
-                  "successes": 1,
-                  "wilson_lower": 0.20654931437723745,
-                  "wilson_upper": 1.0
                 },
                 "modify_pending_order_items": {
-                  "claim": "M-PRECOND recall (real):modify_pending_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (real):modify_pending_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
                   "label": "M-PRECOND recall (real):modify_pending_order_items",
-                  "n": 1,
+                  "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_upper": 0.6576197724933469
                 },
-                "modify_pending_order_payment": {
-                  "claim": "M-PRECOND recall (real):modify_pending_order_payment >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
-                  "label": "M-PRECOND recall (real):modify_pending_order_payment",
-                  "n": 3,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 5.551115123125783e-17,
-                  "wilson_upper": 0.5614970317550454
-                },
-                "return_delivered_order_items": {
-                  "claim": "M-PRECOND recall (real):return_delivered_order_items >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PRECOND recall (real):return_delivered_order_items",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "set_wifi_status": {
-                  "claim": "M-PRECOND recall (real):set_wifi_status >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
-                  "label": "M-PRECOND recall (real):set_wifi_status",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
-                },
-                "suspend_line": {
-                  "claim": "M-PRECOND recall (real):suspend_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
-                  "label": "M-PRECOND recall (real):suspend_line",
+                "resume_line": {
+                  "claim": "M-PRECOND recall (real):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (real):resume_line",
                   "n": 1,
                   "point": 1.0,
                   "successes": 1,
                   "wilson_lower": 0.20654931437723745,
                   "wilson_upper": 1.0
+                },
+                "send_payment_request": {
+                  "claim": "M-PRECOND recall (real):send_payment_request >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
+                  "label": "M-PRECOND recall (real):send_payment_request",
+                  "n": 2,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
                 }
               },
               "pooled": {
-                "claim": "M-PRECOND recall (real) >= 0.088 (n=9; Wilson 95% CI [0.088, 0.594], point estimate 0.273)",
+                "claim": "M-PRECOND recall (real) >= 0.020 (n=5; Wilson 95% CI [0.020, 0.576], point estimate 0.143)",
                 "label": "M-PRECOND recall (real)",
-                "n": 9.0,
-                "point": 0.2727272727272727,
-                "successes": 2.454545454545454,
-                "wilson_lower": 0.0878178547052808,
-                "wilson_upper": 0.5936117127581483
+                "n": 5.0,
+                "point": 0.14285714285714285,
+                "successes": 0.7142857142857142,
+                "wilson_lower": 0.02003596276035624,
+                "wilson_upper": 0.5760229406561971
               }
             }
           },
           "toy": {
             "classification_counts": {
-              "detected": 4,
-              "error": 2,
-              "missed": 8
+              "detected": 2,
+              "error": 5,
+              "missed": 11
             },
-            "n_drawn": 14,
+            "n_drawn": 18,
             "recall": {
-              "n_tools": 9,
+              "n_tools": 10,
               "per_tool": {
                 "acquire_lock": {
                   "claim": "M-PRECOND recall (toy):acquire_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -1974,14 +1386,14 @@
                   "wilson_lower": 0.0,
                   "wilson_upper": 0.7934506856227626
                 },
-                "deposit": {
-                  "claim": "M-PRECOND recall (toy):deposit >= 0.208 (n=3; Wilson 95% CI [0.208, 0.939], point estimate 0.667)",
-                  "label": "M-PRECOND recall (toy):deposit",
-                  "n": 3,
-                  "point": 0.6666666666666666,
-                  "successes": 2,
-                  "wilson_lower": 0.2076596008020477,
-                  "wilson_upper": 0.9385080552796037
+                "freeze_account": {
+                  "claim": "M-PRECOND recall (toy):freeze_account >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "label": "M-PRECOND recall (toy):freeze_account",
+                  "n": 1,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.7934506856227626
                 },
                 "release_item": {
                   "claim": "M-PRECOND recall (toy):release_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -1993,31 +1405,31 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "release_lock": {
-                  "claim": "M-PRECOND recall (toy):release_lock >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (toy):release_lock >= 0.000 (n=3; Wilson 95% CI [0.000, 0.561], point estimate 0.000)",
                   "label": "M-PRECOND recall (toy):release_lock",
-                  "n": 1,
+                  "n": 3,
                   "point": 0.0,
                   "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_lower": 5.551115123125783e-17,
+                  "wilson_upper": 0.5614970317550454
                 },
                 "reserve_item": {
-                  "claim": "M-PRECOND recall (toy):reserve_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (toy):reserve_item >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
                   "label": "M-PRECOND recall (toy):reserve_item",
-                  "n": 1,
+                  "n": 2,
                   "point": 0.0,
                   "successes": 0,
                   "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "wilson_upper": 0.6576197724933469
                 },
                 "resize_inventory": {
-                  "claim": "M-PRECOND recall (toy):resize_inventory >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PRECOND recall (toy):resize_inventory >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
                   "label": "M-PRECOND recall (toy):resize_inventory",
-                  "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "n": 2,
+                  "point": 0.5,
+                  "successes": 1,
+                  "wilson_lower": 0.09453120573423074,
+                  "wilson_upper": 0.9054687942657693
                 },
                 "tag_item": {
                   "claim": "M-PRECOND recall (toy):tag_item >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
@@ -2029,77 +1441,155 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "transfer": {
-                  "claim": "M-PRECOND recall (toy):transfer >= 0.061 (n=3; Wilson 95% CI [0.061, 0.792], point estimate 0.333)",
+                  "claim": "M-PRECOND recall (toy):transfer >= 0.000 (n=4; Wilson 95% CI [0.000, 0.490], point estimate 0.000)",
                   "label": "M-PRECOND recall (toy):transfer",
-                  "n": 3,
-                  "point": 0.3333333333333333,
+                  "n": 4,
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.4898908364545973
+                },
+                "unfreeze_account": {
+                  "claim": "M-PRECOND recall (toy):unfreeze_account >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+                  "label": "M-PRECOND recall (toy):unfreeze_account",
+                  "n": 1,
+                  "point": 1.0,
                   "successes": 1,
-                  "wilson_lower": 0.06149194472039621,
-                  "wilson_upper": 0.7923403991979522
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 },
                 "withdraw": {
-                  "claim": "M-PRECOND recall (toy):withdraw >= 0.095 (n=2; Wilson 95% CI [0.095, 0.905], point estimate 0.500)",
+                  "claim": "M-PRECOND recall (toy):withdraw >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
                   "label": "M-PRECOND recall (toy):withdraw",
                   "n": 2,
-                  "point": 0.5,
-                  "successes": 1,
-                  "wilson_lower": 0.09453120573423074,
-                  "wilson_upper": 0.9054687942657693
+                  "point": 0.0,
+                  "successes": 0,
+                  "wilson_lower": 0.0,
+                  "wilson_upper": 0.6576197724933469
                 }
               },
               "pooled": {
-                "claim": "M-PRECOND recall (toy) >= 0.117 (n=14; Wilson 95% CI [0.117, 0.546], point estimate 0.286)",
+                "claim": "M-PRECOND recall (toy) >= 0.026 (n=13.4559; Wilson 95% CI [0.026, 0.369], point estimate 0.111)",
                 "label": "M-PRECOND recall (toy)",
-                "n": 14.0,
-                "point": 0.2857142857142857,
-                "successes": 4.0,
-                "wilson_lower": 0.11721378644576919,
-                "wilson_upper": 0.5464908432989318
+                "n": 13.455882352941176,
+                "point": 0.1111111111111111,
+                "successes": 1.495098039215686,
+                "wilson_lower": 0.02603236538790596,
+                "wilson_upper": 0.36892168162703887
               }
             }
           }
         },
         "M-RESET": {
-          "classification_counts": {
-            "untestable_no_checker_path": 5
+          "all": {
+            "classification_counts": {
+              "detected": 4,
+              "missed": 1
+            },
+            "n_drawn": 5,
+            "recall": {
+              "n_tools": 1,
+              "per_tool": {
+                "reset": {
+                  "claim": "M-RESET recall (all):reset >= 0.376 (n=5; Wilson 95% CI [0.376, 0.964], point estimate 0.800)",
+                  "label": "M-RESET recall (all):reset",
+                  "n": 5,
+                  "point": 0.8,
+                  "successes": 4,
+                  "wilson_lower": 0.37553462976252533,
+                  "wilson_upper": 0.9637758913675698
+                }
+              },
+              "pooled": {
+                "claim": "M-RESET recall (all) >= 0.376 (n=5; Wilson 95% CI [0.376, 0.964], point estimate 0.800)",
+                "label": "M-RESET recall (all)",
+                "n": 5.0,
+                "point": 0.8,
+                "successes": 4.0,
+                "wilson_lower": 0.37553462976252533,
+                "wilson_upper": 0.9637758913675698
+              }
+            }
           },
-          "n_drawn": 5,
-          "real_n": 0,
-          "reason": "no_reset_path_checker: dynamic.harness.run_contract never calls Adapter.reset() or evaluates a contract's reset: clause -- confirmed by inspection, not assumed. Every M-RESET mutant is therefore UNTESTABLE by the currently-wired checker, structurally, not empirically -- reporting a Wilson interval on 0/N here would misrepresent 'the checker never had a code path to try' as 'the checker tried and missed every time'.",
-          "status": "UNTESTABLE_STRUCTURAL",
-          "toy_n": 5
+          "real": {
+            "classification_counts": {},
+            "n_drawn": 0,
+            "recall": null
+          },
+          "toy": {
+            "classification_counts": {
+              "detected": 4,
+              "missed": 1
+            },
+            "n_drawn": 5,
+            "recall": {
+              "n_tools": 1,
+              "per_tool": {
+                "reset": {
+                  "claim": "M-RESET recall (toy):reset >= 0.376 (n=5; Wilson 95% CI [0.376, 0.964], point estimate 0.800)",
+                  "label": "M-RESET recall (toy):reset",
+                  "n": 5,
+                  "point": 0.8,
+                  "successes": 4,
+                  "wilson_lower": 0.37553462976252533,
+                  "wilson_upper": 0.9637758913675698
+                }
+              },
+              "pooled": {
+                "claim": "M-RESET recall (toy) >= 0.376 (n=5; Wilson 95% CI [0.376, 0.964], point estimate 0.800)",
+                "label": "M-RESET recall (toy)",
+                "n": 5.0,
+                "point": 0.8,
+                "successes": 4.0,
+                "wilson_lower": 0.37553462976252533,
+                "wilson_upper": 0.9637758913675698
+              }
+            }
+          }
         }
       },
       "pool_sizes": {
         "M-IGNARG": {
           "drawn": 25,
           "pool_size": 106,
-          "requested": 25
+          "requested": 25,
+          "reused_full_pool": false,
+          "unused_pool_size": 81
         },
         "M-INVAR": {
           "drawn": 10,
           "pool_size": 10,
-          "requested": 25
+          "requested": 25,
+          "reused_full_pool": true,
+          "unused_pool_size": 0
         },
         "M-PARTIAL": {
-          "drawn": 25,
+          "drawn": 11,
           "pool_size": 36,
-          "requested": 25
+          "requested": 25,
+          "reused_full_pool": false,
+          "unused_pool_size": 11
         },
         "M-PHANTOM": {
-          "drawn": 25,
+          "drawn": 10,
           "pool_size": 35,
-          "requested": 25
+          "requested": 25,
+          "reused_full_pool": false,
+          "unused_pool_size": 10
         },
         "M-PRECOND": {
           "drawn": 25,
           "pool_size": 126,
-          "requested": 25
+          "requested": 25,
+          "reused_full_pool": false,
+          "unused_pool_size": 101
         },
         "M-RESET": {
           "drawn": 5,
           "pool_size": 5,
-          "requested": 25
+          "requested": 25,
+          "reused_full_pool": true,
+          "unused_pool_size": 0
         }
       }
     }
@@ -4644,6 +4134,199 @@
     "closed_world_seed": 20260902,
     "closed_world_source": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\report\\mutation_closed_world_raw.jsonl",
     "generated_by": "experiments/build_mutation_report.py",
-    "git_commit": "9f6d6bae6854ba7a2a522930e4a967b5d3776598"
+    "git_commit": "94adf1e4d0189b4c3840e6ccef409f469850503e"
+  },
+  "v1_vs_v2_comparison": {
+    "note": "v1 was scored against checker-freeze-v1, which had no code path for M-RESET or M-INVAR (both hard-UNTESTABLE structurally, not weak detection), never evaluated any frame clause, and silently skipped 17 of 19 tau2 contracts behind a two-entry lookup table. v2 (checker-freeze-v2) fixes all four; the mutant sample was invalidated and rescored per detector_analysis_plan.md sec 8. M-RESET and M-INVAR's v2 columns above are this refreeze's first REAL per-operator data for those two classes.",
+    "open_world": {
+      "tau2-telecom": {
+        "v1": {
+          "escape_decomposition": {
+            "clause_gap": 16
+          },
+          "escape_rate_raw_claim": "tau2-telecom escape rate (raw) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
+          "n_behaviorally_live": 33,
+          "n_mutations_scored": 281
+        },
+        "v2": {
+          "escape_decomposition": {
+            "clause_gap": 16
+          },
+          "escape_rate_raw_claim": "tau2-telecom escape rate (raw) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
+          "n_behaviorally_live": 33,
+          "n_mutations_scored": 281
+        }
+      },
+      "toy": {
+        "v1": {
+          "escape_decomposition": {
+            "checker_crashed_uncategorized": 20,
+            "clause_gap": 119,
+            "probe_gap": 90
+          },
+          "escape_rate_raw_claim": "toy escape rate (raw) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+          "n_behaviorally_live": 229,
+          "n_mutations_scored": 368
+        },
+        "v2": {
+          "escape_decomposition": {
+            "checker_crashed_uncategorized": 20,
+            "clause_gap": 119,
+            "probe_gap": 90
+          },
+          "escape_rate_raw_claim": "toy escape rate (raw) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+          "n_behaviorally_live": 229,
+          "n_mutations_scored": 368
+        }
+      }
+    },
+    "per_operator_recall_real": {
+      "M-IGNARG": {
+        "v1": {
+          "classification_counts": {
+            "detected": 6,
+            "error": 3,
+            "missed": 5,
+            "untestable_no_clause_evaluated": 3
+          },
+          "n_drawn": 17,
+          "pool_size": 106,
+          "recall_claim": "M-IGNARG recall (real) >= 0.162 (n=14.2477; Wilson 95% CI [0.162, 0.607], point estimate 0.353)"
+        },
+        "v2": {
+          "classification_counts": {
+            "detected": 4,
+            "error": 5,
+            "missed": 11,
+            "untestable_no_clause_evaluated": 1
+          },
+          "n_drawn": 21,
+          "pool_size": 106,
+          "recall_claim": "M-IGNARG recall (real) >= 0.066 (n=15.1318; Wilson 95% CI [0.066, 0.441], point estimate 0.190)",
+          "reused_full_pool": false,
+          "unused_pool_size": 81
+        }
+      },
+      "M-INVAR": {
+        "v1": {
+          "classification_counts": {
+            "missed": 6,
+            "untestable_no_clause_evaluated": 2
+          },
+          "n_drawn": 8,
+          "pool_size": 10,
+          "recall_claim": "M-INVAR recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)"
+        },
+        "v2": {
+          "classification_counts": {
+            "error": 8
+          },
+          "n_drawn": 8,
+          "pool_size": 10,
+          "recall_claim": "M-INVAR recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+          "reused_full_pool": true,
+          "unused_pool_size": 0
+        }
+      },
+      "M-PARTIAL": {
+        "v1": {
+          "classification_counts": {
+            "detected": 7,
+            "error": 2,
+            "missed": 8,
+            "untestable_no_clause_evaluated": 3
+          },
+          "n_drawn": 20,
+          "pool_size": 36,
+          "recall_claim": "M-PARTIAL recall (real) >= 0.137 (n=10; Wilson 95% CI [0.137, 0.646], point estimate 0.350)"
+        },
+        "v2": {
+          "classification_counts": {
+            "error": 7,
+            "missed": 1
+          },
+          "n_drawn": 8,
+          "pool_size": 36,
+          "recall_claim": "M-PARTIAL recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+          "reused_full_pool": false,
+          "unused_pool_size": 11
+        }
+      },
+      "M-PHANTOM": {
+        "v1": {
+          "classification_counts": {
+            "detected": 17
+          },
+          "n_drawn": 17,
+          "pool_size": 35,
+          "recall_claim": "M-PHANTOM recall (real) >= 0.816 (n=17; Wilson 95% CI [0.816, 1.000], point estimate 1.000)"
+        },
+        "v2": {
+          "classification_counts": {
+            "detected": 5,
+            "error": 2
+          },
+          "n_drawn": 7,
+          "pool_size": 35,
+          "recall_claim": "M-PHANTOM recall (real) >= 0.359 (n=7; Wilson 95% CI [0.359, 0.918], point estimate 0.714)",
+          "reused_full_pool": false,
+          "unused_pool_size": 10
+        }
+      },
+      "M-PRECOND": {
+        "v1": {
+          "classification_counts": {
+            "detected": 3,
+            "error": 1,
+            "missed": 7
+          },
+          "n_drawn": 11,
+          "pool_size": 126,
+          "recall_claim": "M-PRECOND recall (real) >= 0.088 (n=9; Wilson 95% CI [0.088, 0.594], point estimate 0.273)"
+        },
+        "v2": {
+          "classification_counts": {
+            "detected": 1,
+            "error": 1,
+            "missed": 5
+          },
+          "n_drawn": 7,
+          "pool_size": 126,
+          "recall_claim": "M-PRECOND recall (real) >= 0.020 (n=5; Wilson 95% CI [0.020, 0.576], point estimate 0.143)",
+          "reused_full_pool": false,
+          "unused_pool_size": 101
+        }
+      },
+      "M-RESET": {
+        "v1": {
+          "classification_counts": {},
+          "n_drawn": 0,
+          "pool_size": 5,
+          "recall_claim": null
+        },
+        "v2": {
+          "classification_counts": {},
+          "n_drawn": 0,
+          "pool_size": 5,
+          "recall_claim": null,
+          "reused_full_pool": true,
+          "unused_pool_size": 0
+        }
+      }
+    },
+    "precision": {
+      "v1_claim": "precision >= 0.926 (n=48; Wilson 95% CI [0.926, 1.000], point estimate 1.000)",
+      "v1_tp_fp": {
+        "fp": 0,
+        "n_flags": 48,
+        "tp": 48
+      },
+      "v2_claim": "precision >= 0.862 (n=24; Wilson 95% CI [0.862, 1.000], point estimate 1.000)",
+      "v2_tp_fp": {
+        "fp": 0,
+        "n_flags": 24,
+        "tp": 24
+      }
+    }
   }
 }

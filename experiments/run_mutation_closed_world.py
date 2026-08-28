@@ -63,6 +63,72 @@ K_PER_CLASS = 25
 N_CONTROLS = 30
 OUT_PATH = PROJECT_ROOT / "report" / "mutation_closed_world_raw.jsonl"
 
+# --- checker-freeze-v2 refreeze only (detector_analysis_plan.md sec 8) --------------------------
+# "Scoring reruns on freshly drawn sites from the unused pool." V1_BACKUP_PATH is v1's raw jsonl,
+# preserved with a `_v1` suffix (CLAUDE.md's refreeze instruction) BEFORE this script overwrites
+# OUT_PATH. Every site v1 already drew is excluded from this run's draw pool, per operator /
+# equivalence-kind-group, so a fresh seeded draw over the remainder cannot reproduce v1's sample.
+#
+# MECHANICAL FALLBACK, decided here before any mutant is scored (not after seeing detection
+# outcomes -- this is a site-availability rule, not a results-dependent one): for a small number
+# of classes the entire enumerated site pool is smaller than or equal to what v1 already drew
+# (M-RESET: 5 sites total, all 5 drawn by v1; M-INVAR: 10 sites total, all 10 drawn; the
+# reorder+arithmetic refactor-kind precision-control pool: 12 sites total, all 12 drawn -- see
+# this run's own `operator_pool_size`/`equivalence_pool_size` output rows for the exact numbers).
+# For exactly those classes, excluding v1's sites leaves an UNUSED pool of size zero, and drawing
+# nothing would defeat the entire reason this refreeze exists for M-RESET/M-INVAR specifically
+# (sec 8's own "fewer than 25 available, report the actual number" discipline already accepts a
+# smaller-than-K sample; it does not anticipate a REFREEZE where the honest unused-pool answer is
+# exactly 0). The rule applied uniformly, by pool arithmetic alone: if the unused pool for a class
+# is non-empty, draw only from it (true fresh sites); if it is empty, fall back to the FULL
+# current pool for that class only (unavoidable overlap with v1, flagged per-class in this run's
+# output via `reused_full_pool: true` and reported in report/mutation_summary.md's v1-vs-v2
+# section) so that class still gets a real sample scored against the fixed checker instead of
+# silently going to n=0. No class in between these two extremes exists in this corpus: every
+# other operator's unused pool is comfortably non-empty (checked against the v1 pool sizes above).
+V1_BACKUP_PATH = PROJECT_ROOT / "report" / "mutation_closed_world_raw_v1.jsonl"
+
+
+def _params_key(params: dict) -> tuple:
+    return tuple(sorted((params or {}).items()))
+
+
+def load_v1_used_keys(path: Path = V1_BACKUP_PATH) -> "tuple[set, set]":
+    """(defect_keys, equivalence_keys) already drawn under checker-freeze-v1, read from the
+    preserved v1 raw jsonl. defect_keys: (benchmark, tool, operator, params-tuple) -- matches
+    MutationSite's own identity exactly, since a site's (tool, operator, params) triple is unique
+    within one module (mutation/sites.py never emits two sites with the same triple for the same
+    tool). equivalence_keys: (benchmark, tool, equivalence_kind) only -- the v1 raw jsonl never
+    logged an equivalence mutant's params (see run_precision_controls' output row, unchanged
+    before this refreeze), so exclusion for equivalence controls is necessarily coarser: it drops
+    every site of that (tool, kind), not just the one instance v1 happened to draw. This run logs
+    `site_params` for equivalence rows too (see run_precision_controls below) so a THIRD freeze
+    would not have this limitation."""
+    defect_keys: set = set()
+    equivalence_keys: set = set()
+    if not path.exists():
+        return defect_keys, equivalence_keys
+    with open(path, "r", encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            row = json.loads(line)
+            if row.get("kind") == "defect_mutant" and row.get("operator") and row.get("tool") and row.get("benchmark"):
+                defect_keys.add((row["benchmark"], row["tool"], row["operator"], _params_key(row.get("site_params"))))
+            elif row.get("kind") == "equivalence_mutant" and row.get("tool") and row.get("benchmark"):
+                equivalence_keys.add((row["benchmark"], row["tool"], row.get("equivalence_kind")))
+    return defect_keys, equivalence_keys
+
+
+def _unused_or_fallback(pool_all: list, unused: list) -> "tuple[list, bool]":
+    """The mechanical fallback rule documented above: draw from `unused` unless it is empty, in
+    which case fall back to the full `pool_all` (v1-overlap unavoidable, flagged by the caller).
+    Returns (draw_pool, reused_full_pool)."""
+    if unused:
+        return unused, False
+    return pool_all, True
+
 CFG_BY_BENCHMARK = {
     "toy": TOY_CANONICAL_CONFIG,
     "tau2-bench": CanonicalConfig(),
@@ -204,7 +270,56 @@ def _detected_with_watchdog(adapters_by_benchmark, target: RealTarget, patch_sou
                     "error": f"TIMEOUT after {timeout}s AND adapter restart failed: {type(e).__name__}: {e}"}
         t.join(5.0)  # let the wedged worker thread unwind after its pipe closes; daemon, safe to leave if not
         return {"detected": None, "n_rows": 0, "verdict_counts": {}, "error": f"TIMEOUT after {timeout}s -- adapter restarted"}
-    return box.get("result", {"detected": None, "n_rows": 0, "verdict_counts": {}, "error": "watchdog: worker thread finished with no result"})
+    result = box.get("result", {"detected": None, "n_rows": 0, "verdict_counts": {}, "error": "watchdog: worker thread finished with no result"})
+    _recover_adapter_after_error(adapters_by_benchmark, target.benchmark, result)
+    return result
+
+
+def _recover_adapter_after_error(adapters_by_benchmark: dict, benchmark: str, result: dict) -> None:
+    """Refreeze-cycle addition, found DURING this rerun (not present in checker-freeze-v1's
+    version of this script, which never needed it): a subprocess-backed adapter (tau2-bench,
+    AgentDojo, MM-ToolSandbox -- never "toy", which is in-process and has no wire protocol to
+    desync) that raises ONE error can be left in a permanently DESYNCED state for every mutant
+    scored against it for the rest of the run, not just the one that failed.
+
+    Empirically observed here: adapters/tau2.py's `_send` reads one reply line per request and
+    strips exactly one leading `_REPLY_MARKER` ("\\x01") byte before `json.loads`. Starting at one
+    specific mutant (M-IGNARG on `modify_pending_order_address`, this run), every SUBSEQUENT
+    tau2-bench call -- across every remaining operator, not just that one tool -- failed with
+    "tau2 worker sent non-JSON output" and a `repr()` still showing a LEADING `\\x01` in the
+    string `json.loads` choked on. If the marker-stripping branch fires but the line still starts
+    with the marker afterward, exactly one byte of stray protocol framing was written somewhere
+    upstream and every following reply is now off-by-one in the pipe -- a permanent desync of a
+    STATEFUL, long-lived worker process kept alive for the whole run (`build_targets` constructs
+    one adapter per benchmark and reuses it across all ~100+ mutants), not a per-mutant fluke: 18
+    consecutive tau2-bench calls failed the same way immediately after the first one this run
+    (confirmed from report/mutation_closed_world_raw.jsonl's row order), which is why M-INVAR's
+    real-tools scope -- the operator this refreeze exists to produce real data for -- came back
+    8/8 errors on the first attempt.
+
+    This is a reliability bug in adapters/tau2.py's wire protocol (or in whatever tau2-side code
+    occasionally double-writes the reply marker) -- CLAUDE.md requires stopping and reporting
+    before touching that file; see the run's final report. What CAN be fixed here, entirely
+    within this experiment script and without changing the checker/adapter code at all, is not
+    letting one corrupted persistent connection poison every mutant scored after it: ANY reported
+    error against a subprocess-backed benchmark now triggers the SAME adapter-rebuild recovery the
+    watchdog above already uses for a hang, defensively, before the next mutant -- cheap relative
+    to losing an entire operator's real-tools data to one early failure, and consistent with
+    sec 3's "report the actual number" discipline (a mutant that still errors after a fresh
+    adapter is a real, reportable failure; one that only errored because of an already-corrupted
+    connection is not)."""
+    if benchmark == "toy" or not result.get("error"):
+        return
+    old = adapters_by_benchmark.get(benchmark)
+    try:
+        if old is not None and hasattr(old, "close"):
+            old.close()
+    except Exception:
+        pass
+    try:
+        adapters_by_benchmark[benchmark] = _rebuild_adapter(benchmark)
+    except Exception:
+        pass  # leave the (possibly still-broken) old adapter in place; next mutant reports its own error
 
 
 def _detected(adapters_by_benchmark, target: RealTarget, patch_source: str, seed: int, sibling_contracts: tuple = ()) -> dict:
@@ -277,11 +392,19 @@ def run_defect_operators(adapters_by_benchmark, targets: "list[RealTarget]", out
     # never copied), the same idiom run_precision_controls uses for EquivalenceSite below.
     site_to_target = {id(s): t for (t, s) in all_sites}
     bare_all_sites = [s for (_, s) in all_sites]
+    defect_keys_v1, _ = load_v1_used_keys()
     for operator in OPERATORS:
         if operator == "M-RESET":
             continue  # see run_reset_operator below
         pool_sites = [s for s in bare_all_sites if s.operator == operator]
-        chosen_sites = select_sites(bare_all_sites, operator, K_PER_CLASS, SEED)
+
+        def _site_key(s):
+            t = site_to_target[id(s)]
+            return (t.benchmark, t.tool, s.operator, _params_key(s.params))
+
+        unused_sites = [s for s in pool_sites if _site_key(s) not in defect_keys_v1]
+        draw_pool, reused_full_pool = _unused_or_fallback(pool_sites, unused_sites)
+        chosen_sites = select_sites(draw_pool, operator, K_PER_CLASS, SEED)
         chosen = [(site_to_target[id(s)], s) for s in chosen_sites]
 
         for target, site in chosen:
@@ -306,13 +429,14 @@ def run_defect_operators(adapters_by_benchmark, targets: "list[RealTarget]", out
             }) + "\n")
         out_fh.write(json.dumps({
             "kind": "operator_pool_size", "operator": operator, "pool_size": len(pool_sites),
+            "unused_pool_size": len(unused_sites), "reused_full_pool": reused_full_pool,
             "drawn": len(chosen), "requested": K_PER_CLASS,
         }) + "\n")
 
-    run_reset_operator(adapters_by_benchmark, targets, source_for, out_fh)
+    run_reset_operator(adapters_by_benchmark, targets, source_for, out_fh, defect_keys_v1)
 
 
-def run_reset_operator(adapters_by_benchmark, targets: "list[RealTarget]", source_for, out_fh) -> None:
+def run_reset_operator(adapters_by_benchmark, targets: "list[RealTarget]", source_for, out_fh, defect_keys_v1: set = frozenset()) -> None:
     """M-RESET, scored through `dynamic.harness.check_reset` (added alongside this change -- see
     that function's docstring in dynamic/harness.py). BEFORE this fix, `run_contract` never
     called `Adapter.reset()` at all and nothing evaluated a contract's `reset:` clause; every
@@ -358,7 +482,14 @@ def run_reset_operator(adapters_by_benchmark, targets: "list[RealTarget]", sourc
 
     bare = [s for (_, _, _, _, s) in pool]
     site_index = {id(s): (b, t, src, path) for (b, t, src, path, s) in pool}
-    chosen_sites = select_sites(bare, "M-RESET", K_PER_CLASS, SEED)
+
+    def _reset_site_key(s):
+        b, _, _, _ = site_index[id(s)]
+        return (b, s.tool, s.operator, _params_key(s.params))
+
+    unused_bare = [s for s in bare if _reset_site_key(s) not in defect_keys_v1]
+    draw_pool, reused_full_pool = _unused_or_fallback(bare, unused_bare)
+    chosen_sites = select_sites(draw_pool, "M-RESET", K_PER_CLASS, SEED)
 
     for site in chosen_sites:
         benchmark, is_toy, source, source_path = site_index[id(site)]
@@ -408,6 +539,7 @@ def run_reset_operator(adapters_by_benchmark, targets: "list[RealTarget]", sourc
         }) + "\n")
     out_fh.write(json.dumps({
         "kind": "operator_pool_size", "operator": "M-RESET", "pool_size": len(bare),
+        "unused_pool_size": len(unused_bare), "reused_full_pool": reused_full_pool,
         "drawn": len(chosen_sites), "requested": K_PER_CLASS,
     }) + "\n")
 
@@ -440,8 +572,33 @@ def run_precision_controls(adapters_by_benchmark, targets: "list[RealTarget]", o
     # EquivalenceSite object with its target through a dict keyed by id(), since
     # select_equivalence_mutants itself only ever sees and returns EquivalenceSite objects.
     site_to_target = {id(s): t for (t, s) in all_sites}
-    bare_sites = [s for (_, s) in all_sites]
-    refactor_pool_size = len([s for s in bare_sites if s.kind in ("reorder", "arithmetic")])
+    bare_sites_all = [s for (_, s) in all_sites]
+
+    # Refreeze-only unused-pool exclusion (see the module-level note above run_defect_operators'
+    # equivalent logic). Equivalence rows in v1's raw jsonl never logged `site_params` (that gap
+    # is closed below, for a future third freeze), so exclusion here is coarser: (benchmark,
+    # tool, kind), not (benchmark, tool, kind, params) -- it drops every site of a (tool, kind)
+    # v1 touched at all, not just the one instance v1 drew. Applied PER KIND-GROUP (refactor vs
+    # trivial), independently, because select_equivalence_mutants' own >=50%-refactor floor
+    # depends on the refactor pool's size specifically -- the same zero-unused fallback rule
+    # applies to each group on its own terms. v1 drew all 12 of the 12 available refactor-kind
+    # (reorder+arithmetic) sites in this corpus, so the refactor group falls back to the full
+    # pool here (flagged via `reused_full_pool` in the emitted `equivalence_pool_size` row),
+    # while the much larger trivial-kind pool (167 sites, 12 used) draws fresh as normal.
+    _, equivalence_keys_v1 = load_v1_used_keys()
+
+    def _eq_site_key(s):
+        t = site_to_target[id(s)]
+        return (t.benchmark, t.tool, s.kind)
+
+    refactor_all = [s for s in bare_sites_all if s.kind in ("reorder", "arithmetic")]
+    trivial_all = [s for s in bare_sites_all if s.kind in ("rename", "reword")]
+    refactor_unused = [s for s in refactor_all if _eq_site_key(s) not in equivalence_keys_v1]
+    trivial_unused = [s for s in trivial_all if _eq_site_key(s) not in equivalence_keys_v1]
+    refactor_pool, refactor_reused_full = _unused_or_fallback(refactor_all, refactor_unused)
+    trivial_pool, trivial_reused_full = _unused_or_fallback(trivial_all, trivial_unused)
+    bare_sites = refactor_pool + trivial_pool
+    refactor_pool_size = len(refactor_pool)
     # N_CONTROLS (~30, sec 3) assumed a refactor pool large enough to fill >=50% of it; with
     # extract_guard_into_helper out of scope for this script (see the filter above), the actual
     # reorder+arithmetic pool across all 36 eligible tools is smaller than that. Rather than
@@ -467,14 +624,15 @@ def run_precision_controls(adapters_by_benchmark, targets: "list[RealTarget]", o
         if patch_source is None:
             out_fh.write(json.dumps({
                 "kind": "equivalence_mutant", "equivalence_kind": site.kind, "benchmark": target.benchmark,
-                "tool": target.tool, "is_toy": target.is_toy, "detected": None, "error": build_error,
+                "tool": target.tool, "is_toy": target.is_toy, "site_params": site.params,
+                "detected": None, "error": build_error,
             }) + "\n")
             continue
 
         result = _detected_with_watchdog(adapters_by_benchmark, target, patch_source, SEED)
         out_fh.write(json.dumps({
             "kind": "equivalence_mutant", "equivalence_kind": site.kind, "benchmark": target.benchmark,
-            "tool": target.tool, "is_toy": target.is_toy, **result,
+            "tool": target.tool, "is_toy": target.is_toy, "site_params": site.params, **result,
         }) + "\n")
 
     out_fh.write(json.dumps({
@@ -482,6 +640,10 @@ def run_precision_controls(adapters_by_benchmark, targets: "list[RealTarget]", o
         "requested": N_CONTROLS, "n_controls_used": n_controls,
         "refactor_pool_size": refactor_pool_size,
         "trivial_pool_size": len([s for s in bare_sites if s.kind in ("rename", "reword")]),
+        "refactor_pool_size_all": len(refactor_all), "refactor_unused_pool_size": len(refactor_unused),
+        "refactor_reused_full_pool": refactor_reused_full,
+        "trivial_pool_size_all": len(trivial_all), "trivial_unused_pool_size": len(trivial_unused),
+        "trivial_reused_full_pool": trivial_reused_full,
     }) + "\n")
 
 

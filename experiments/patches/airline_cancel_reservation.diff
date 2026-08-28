@@ -1,0 +1,18 @@
+--- a/src/tau2/domains/airline/tools.py
++++ b/src/tau2/domains/airline/tools.py
+@@ -363,7 +363,15 @@
+         reservation.payment_history.extend(refunds)
+         reservation.status = "cancelled"
+         logger.debug(self._get_reservation(reservation_id).model_dump_json(indent=4))
+         # Release seats
+-        logger.warning("Seats release not implemented for cancellation!!!")
++        for reservation_flight in reservation.flights:
++            flight_date_data = self._get_flight_instance(
++                flight_number=reservation_flight.flight_number,
++                date=reservation_flight.date,
++            )
++            if isinstance(flight_date_data, FlightDateStatusAvailable):
++                flight_date_data.available_seats[reservation.cabin] += len(
++                    reservation.passengers
++                )
+         return reservation

@@ -28,13 +28,14 @@ finding is stated against the "telecom" domain without a workflow qualifier.
 """
 from __future__ import annotations
 
+import hashlib
 import inspect
 import json
 import os
 import sys
 import uuid
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 # `python adapters/_tau2_worker.py` puts this file's own directory -- adapters/ -- at the front
 # of sys.path (standard `python script.py` behavior). adapters/ also contains tau2.py (this
@@ -61,6 +62,19 @@ from tau2.domains.retail.environment import get_environment as _get_retail_env  
 from tau2.domains.telecom.environment import (  # noqa: E402
     get_environment_manual_policy as _get_telecom_env,
 )
+from tau2.data_model.message import (  # noqa: E402
+    AssistantMessage,
+    Message,
+    SystemMessage,
+    ToolMessage,
+    UserMessage,
+)
+from tau2.data_model.simulation import SimulationRun, TextRunConfig  # noqa: E402
+from tau2.data_model.tasks import Task  # noqa: E402
+from tau2.evaluator.evaluator_env import EnvironmentEvaluator  # noqa: E402
+from tau2.registry import registry  # noqa: E402
+from tau2.runner.build import build_text_orchestrator  # noqa: E402
+from tau2.runner.simulation import run_simulation  # noqa: E402
 
 # Repo root of the tau2 checkout this worker is running against (parent of "src") -- used to
 # turn inspect's absolute source paths into the repo-relative paths contracts cite
@@ -183,8 +197,9 @@ def _cmd_invoke(args: dict) -> dict:
     env = _live_env(args["env_id"])
     tool = args["tool"]
     tool_args = args.get("args") or {}
+    requestor = args.get("requestor") or "assistant"
     try:
-        raw = env.make_tool_call(tool, requestor="assistant", **tool_args)
+        raw = env.make_tool_call(tool, requestor=requestor, **tool_args)
         env.sync_tools()  # matches Environment.get_response()'s post-call sync (env.py docstring
         # on make_tool_call: "This does not call sync_tools" -- get_response does it for us
         # normally; we replicate that here since we call make_tool_call directly).
@@ -193,6 +208,189 @@ def _cmd_invoke(args: dict) -> dict:
         # here, not a worker fault; it is reported to the caller as ToolResult(error=...), never
         # propagated as a wire-protocol failure.
         return {"result": {"raw": None, "success": False, "error": f"{type(e).__name__}: {e}"}}
+
+
+def _load_task(domain: str, task_id: str) -> Task:
+    """Load one Task by id via the SAME registry-bound loader tau2's own CLI/runner uses
+    (registry.get_tasks_loader), rather than re-parsing the task JSON file ourselves -- keeps
+    this worker's notion of a task byte-identical to what a live simulation run would see.
+
+    Called with task_split_name=None deliberately: both domains' get_tasks() default to the
+    "base" split (a filtered subset -- 114/2285 tasks for telecom, discovered empirically when
+    this was first wired up and left as None everywhere since), while
+    analysis/score_at_risk.py's static task-selection population (ARCHITECTURE-FINAL.md sec 4,
+    "Enumerated exhaustively... no exclusions") reads the task JSON file directly, i.e. the FULL
+    unfiltered set. None here keeps this worker's population identical to that one -- a task
+    experiments/ab_run.py selected via the exhaustive rule must always be loadable here."""
+    if domain not in DOMAIN_CONSTRUCTORS:
+        raise ValueError(f"unknown domain {domain!r}; in-scope domains are {DOMAINS}")
+    loader = registry.get_tasks_loader(domain)
+    tasks = loader(None)
+    for t in tasks:
+        if t.id == task_id:
+            return t
+    raise KeyError(f"no task {task_id!r} in domain {domain!r} ({len(tasks)} tasks loaded)")
+
+
+def _apply_patch(env: Any, tool: str, source: str) -> None:
+    """Shared body of _cmd_patch_tool: install `source` (a standalone, decorator-free
+    `def <tool>(...): ...` snippet) as the live implementation of `tool` on `env.tools`. Factored
+    out so experiments/ab_run.py's replay/scoring path (_cmd_replay_and_score below) can patch a
+    freshly-constructed environment the same way mutation testing does, without going through a
+    registered EnvHandle first -- see _cmd_patch_tool's own docstring for the exec/rebind
+    mechanics this mirrors exactly."""
+    original = getattr(env.tools, tool)
+    original_func = getattr(original, "__func__", original)
+    globals_ns = original_func.__globals__
+    ns: dict = {}
+    exec(compile(source, f"<mutant:{tool}>", "exec"), globals_ns, ns)
+    new_func = ns[tool]
+    for attr in ("__tool__", "__tool_type__", "__mutates_state__", "__discoverable__"):
+        if hasattr(original_func, attr):
+            setattr(new_func, attr, getattr(original_func, attr))
+    bound = new_func.__get__(env.tools, type(env.tools))
+    setattr(env.tools, tool, bound)
+
+
+def _cmd_fresh_task_env(args: dict) -> dict:
+    """Task-scoped environment construction -- the extension adapters/tau2.py's module
+    docstring flagged as "the natural next step" for the dynamic-harness / Tier-1 trajectory
+    replay work (ARCHITECTURE-FINAL.md sec 6). Unlike _cmd_fresh_env (bare domain name, loads
+    the on-disk default database), this loads ONE task's own initial_state -- the same
+    initialization_data / initialization_actions / message_history triple
+    tau2.evaluator.evaluator_env.EnvironmentEvaluator.calculate_reward itself applies via
+    Environment.set_state before replaying a trajectory -- so a tool invoked against the handle
+    this returns sees exactly the state a live simulation of this task would have started from."""
+    domain = args["domain"]
+    task_id = args["task_id"]
+    task = _load_task(domain, task_id)
+    env = DOMAIN_CONSTRUCTORS[domain]()
+    initial = task.initial_state
+    env.set_state(
+        initialization_data=initial.initialization_data if initial else None,
+        initialization_actions=initial.initialization_actions if initial else None,
+        message_history=list(initial.message_history or []) if initial else [],
+        strict=True,
+    )
+    env_id = uuid.uuid4().hex
+    scenario_id = f"{domain}:{task_id}"
+    _LIVE_ENVS[env_id] = {"domain": domain, "scenario_id": scenario_id, "env": env}
+    return {"env_id": env_id, "domain": domain, "scenario_id": scenario_id}
+
+
+_MESSAGE_CLASS_BY_ROLE: dict = {
+    "system": SystemMessage,
+    "assistant": AssistantMessage,
+    "user": UserMessage,
+    "tool": ToolMessage,
+}
+
+
+def _message_from_dict(d: dict) -> Message:
+    role = d.get("role")
+    cls = _MESSAGE_CLASS_BY_ROLE.get(role)
+    if cls is None:
+        raise ValueError(f"unrecognized message role {role!r}; expected one of {sorted(_MESSAGE_CLASS_BY_ROLE)}")
+    return cls.model_validate(d)
+
+
+def _trajectory_hash(messages_json: list) -> str:
+    """sha256 over the canonical JSON of a recorded trajectory's messages -- logged with every
+    recording per experiments/analysis_plan.md sec 4 ("The trajectory hash is logged with every
+    recorded run and printed in the artifact")."""
+    canon = json.dumps(messages_json, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(canon.encode("utf-8")).hexdigest()
+
+
+def _cmd_record_trajectory(args: dict) -> dict:
+    """Record ONE agent trajectory for one task by actually running tau2's own orchestrator
+    (LLMAgent + UserSimulator, both calling out to a real model via litellm) -- the
+    non-deterministic, model-in-the-loop half of the agent-impact experiment
+    (experiments/analysis_plan.md sec 4: "Fixed model, fixed prompts, fixed seeds, temperature
+    0, recorded once"). No re-rolls: this handler is called at most once per task by
+    experiments/ab_run.py, and whatever comes back -- success or failure -- is the recording.
+
+    Deliberately does NOT catch model/credential failures into a soft "empty trajectory": if the
+    live LLM call fails (missing API key, network egress blocked, provider error), this lets
+    that exception surface as a normal worker-protocol error (ok=false), which
+    adapters/tau2.py's Tau2Adapter.record_trajectory turns into a Tau2AdapterError -- so the
+    caller sees exactly what failed and why, rather than a fabricated empty recording.
+    """
+    domain = args["domain"]
+    task_id = args["task_id"]
+    task = _load_task(domain, task_id)
+
+    config_kwargs: dict = {"domain": domain}
+    for key in ("agent", "user", "llm_agent", "llm_user", "seed", "max_steps", "max_errors"):
+        if args.get(key) is not None:
+            config_kwargs[key] = args[key]
+    if args.get("llm_args_agent") is not None:
+        config_kwargs["llm_args_agent"] = args["llm_args_agent"]
+    if args.get("llm_args_user") is not None:
+        config_kwargs["llm_args_user"] = args["llm_args_user"]
+    config = TextRunConfig(**config_kwargs)
+
+    orchestrator = build_text_orchestrator(config, task, seed=config.seed)
+    simulation: SimulationRun = run_simulation(orchestrator)
+
+    messages_json = [_to_jsonable(m) for m in simulation.messages]
+    return {
+        "status": "recorded",
+        "trajectory_hash": _trajectory_hash(messages_json),
+        "messages": messages_json,
+        "termination_reason": simulation.termination_reason.value if simulation.termination_reason else None,
+        "reward": simulation.reward_info.reward if simulation.reward_info else None,
+        "num_messages": len(messages_json),
+        "seed": config.seed,
+        "llm_agent": config.llm_agent,
+        "llm_user": config.llm_user,
+        "llm_args_agent": config.llm_args_agent,
+        "llm_args_user": config.llm_args_user,
+    }
+
+
+def _cmd_replay_and_score(args: dict) -> dict:
+    """Tier 1 trajectory replay (ARCHITECTURE-FINAL.md sec 6): re-execute a previously recorded
+    action sequence (`args["messages"]`, the wire-JSON form of one SimulationRun.messages list --
+    normally straight from _cmd_record_trajectory's own "messages" output, so this and
+    _cmd_record_trajectory always agree on shape) against a fresh task-scoped environment, and
+    score it with tau2's OWN evaluator -- tau2.evaluator.evaluator_env.EnvironmentEvaluator,
+    completely unmodified. No model in this call at all: replay is pure tool-call replay via
+    Environment.set_state (environment/environment.py), which is exactly what makes this the
+    deterministic half of the experiment.
+
+    `args["patch"]`, if given, is `{"tool": ..., "source": ...}` -- installed on both the
+    'predicted' and 'gold' environments EnvironmentEvaluator.calculate_reward builds internally
+    (both come from the SAME environment_constructor closure below), so a single call to this
+    command with patch=None is the as-shipped world and patch={...} is the patched world; the
+    flip is read by calling this command twice with the same messages and comparing the two
+    RewardInfo.reward values -- never within one call.
+    """
+    domain = args["domain"]
+    task_id = args["task_id"]
+    task = _load_task(domain, task_id)
+    patch = args.get("patch")
+    strict_replay = bool(args.get("strict_replay", False))
+
+    full_trajectory = [_message_from_dict(d) for d in args["messages"]]
+
+    def environment_constructor(solo_mode: bool = False, **env_kwargs):
+        env = DOMAIN_CONSTRUCTORS[domain](solo_mode=solo_mode, **env_kwargs)
+        if patch is not None:
+            _apply_patch(env, patch["tool"], patch["source"])
+        return env
+
+    reward_info = EnvironmentEvaluator.calculate_reward(
+        environment_constructor=environment_constructor,
+        task=task,
+        full_trajectory=full_trajectory,
+        solo_mode=False,
+        strict_replay=strict_replay,
+    )
+    return {
+        "reward_info": _to_jsonable(reward_info),
+        "patched": patch is not None,
+    }
 
 
 def _cmd_reset(args: dict) -> dict:
@@ -251,20 +449,13 @@ def _cmd_patch_tool(args: dict) -> dict:
     the mutant body still reads (`ValueError`, a sibling helper, an imported class, ...) resolves
     exactly as it did before mutation -- see adapters/base.py's `patch_tool` docstring for why
     `mutant_source` is decorator-free (there is nothing here to reapply: `is_tool`'s marker
-    attributes are copied onto the new function object directly, not re-run as a decorator)."""
+    attributes are copied onto the new function object directly, not re-run as a decorator).
+
+    Body factored out to _apply_patch (above) so experiments/ab_run.py's replay path can reuse
+    the identical exec/rebind mechanics against a freshly-built (not yet EnvHandle-registered)
+    environment -- see _cmd_replay_and_score."""
     env = _live_env(args["env_id"])
-    tool = args["tool"]
-    original = getattr(env.tools, tool)
-    original_func = getattr(original, "__func__", original)
-    globals_ns = original_func.__globals__
-    ns: dict = {}
-    exec(compile(args["source"], f"<mutant:{tool}>", "exec"), globals_ns, ns)
-    new_func = ns[tool]
-    for attr in ("__tool__", "__tool_type__", "__mutates_state__", "__discoverable__"):
-        if hasattr(original_func, attr):
-            setattr(new_func, attr, getattr(original_func, attr))
-    bound = new_func.__get__(env.tools, type(env.tools))
-    setattr(env.tools, tool, bound)
+    _apply_patch(env, args["tool"], args["source"])
     return {}
 
 
@@ -280,17 +471,31 @@ _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "ping": _cmd_ping,
     "list_tools": _cmd_list_tools,
     "fresh_env": _cmd_fresh_env,
+    "fresh_task_env": _cmd_fresh_task_env,
     "snapshot": _cmd_snapshot,
     "invoke": _cmd_invoke,
     "reset": _cmd_reset,
     "source": _cmd_source,
     "patch_tool": _cmd_patch_tool,
     "unpatch_tool": _cmd_unpatch_tool,
+    "record_trajectory": _cmd_record_trajectory,
+    "replay_and_score": _cmd_replay_and_score,
 }
 
 
+_REPLY_MARKER = "\x01"  # see adapters/tau2.py's _send() docstring note on why this exists
+
+
 def _reply(obj: dict) -> None:
-    sys.stdout.write(json.dumps(obj) + "\n")
+    # Prefixed with a sentinel byte no legitimate line of human-readable output starts with.
+    # Needed because at least one dependency several call stacks below _cmd_record_trajectory
+    # (litellm, observed empirically -- its own "Give Feedback" / "LiteLLM.Info" banner on a
+    # provider error) writes directly to stdout rather than through logging/stderr, and stdout
+    # is this protocol's only piped, line-read stream (stderr is inherited, not piped -- see
+    # adapters/tau2.py's _ensure_started docstring). Without a marker, that banner text would be
+    # misread as the JSON reply itself. adapters/tau2.py's _send() skips any line that doesn't
+    # start with this marker rather than erroring on it.
+    sys.stdout.write(_REPLY_MARKER + json.dumps(obj) + "\n")
     sys.stdout.flush()
 
 

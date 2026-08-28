@@ -8,6 +8,14 @@ Every finding here was read directly at its pinned commit by someone other than 
 
 **Kill gate (2026-09-06): CLEARED on 2026-08-21, sixteen days early.** Requires at least 5 confirmed findings across at least 4 environments; 8 across 4 in hand. No existing finding failed re-verification — one label was withdrawn (Finding 3's Reset Leak) after tracing reset scope, which is the process working rather than a failure.
 
+## A framing error to stop repeating: "42 contracts across four benchmarks"
+
+The 42 contracts are tau2-bench 19, AgentDojo 7, MM-ToolSandbox 5, and **toy 11** — the synthetic regression domain. The fourth is not MedAgentBench. **MedAgentBench has zero contracts and no adapter**: it is a static case study by design, demoted there because its POST branch has no standalone callable, its repo has no reset path, and its grading logic lives outside git.
+
+So "42 contracts across four benchmarks" reads as though the four are the four audited benchmarks. They are not. Three audited benchmarks carry contracts, plus a synthetic domain built to debug detectors independently of benchmark quirks.
+
+State it as: **31 contracts across three audited benchmarks, plus 11 toy contracts.** Anywhere the paper implies MedAgentBench has a contract or an adapter, it is wrong.
+
 ## How to count these, and how the paper must state it
 
 The instance count is 8. **It is not the headline number**, because the project's reporting-granularity rule counts unique defect classes per benchmark, not instances. Under that rule:
