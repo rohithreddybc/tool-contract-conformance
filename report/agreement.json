@@ -1,7 +1,7 @@
 {
   "provenance": {
-    "git_commit": "edc9482f4fe288873673f88038a84584124af5c4",
-    "generated_at": "2026-08-29T17:14:24Z",
+    "git_commit": "eaf1bdd5de17bd4a093139b8ee11aee06ccadd48",
+    "generated_at": "2026-08-29T17:17:17Z",
     "python": "3.11.7",
     "script": "experiments/agreement.py",
     "protocol": "experiments/annotation_protocol.md"
