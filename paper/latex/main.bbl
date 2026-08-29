@@ -23,197 +23,155 @@
 
 \bibitem{liveclawbench26}
 Long, Du, Xu \emph{et~al.}, ``{LiveClawBench}: Benchmarking {LLM} agents on
-  complex, real-world assistant tasks,'' 2026, preprint; venue not yet
-  confirmed.
+  complex, real-world assistant tasks,'' 2026, preprint.
 
 \bibitem{medagentbench25}
 Jiang, Black, Geng, Park, Zou, Ng, and Chen, ``{MedAgentBench}: A virtual {EHR}
   environment to benchmark medical {LLM} agents,'' \emph{NEJM AI}, vol.~2,
-  no.~9, 2025, preprint version (arXiv:2501.14654, v2 2025-02-12, titled
-  ``MedAgentBench: A Realistic Virtual EHR Environment to Benchmark Medical LLM
-  Agents'') read directly; Table 3 is cited from that arXiv version, not from
-  the paywalled NEJM AI version.
+  no.~9, 2025, preprint version (arXiv:2501.14654) read directly; Table 3 cited
+  from that version.
 
 \bibitem{benchguard26}
 Tu, Wang, Lu, Huang, Qu, and Mostafavi, ``{BenchGuard}: Who guards the
   benchmarks? automated auditing of {LLM} agent benchmarks,'' 2026, accepted,
-  Conference on Language Modeling (COLM) 2026 -- confirmed verbatim on the
-  official COLM 2026 accepted-papers page
-  (colm.eventhosts.cc/Conferences/2026/AcceptedPapers), exact title and author
-  match among 856 accepted entries, checked 2026-08-21. Not yet Scopus-indexed
-  as of that date (COLM proceedings lag Scopus indexing).
+  Conference on Language Modeling (COLM) 2026.
 
 \bibitem{aba26}
 Wang, Bianchi, Zhu, Nie, Kwon, Dhingra, and Zou, ``Automated benchmark auditing
-  for {AI} agents and large language models,'' 2026, confirmed preprint-only: 0
-  Scopus results for title (checked 2026-08-21), no Comments/Journal-ref field
-  on the arXiv page.
+  for {AI} agents and large language models,'' 2026, preprint.
 
 \bibitem{toolveritas26}
 Bhat, Vaghasiya, Mohsin, and Aali, ``Benchmarking the benchmarks: A validity
-  audit of tool-calling evaluation,'' 2026, confirmed preprint-only: 0 Scopus
-  results for title (checked 2026-08-21), no Comments/Journal-ref field on the
-  arXiv page.
+  audit of tool-calling evaluation,'' 2026, preprint.
 
 \bibitem{safeaudit26}
 Chen, Yan, Zhang, and Zhang, ``Who tests the testers? systematic enumeration
-  and coverage audit of {LLM} agent tool call safety,'' 2026, v2, 2026-08-15.
-  Confirmed preprint-only: 0 Scopus results for title (checked 2026-08-21), no
-  Comments/Journal-ref field on the arXiv page.
+  and coverage audit of {LLM} agent tool call safety,'' 2026, preprint.
 
 \bibitem{toolgate26}
 Liu, Peng, Cao, Wang, Deng, Chen, Yin, and Zhang, ``{ToolGate}:
-  Contract-grounded and verified tool execution for {LLMs},'' 2026, confirmed
-  preprint-only: Scopus title search returns only two unrelated papers matched
-  on incidental keyword overlap, not this work; the arXiv Comments field reads
-  ``First version of ToolGate'' with no acceptance claim.
+  Contract-grounded and verified tool execution for {LLMs},'' 2026, preprint.
 
 \bibitem{abc26}
 Bhardwaj, ``Agent behavioral contracts: Formal specification and runtime
   enforcement for reliable autonomous {AI} agents,'' Zenodo, 2026, preprint,
-  not peer-reviewed. DOI resolves to a Zenodo deposit rather than arXiv;
-  cross-referenced by arXiv:2602.22302 (same title), whose Comments field reads
-  ``Also available on Zenodo: DOI https://doi.org/10.5281/zenodo.18775393''. 0
-  Scopus results.
+  not peer-reviewed.
 
 \bibitem{contract2tool26}
 Babu and Iyer, ``{Contract2Tool}: Learning preconditions and effects for
-  reliable tool-augmented {LLM} agents,'' 2026, preprint; venue not yet
-  confirmed.
+  reliable tool-augmented {LLM} agents,'' 2026, preprint.
 
 \bibitem{contractbench26}
 Wang, He, Wang, Xing, De, and Chen, ``{ContractBench}: Can {LLM} agents
-  preserve observation contracts?'' 2026, preprint; venue not yet confirmed.
+  preserve observation contracts?'' 2026, preprint.
 
 \bibitem{toolfuzz25}
 Milev, Balunovi\'{c}, Baader, and Vechev, ``{ToolFuzz} -- automated agent tool
-  testing,'' 2025, preprint; venue not yet confirmed.
+  testing,'' 2025, preprint.
 
 \bibitem{contractguard26}
 Iyer and Babu, ``The gate is only as honest as its contracts: {ContractGuard}
-  for the contract layer of risk-aware causal gating,'' 2026, preprint; venue
-  not yet confirmed.
+  for the contract layer of risk-aware causal gating,'' 2026, preprint.
 
 \bibitem{faulttaxonomy26}
 Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
-  taxonomy of types, symptoms, and root causes,'' 2026, preprint; venue not yet
-  confirmed.
+  taxonomy of types, symptoms, and root causes,'' 2026, preprint.
 
 \bibitem{jcontractor05}
 Karaorman and Abercrombie, ``j{C}ontractor: Introducing design-by-contract to
   {Java} using reflective bytecode instrumentation,'' \emph{Formal Methods in
-  System Design}, vol.~27, no.~3, 2005, scopus-confirmed: DOI match.
+  System Design}, vol.~27, no.~3, 2005.
 
 \bibitem{jass01}
 Bartetzko, Fischer, M\"{o}ller, and Wehrheim, ``Jass -- {Java} with
   assertions,'' \emph{Electronic Notes in Theoretical Computer Science
-  (ENTCS)}, vol.~55, no.~2, 2001, scopus-confirmed: DOI match.
+  (ENTCS)}, vol.~55, no.~2, 2001.
 
 \bibitem{contract26}
 Deng, Ma, Gao, and Sun, ``Efficient bug detection by inferring implicit {API}
   contract of pointer state transition,'' in \emph{Proceedings of the IEEE
-  International Conference on Dependable Systems and Networks (DSN)}, 2026,
-  scopus-confirmed: DOI match, exact title/authors/venue.
+  International Conference on Dependable Systems and Networks (DSN)}, 2026.
 
 \bibitem{icepick26}
 Ribeiro, Mamede, and Ferreira, ``Systematic {API} testing through model
   checking and executable contracts,'' in \emph{Proceedings of the IEEE
   International Conference on Software Testing, Verification and Validation
-  (ICST)}, 2026, scopus-confirmed: DOI match, exact title/authors/venue.
+  (ICST)}, 2026.
 
 \bibitem{agora25}
 Alonso, Ernst, Segura, and Ruiz-Cort\'{e}s, ``Test oracle generation for {REST}
   {APIs},'' \emph{ACM Transactions on Software Engineering and Methodology
-  (TOSEM)}, vol.~35, no.~1, p. art.\ 19, 2025, scopus-confirmed: DOI match.
+  (TOSEM)}, vol.~35, no.~1, p. art.\ 19, 2025.
 
 \bibitem{frames25}
 Cheon \emph{et~al.}, ``Enhancing design-by-contract with frame
   specifications,'' in \emph{Proceedings of the 20th International Conference
   on Software Technologies (ICSOFT)}.\hskip 1em plus 0.5em minus 0.4em\relax
-  SCITEPRESS, 2025, not in Scopus; confirmed via the SCITEPRESS publisher page,
-  where the DOI resolves.
+  SCITEPRESS, 2025.
 
 \bibitem{cogent23}
 Ghosal, Jonsson, and R\"{u}mmer, ``An active learning approach to synthesizing
   program contracts,'' in \emph{Lecture Notes in Computer Science}, vol.
-  14323.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2023,
-  scopus-confirmed: DOI match. Specific host conference not independently
-  identified; cited by LNCS volume.
+  14323.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2023.
 
 \bibitem{dlcontract23}
 Ahmed, Cruz, Imtiaz, Khairunnesa, and Rajan, ``Design by contract for deep
   learning {APIs},'' in \emph{Proceedings of the 31st ACM Joint European
   Software Engineering Conference and Symposium on the Foundations of Software
-  Engineering (ESEC/FSE)}, 2023, scopus-confirmed: DOI match.
+  Engineering (ESEC/FSE)}, 2023.
 
 \bibitem{segura18}
 Segura, Parejo, Troya, and Ruiz-Cort\'{e}s, ``Metamorphic testing of {RESTful}
   web {APIs},'' \emph{IEEE Transactions on Software Engineering}, vol.~44,
-  no.~11, 2018, scopus-confirmed: DOI match.
+  no.~11, 2018.
 
 \bibitem{segura16}
 Segura, Fraser, Sanchez, and Ruiz-Cort\'{e}s, ``A survey on metamorphic
   testing,'' \emph{IEEE Transactions on Software Engineering}, vol.~42, no.~9,
-  2016, scopus-confirmed: DOI match.
+  2016.
 
 \bibitem{chen18}
 Chen, Kuo, Liu, Tse, and Zhou, ``Metamorphic testing: A review of challenges
   and opportunities,'' \emph{ACM Computing Surveys}, vol.~51, no.~1, p. art.\
-  4, 2019, year and title corrected from an earlier draft that cited 2018 and a
-  paraphrased title: the Scopus DOI match resolves to 2019, and the actual
-  article title is ``Metamorphic testing: A review of challenges and
-  opportunities.''.
+  4, 2019.
 
 \bibitem{restler19}
 Atlidakis, Godefroid, and Polishchuk, ``{RESTler}: Stateful {REST} {API}
   fuzzing,'' in \emph{Proceedings of the 41st International Conference on
-  Software Engineering (ICSE)}, 2019, scopus-confirmed: DOI match.
+  Software Engineering (ICSE)}, 2019.
 
 \bibitem{godefroid20}
 Godefroid, Lehmann, and Polishchuk, ``Differential regression testing for
   {REST} {APIs},'' in \emph{Proceedings of the 29th ACM SIGSOFT International
-  Symposium on Software Testing and Analysis (ISSTA)}, 2020, scopus-confirmed:
-  DOI match.
+  Symposium on Software Testing and Analysis (ISSTA)}, 2020.
 
 \bibitem{abcchecklist25}
 Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
-  building rigorous agentic benchmarks,'' 2025, v5. Preprint; venue not yet
-  confirmed. Referred to in text as the Agentic Benchmark Checklist.
+  building rigorous agentic benchmarks,'' 2025, v5. Preprint. Referred to in
+  text as the Agentic Benchmark Checklist.
 
 \bibitem{taubench24}
 Yao, Shinn, Razavi, and Narasimhan, ``$\tau$-bench: A benchmark for
-  tool-agent-user interaction in real-world domains,'' 2024, preprint. This is
-  the benchmark audited by the Agentic Benchmark Checklist
-  \cite{abcchecklist25} (repo \texttt{sierra-research/tau-bench}), a distinct
-  artifact and codebase from $\tau^2$-bench \cite{tau2bench25}, the artifact
-  audited in this paper.
+  tool-agent-user interaction in real-world domains,'' 2024, preprint; distinct
+  artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,II).
 
 \bibitem{tau2bench25}
 Barres, Dong, Ray, Si, and Narasimhan, ``$\tau^2$-bench: Evaluating
-  conversational agents in a dual-control environment,'' 2025, v1, 2025-06-09,
-  no later version as of the audited commit. Preprint; this is the audited
-  artifact's own paper.
+  conversational agents in a dual-control environment,'' 2025, preprint.
 
 \bibitem{constructvalidity25}
 Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
   validity in large language model benchmarks,'' 2025, self-listed as NeurIPS
-  2025 Datasets and Benchmarks Track; not yet Scopus- or publisher-confirmed.
-  Cited here as self-described rather than as a confirmed proceedings entry.
+  2025 Datasets and Benchmarks Track; not independently confirmed.
 
 \bibitem{agentdojo24}
 Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
   ``{AgentDojo}: A dynamic environment to evaluate prompt injection attacks and
-  defenses for {LLM} agents,'' 2024, parent venue confirmed via Scopus
-  (2026-08-23): Advances in Neural Information Processing Systems, vol.\ 37,
-  2024, conference paper, exact title/author match, 63 citations. Scopus does
-  not tag NeurIPS sub-tracks, so the specific ``Datasets and Benchmarks Track''
-  label is \emph{not} independently confirmed and is not asserted here.
+  defenses for {LLM} agents,'' 2024, neurIPS 2024 (Scopus-confirmed); the
+  Datasets and Benchmarks Track sub-label is not independently confirmed.
 
 \bibitem{mmtoolsandbox26}
 Ma, Feng, Metz, Lu, Verma, and Dehghan, ``{MM-ToolSandBox}: A unified framework
-  for evaluating visual tool-calling agents,'' 2026, preprint; no
-  Comments/Journal-ref acceptance claim on the abstract page; not yet Scopus-
-  or publisher-confirmed. Matches the audited \texttt{apple/ml-mmtoolsandbox}
-  repository.
+  for evaluating visual tool-calling agents,'' 2026, preprint.
 
 \end{thebibliography}
