@@ -45,6 +45,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import functools
+import subprocess
 import re
 import sys
 from dataclasses import dataclass, field
@@ -101,6 +103,32 @@ class Report:
             out.setdefault(f.section, []).append(f)
         return out
 
+
+
+@functools.lru_cache(maxsize=None)
+def _resolves_in_our_git(short_hash: str) -> bool:
+    """True if `short_hash` names a commit in THIS repository.
+
+    The paper cites two kinds of hash. Benchmark commits (MedAgentBench 9926011,
+    tau2-bench c3398666) appear as full hashes in FINDINGS-VERIFIED.md, and the check
+    above matches short forms against those. But the paper also cites its OWN commits --
+    the two checker-freeze tags and the agent-experiment pre-registration -- and those
+    live in git, not in any markdown file. Without this the audit reports every one of
+    them as unknown, which is a false alarm that trains you to ignore the check.
+
+    It is also the check that matters most. A draft once cited 35c2dbf and 94adf1e for
+    the two freeze tags; the real hashes are 57b019d and 5824376. A wrong hash on a
+    pre-registration claim is falsifiable by a reviewer in one command, and nothing else
+    in the audit would have caught it.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(PROJECT_ROOT), "rev-parse", "--verify", "--quiet", f"{short_hash}^{{commit}}"],
+            capture_output=True, text=True, timeout=15,
+        )
+        return out.returncode == 0 and bool(out.stdout.strip())
+    except Exception:
+        return False
 
 def line_of(text: str, pos: int) -> int:
     return text.count("\n", 0, pos) + 1
@@ -1014,6 +1042,7 @@ def check_placeholder_discipline(text: str, report: Report) -> None:
 
 def check_commit_hash_consistency(text: str, report: Report) -> None:
     section = "2-internal-consistency"
+    _resolves_in_our_git.cache_clear() if hasattr(_resolves_in_our_git, "cache_clear") else None
     full_hashes: set[str] = set()
     for path in (FINDINGS_VERIFIED_MD, EXTERNAL_VERIFICATION_MD):
         if path.exists():
@@ -1025,7 +1054,7 @@ def check_commit_hash_consistency(text: str, report: Report) -> None:
         return
     short_hashes = {h for _, h in extract_commit_hashes(text) if 6 <= len(h) < 40}
     for h in sorted(short_hashes):
-        match = any(fh.startswith(h) for fh in full_hashes)
+        match = any(fh.startswith(h) for fh in full_hashes) or _resolves_in_our_git(h)
         report.add(section, f"commit short-hash `{h}` is a prefix of a known full hash",
                     "paper/main.md", "prefix of some 40-char hash in FINDINGS-VERIFIED.md / "
                     "EXTERNAL-VERIFICATION.md", "matched" if match else "NO MATCH FOUND",

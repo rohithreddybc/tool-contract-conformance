@@ -14,24 +14,29 @@ from pathlib import Path
 
 from analysis.score_at_risk import (
     KNOWN_AGENTDOJO_DEFECTS,
+    KNOWN_MMTOOLSANDBOX_DEFECTS,
     KNOWN_TAU2_DEFECTS,
     ReadProfile,
     _direct_function_index,
     _maximal_paths,
     _module_function_index,
     _profile_function,
+    agentdojo_defect_write_fields,
     agentdojo_task_classes,
     agentdojo_task_profile,
     build_agentdojo_rows,
     build_all_rows,
     build_medagentbench_rows,
+    build_mmtoolsandbox_rows,
     build_tau2_rows,
     collection_names,
     extract_state_paths,
     leaf_field_names,
     medagentbench_defect_fields,
     medagentbench_oracle_profile,
+    mmtoolsandbox_defect_write_fields,
     tau2_defect_write_fields,
+    terminal_field_names,
     transitive_read_profile,
     verify,
     write_rows,
@@ -89,6 +94,30 @@ class TestLeafFieldNamesAndCollections(unittest.TestCase):
     def test_collection_names_is_first_segment_after_root(self):
         maximal = [("post", "lines", "*", "data_refueling_gb"), ("post", "bills", "*", "total_due")]
         self.assertEqual(collection_names(maximal, "post"), frozenset({"lines", "bills"}))
+
+
+class TestTerminalFieldNames(unittest.TestCase):
+    def test_terminal_field_is_the_trailing_non_wildcard_segment(self):
+        maximal = [("post", "lines", "*", "data_refueling_gb"), ("post", "bills", "*", "total_due")]
+        self.assertEqual(terminal_field_names(maximal, "post"), frozenset({"data_refueling_gb", "total_due"}))
+
+    def test_nested_wrapper_object_does_not_leak_the_middle_collection_name(self):
+        # Regression check for the exact shape agentdojo_defect_write_fields() hits: a wrapper
+        # object (bank_account) containing a collection (scheduled_transactions) containing the
+        # actually-compared field (recurring), three levels deep. collection_names() would only
+        # strip 'bank_account' and leave 'scheduled_transactions' in the set;
+        # terminal_field_names() must strip both intermediate segments.
+        maximal = [("post", "bank_account", "scheduled_transactions", "*", "recurring")]
+        fields = terminal_field_names(maximal, "post")
+        self.assertEqual(fields, frozenset({"recurring"}))
+        self.assertNotIn("bank_account", fields)
+        self.assertNotIn("scheduled_transactions", fields)
+
+    def test_trailing_wildcard_falls_back_to_the_last_named_segment(self):
+        # cancel_reservation.yaml's eff.seats_released shape: the final subscript key is a
+        # non-constant expression, so the maximal path ends in '*' rather than a field name.
+        maximal = [("post", "flights", "*", "dates", "*", "available_seats", "*")]
+        self.assertEqual(terminal_field_names(maximal, "post"), frozenset({"available_seats"}))
 
 
 class TestProfileFunctionAndTransitiveResolution(unittest.TestCase):
@@ -281,18 +310,47 @@ class TestAgentDojoTaskProfile(unittest.TestCase):
         self.assertIn("end_time", profile["attribute_names"])
 
 
+class TestAgentDojoDefectWriteFields(unittest.TestCase):
+    # Step 1, now contract-driven exactly as tau2_defect_write_fields() is -- the whole point of
+    # closing this module's own documented "manually-seeded substitute" caveat. Pinned against
+    # FINDINGS-VERIFIED.md Finding 5 / Finding 6's own source citations, same as before, but the
+    # field names below now come from walking spec/contracts/agentdojo/*.yaml's own violated
+    # effect clause, not from a hand-typed string.
+    def test_recurring_propagated_derives_recurring_from_the_contract(self):
+        kd = next(k for k in KNOWN_AGENTDOJO_DEFECTS if k.tool == "update_scheduled_transaction")
+        self.assertEqual(kd.clause_id, "eff.recurring_propagated")
+        fields, max_paths, tier = agentdojo_defect_write_fields(kd)
+        self.assertIn("recurring", fields)
+        self.assertEqual(tier.value, "agent_visible")  # docstring-grounded, headline-eligible
+
+    def test_end_time_applied_derives_end_time_from_the_contract(self):
+        kd = next(k for k in KNOWN_AGENTDOJO_DEFECTS if k.tool == "reserve_car_rental")
+        # eff.end_time_propagated (the pre-fix, hand-typed clause id) does not exist in
+        # reserve_car_rental.yaml -- the real clause is eff.end_time_applied. Getting this wrong
+        # was itself part of the debt this module now closes.
+        self.assertEqual(kd.clause_id, "eff.end_time_applied")
+        fields, max_paths, tier = agentdojo_defect_write_fields(kd)
+        self.assertEqual(fields, frozenset({"end_time"}))
+        self.assertEqual(tier.value, "agent_visible")
+
+
 class TestBuildAgentDojoRows(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.rows = build_agentdojo_rows()
         cls.summaries = {r["tool"]: r for r in cls.rows if r["kind"] == "summary"}
+        cls.defects = {r["tool"]: r for r in cls.rows if r["kind"] == "defect"}
 
     def test_finding5_experiment_frame_is_not_contained_in_at_risk(self):
         # A genuine, mechanically-verified W6 containment failure, not a bug: every banking task
         # whose gold solution calls update_scheduled_transaction only touches amount/recipient,
         # never recurring; the one task whose oracle reads .recurring (UserTask6) reaches it
         # through a *different* tool (schedule_transaction). Both populations must still be
-        # reported, and the containment field must say so honestly.
+        # reported, and the containment field must say so honestly. Unchanged by the switch to
+        # contract-driven field derivation: terminal_field_names() still isolates 'recurring'
+        # (plus the harmless, never-matched selector field 'id') rather than the noisy
+        # 'scheduled_transactions' collection name a naive collection_names() strip would leave
+        # in, which would have inflated n_at_risk well past 1.
         s = self.summaries["update_scheduled_transaction"]
         self.assertEqual(s["n_at_risk"], 1)
         self.assertEqual(s["n_experiment_frame"], 4)
@@ -304,6 +362,63 @@ class TestBuildAgentDojoRows(unittest.TestCase):
         s = self.summaries["reserve_car_rental"]
         self.assertEqual(s["n_experiment_frame"], 0)
         self.assertTrue(s["experiment_frame_subset_of_at_risk"])
+
+    def test_defect_rows_carry_a_headline_tier_and_real_predicate_derived_paths(self):
+        for tool, clause_id in (
+            ("update_scheduled_transaction", "eff.recurring_propagated"),
+            ("reserve_car_rental", "eff.end_time_applied"),
+        ):
+            d = self.defects[tool]
+            self.assertEqual(d["clause_id"], clause_id)
+            self.assertEqual(d["headline_tier"], "agent_visible")
+            self.assertTrue(all(p.startswith("post.") for p in d["write_paths"]))
+
+
+# =============================================================================================
+# MM-ToolSandbox acceptance tests -- Step 1 only, Steps 2/3 blocked on AppWorld.
+# =============================================================================================
+
+
+class TestMMToolSandboxDefectWriteFields(unittest.TestCase):
+    def test_sort_by_forwarded_derives_sort_by_from_the_contract(self):
+        kd = next(k for k in KNOWN_MMTOOLSANDBOX_DEFECTS if k.tool == "venmo_social")
+        self.assertEqual(kd.clause_id, "eff.sort_by_forwarded")
+        fields, max_paths, tier = mmtoolsandbox_defect_write_fields(kd)
+        self.assertEqual(fields, frozenset({"sort_by"}))
+        self.assertEqual(tier.value, "agent_visible")
+        # The nested boundary_calls[*].kwargs.sort_by shape is exactly the case
+        # terminal_field_names() exists for: collection_names() would have stripped only
+        # 'boundary_calls' and left 'kwargs' in the match set.
+        self.assertTrue(any(p[-1] == "sort_by" for p in max_paths))
+
+
+class TestBuildMMToolSandboxRows(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.rows = build_mmtoolsandbox_rows()
+
+    def test_defect_row_is_contract_derived(self):
+        d = next(r for r in self.rows if r["kind"] == "defect")
+        self.assertEqual(d["benchmark"], "mm-toolsandbox")
+        self.assertEqual(d["tool"], "venmo_social")
+        self.assertEqual(d["clause_id"], "eff.sort_by_forwarded")
+        self.assertEqual(d["field_names"], ["sort_by"])
+        self.assertEqual(d["headline_tier"], "agent_visible")
+
+    def test_summary_never_claims_a_computed_at_risk_bound(self):
+        # No local, offline evaluator or task file exists for the AppWorld-tier scenarios that
+        # exercise venmo_social (FINDINGS-VERIFIED.md's git-lfs blocker), so Steps 2/3 cannot
+        # run. The summary must say so explicitly rather than silently report zero -- the same
+        # W2 discipline the MedAgentBench "never print zero" rule already enforces for a
+        # different reason.
+        s = next(r for r in self.rows if r["kind"] == "summary")
+        self.assertEqual(s["score_at_risk_status"], "not_computable_appworld_unreachable")
+        self.assertIsNone(s["n_at_risk"])
+        self.assertIsNone(s["n_experiment_frame"])
+        self.assertNotEqual(s["score_at_risk_status"], "computed")
+
+    def test_no_task_verdict_rows_are_emitted(self):
+        self.assertFalse(any(r["kind"] == "task_verdict" for r in self.rows))
 
 
 # =============================================================================================
@@ -324,6 +439,14 @@ class TestBuildAllRowsAndVerify(unittest.TestCase):
         for r in rows:
             self.assertIn("benchmark", r)
             self.assertIn("tool", r)
+
+    def test_all_four_contract_bearing_and_case_study_benchmarks_are_present(self):
+        # tau2-bench, AgentDojo, and MM-ToolSandbox all now derive Step 1 from shipped
+        # contracts; MedAgentBench remains the static case study by design (zero contracts,
+        # FINDINGS-VERIFIED.md's own framing note).
+        rows = build_all_rows()
+        benchmarks = {r["benchmark"] for r in rows}
+        self.assertEqual(benchmarks, {"tau2-bench", "medagentbench", "agentdojo", "mm-toolsandbox"})
 
     def test_verify_round_trips_against_freshly_written_rows(self):
         import tempfile

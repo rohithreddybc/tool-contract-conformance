@@ -4,7 +4,8 @@ ARCHITECTURE-FINAL.md sec 1 ("score-at-risk analysis... must be section 3 of the
 script in an appendix") and sec 4 ("Score-at-risk analysis (analysis/score_at_risk.py)").
 REVIEW-RESPONSE.md W2 (oracle-grounding classification, never print zero for a transcript-
 grounded oracle) and W6 (two different "affected task" definitions; state the bound's
-direction). FINDINGS-VERIFIED.md carries the seven confirmed findings this module traces.
+direction). FINDINGS-VERIFIED.md carries 8 confirmed findings across 4 environments -- 7 unique
+benchmark-class cells, 4 headline-eligible -- this module traces.
 
 Three static steps, no model in the loop, no agent runs (ARCHITECTURE-FINAL.md sec 4 and sec 10
 "Zero LLM" bucket, which explicitly lists "score-at-risk analysis" and "probes" together):
@@ -21,12 +22,13 @@ Three static steps, no model in the loop, no agent runs (ARCHITECTURE-FINAL.md s
   3. Evaluator -> tasks. Enumerate tasks whose verdict depends on any field in the Step
      1 / Step 2 intersection, from the benchmark's own pinned task-definition files.
 
-Everything here reads only pinned, offline files: contract YAMLs (spec/contracts/tau2/), the
-tau2 source snapshot (.tau2-src-c3398666/), the tau2 task JSON files inside it, the pinned
-MedAgentBench grader (repro/env/refsol.py, sha256-pinned) and its task file
-(repos/medagentbench/), and the AgentDojo v1 user-task suites (repos/agentdojo/). No network
-call, no subprocess, no tau2 venv, no model. `--verify` re-derives every row from these same
-files and diffs against what is on disk, for the project's numbers audit.
+Everything here reads only pinned, offline files: contract YAMLs (spec/contracts/tau2/,
+spec/contracts/agentdojo/, spec/contracts/mmtoolsandbox/), the tau2 source snapshot
+(.tau2-src-c3398666/), the tau2 task JSON files inside it, the pinned MedAgentBench grader
+(repro/env/refsol.py, sha256-pinned) and its task file (repos/medagentbench/), and the AgentDojo
+v1 user-task suites (repos/agentdojo/). No network call, no subprocess, no tau2 venv, no model.
+`--verify` re-derives every row from these same files and diffs against what is on disk, for the
+project's numbers audit.
 
 WHERE THIS MODULE DEVIATES FROM A NAIVE READING OF ARCHITECTURE-FINAL.md SEC 4, AND WHY
 --------------------------------------------------------------------------------------------
@@ -47,13 +49,29 @@ did not survive contact with the code as cleanly as a one-line spec sentence imp
     about the read site, not a set-membership question about field names, so this module adds a
     read-site provenance classification (state_grounded / transcript_grounded / mixed) as a
     first-class output alongside the field intersection, per task, per grader function.
-  * AgentDojo (repos/AGENTDOJO-SPIKE.md) has no Contract YAML in this milestone (contract
-    authoring for benchmarks 3+ is future work) and no `mutates_state` tag on its tools, so Step
-    1 cannot start from a shipped contract clause the way it does for tau2. This module derives
-    AgentDojo's defect fields directly from FINDINGS-VERIFIED.md Finding 5 / Finding 6's own
-    source citations instead (KNOWN_AGENTDOJO_DEFECTS below) and is explicit that this is a
-    narrower, manually-seeded substitute for Step 1's contract-driven derivation -- not a claim
-    that AgentDojo has been contract-audited to the same standard as tau2.
+  * AgentDojo now has shipped Contract YAMLs (spec/contracts/agentdojo/, 7 contracts, 8
+    validator checks, zero skips), so Step 1 runs exactly as it does for tau2: walk the
+    violated effect clause's own predicate AST (KNOWN_AGENTDOJO_DEFECTS below names the
+    contract file and clause id, not a field string) and collect the state paths it reads. The
+    one AgentDojo-specific wrinkle is terminal_field_names() rather than tau2's
+    leaf_field_names()/collection_names() split: AgentDojo's snapshot roots are a single wrapper
+    object per suite (`bank_account`, `reservation`) with the real collection one level further
+    in (`bank_account.scheduled_transactions`), so stripping only the first path segment after
+    `post` (tau2's collection_names) leaves the nested collection name in the match set and
+    inflates at-risk counts against unrelated tasks that merely enumerate that collection;
+    terminal_field_names() keeps only each maximal path's own trailing attribute, at whatever
+    depth, which is what actually varies between the defective clause and an unrelated one.
+  * MM-ToolSandbox now has shipped Contract YAMLs too (spec/contracts/mmtoolsandbox/, 5
+    contracts), and Step 1 runs the same way for its one known defect (Finding 7,
+    venmo_social/sort_by). Steps 2 and 3 do not: MM-ToolSandbox's task/grading logic for the
+    AppWorld-tier scenarios that exercise venmo_social lives inside the `appworld` package
+    itself, which cannot currently be cloned (git-lfs quota exceeded --
+    FINDINGS-VERIFIED.md "Reproducibility blocker recorded -- AppWorld"). There is no local,
+    offline evaluator source to parse and no local task file whose verdict-dependency could be
+    enumerated, so build_mmtoolsandbox_rows() reports Step 1 only and an explicit
+    `not_computable_appworld_unreachable` status for Steps 2/3 -- never a silent zero, the same
+    W2 discipline MedAgentBench's transcript-grounded verdict already applies for a different
+    reason.
   * tau2's own evaluator (evaluator/evaluator_env.py) is not one mechanism but two, and they
     have very different read granularity: DB-hash compares `self.db.model_dump()` end to end
     (toolkit.py:242-244) -- i.e. it reads *everything*, so any field a defective tool writes is
@@ -114,10 +132,13 @@ MEDAGENTBENCH_TASKS = MEDAGENTBENCH_ROOT / "data" / "medagentbench" / "test_data
 MEDAGENTBENCH_EVAL = MEDAGENTBENCH_ROOT / "src" / "server" / "tasks" / "medagentbench" / "eval.py"
 
 AGENTDOJO_ROOT = PROJECT_ROOT / "repos" / "agentdojo" / "src" / "agentdojo" / "default_suites" / "v1"
+AGENTDOJO_CONTRACTS = PROJECT_ROOT / "spec" / "contracts" / "agentdojo"
 AGENTDOJO_TASKS_FILE = {
     "banking": AGENTDOJO_ROOT / "banking" / "user_tasks.py",
     "travel": AGENTDOJO_ROOT / "travel" / "user_tasks.py",
 }
+
+MMTOOLSANDBOX_CONTRACTS = PROJECT_ROOT / "spec" / "contracts" / "mmtoolsandbox"
 
 
 # =============================================================================================
@@ -237,6 +258,33 @@ def collection_names(paths: list[tuple], root: str) -> frozenset:
     a defect's write paths live under (e.g. 'lines', 'bills'), used to distinguish a strong
     'exact_field' evaluator match from a weaker 'collection_only' one."""
     return frozenset(p[1] for p in paths if len(p) > 1 and p[0] == root)
+
+
+def terminal_field_names(paths: list[tuple], root: str) -> frozenset:
+    """The last non-'*' segment of each maximal path rooted at `root` -- the specific attribute
+    a clause actually compares or writes, at whatever depth it sits, excluding every container
+    segment along the way to it.
+
+    Unlike collection_names() (which strips only the first segment after `root`), this strips
+    every intermediate segment, not just the outermost one. tau2's DB collections sit directly
+    under the root (`post.flights`, `post.lines`), so stripping the first segment already
+    isolates the field. AgentDojo's snapshot roots are a single wrapper object per suite
+    (`post.bank_account`, `post.reservation`) with the real collection one level further in
+    (`bank_account.scheduled_transactions`) -- collection_names' first-segment rule would strip
+    only 'bank_account', leaving 'scheduled_transactions' in the match set and matching any task
+    that merely enumerates that collection, not only ones that read the specific field the
+    defective clause actually compares. Used by agentdojo_defect_write_fields() and
+    mmtoolsandbox_defect_write_fields() below in place of collection_names() for exactly this
+    reason; tau2's own two known defects keep using leaf_field_names()/collection_names(), which
+    is not a behavior change for them."""
+    names: set = set()
+    for p in paths:
+        if p and p[0] == root:
+            for seg in reversed(p[1:]):
+                if seg != "*":
+                    names.add(seg)
+                    break
+    return frozenset(names)
 
 
 _DOTTED_PATH_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$")
@@ -726,28 +774,60 @@ def build_medagentbench_rows() -> list[dict]:
 class KnownAgentDojoDefect:
     suite: str
     tool: str
-    field: str
+    contract_file: str  # relative to AGENTDOJO_CONTRACTS
+    clause_id: str
     finding_citation: str
 
 
-# No Contract YAML exists yet for AgentDojo in this milestone (repos/AGENTDOJO-SPIKE.md is a
-# go/no-go spike, not contract authoring) -- see module docstring. These two rows are pinned
-# directly from FINDINGS-VERIFIED.md's own source citations, the same epistemic status as
-# KNOWN_TAU2_DEFECTS above.
+# AgentDojo now has shipped Contract YAMLs (spec/contracts/agentdojo/, 7 contracts, all passing
+# spec/validate.py's 8 checks with zero skips) -- this table is this module's "pinned input" for
+# which clause is the known VIOLATES for each tool, the same role KNOWN_TAU2_DEFECTS plays for
+# tau2, epistemically pinned against FINDINGS-VERIFIED.md's own citations the same way. It is not
+# a findings.jsonl substitute either (that file's role is unchanged); it is where to look, not
+# what the fields are -- agentdojo_defect_write_fields() below derives the fields from the named
+# clause's own predicate AST, exactly as tau2_defect_write_fields() does.
 KNOWN_AGENTDOJO_DEFECTS = (
     KnownAgentDojoDefect(
         suite="banking",
         tool="update_scheduled_transaction",
-        field="recurring",
+        contract_file="update_scheduled_transaction.yaml",
+        clause_id="eff.recurring_propagated",
         finding_citation="FINDINGS-VERIFIED.md Finding 5",
     ),
     KnownAgentDojoDefect(
         suite="travel",
         tool="reserve_car_rental",
-        field="end_time",
+        contract_file="reserve_car_rental.yaml",
+        clause_id="eff.end_time_applied",
         finding_citation="FINDINGS-VERIFIED.md Finding 6",
     ),
 )
+
+
+def agentdojo_defect_write_fields(kd: KnownAgentDojoDefect) -> tuple[frozenset, list[tuple], HeadlineTier]:
+    """Step 1 for AgentDojo, contract-driven exactly as tau2_defect_write_fields() is: load the
+    named clause from the shipped contract and walk its own predicate AST for the 'post'-rooted
+    state paths it reads. Both known AgentDojo defects are a single violated effect clause (no
+    tau2-style 'tool_effects' precondition case here), so there is only the one derivation mode.
+
+    Uses terminal_field_names(), not leaf_field_names()/collection_names() -- see that
+    function's docstring for why tau2's first-segment collection-stripping rule is wrong for
+    AgentDojo's wrapper-object snapshot shape."""
+    contract = Contract.from_yaml(AGENTDOJO_CONTRACTS / kd.contract_file)
+    assert contract.tool == kd.tool, f"{kd.contract_file}: tool field {contract.tool!r} != {kd.tool!r}"
+    clause = next((c for c in contract.all_clauses() if c.id == kd.clause_id), None)
+    if clause is None:
+        raise ValueError(f"{kd.contract_file}: no clause {kd.clause_id!r}")
+
+    # check8_passed=True is a documented no-op here, not a bypass -- same justification as
+    # tau2_defect_write_fields() above: check 8 only tests tool_return/prompt_template
+    # provenance surfaces, and every clause this module uses for AgentDojo is 'docstring'.
+    tier = headline_tier(clause, check8_passed=True)
+
+    paths = extract_state_paths(clause.predicate, frozenset({"post"}))
+    max_paths = _maximal_paths(paths)
+    fields = terminal_field_names(max_paths, "post")
+    return fields, max_paths, tier
 
 
 def agentdojo_task_classes(suite: str) -> list[ast.ClassDef]:
@@ -806,7 +886,7 @@ def build_agentdojo_rows() -> list[dict]:
     for kd in KNOWN_AGENTDOJO_DEFECTS:
         classes = agentdojo_task_classes(kd.suite)
         helper_index = _module_function_index(str(AGENTDOJO_TASKS_FILE[kd.suite]))
-        clause_id = f"eff.{kd.field}_propagated"
+        fields, max_paths, tier = agentdojo_defect_write_fields(kd)
 
         rows.append(
             {
@@ -814,11 +894,12 @@ def build_agentdojo_rows() -> list[dict]:
                 "benchmark": "agentdojo",
                 "domain": kd.suite,
                 "tool": kd.tool,
-                "clause_id": clause_id,
+                "clause_id": kd.clause_id,
                 "defect_class": DefectClass.IGNORED_ARGUMENT.value,
+                "headline_tier": tier.value,
                 "finding_citation": kd.finding_citation,
-                "write_paths": [f"{kd.tool}.{kd.field}"],
-                "field_names": [kd.field],
+                "write_paths": [".".join(str(s) for s in p) for p in max_paths],
+                "field_names": sorted(fields),
             }
         )
 
@@ -832,7 +913,8 @@ def build_agentdojo_rows() -> list[dict]:
             in_experiment_frame = kd.tool in profile["gold_tool_calls"]
             if in_experiment_frame:
                 experiment_frame_ids.append(task_id)
-            if kd.field in profile["attribute_names"]:
+            matched = fields & profile["attribute_names"]
+            if matched:
                 at_risk_ids.append(task_id)
                 rows.append(
                     {
@@ -840,7 +922,7 @@ def build_agentdojo_rows() -> list[dict]:
                         "benchmark": "agentdojo",
                         "domain": kd.suite,
                         "tool": kd.tool,
-                        "clause_id": clause_id,
+                        "clause_id": kd.clause_id,
                         "defect_class": DefectClass.IGNORED_ARGUMENT.value,
                         "task_id": task_id,
                         "at_risk": True,
@@ -849,6 +931,7 @@ def build_agentdojo_rows() -> list[dict]:
                             "mechanism": "utility()",
                             "detail": profile["class_name"],
                             "confidence": "exact_field",
+                            "matched_fields": sorted(matched),
                         },
                         "in_experiment_frame": in_experiment_frame,
                         "score_at_risk_status": "computed",
@@ -862,8 +945,9 @@ def build_agentdojo_rows() -> list[dict]:
                 "benchmark": "agentdojo",
                 "domain": kd.suite,
                 "tool": kd.tool,
-                "clause_id": clause_id,
+                "clause_id": kd.clause_id,
                 "defect_class": DefectClass.IGNORED_ARGUMENT.value,
+                "headline_tier": tier.value,
                 "finding_citation": kd.finding_citation,
                 "n_tasks_total": len(classes),
                 "n_at_risk": len(at_risk_ids),
@@ -884,6 +968,123 @@ def build_agentdojo_rows() -> list[dict]:
 
 
 # =============================================================================================
+# MM-ToolSandbox
+# =============================================================================================
+
+
+@dataclass(frozen=True)
+class KnownMMToolSandboxDefect:
+    tool: str
+    contract_file: str  # relative to MMTOOLSANDBOX_CONTRACTS
+    clause_id: str
+    finding_citation: str
+
+
+# MM-ToolSandbox now has shipped Contract YAMLs (spec/contracts/mmtoolsandbox/, 5 contracts, all
+# passing spec/validate.py's 8 checks with zero skips). Same role as KNOWN_TAU2_DEFECTS and
+# KNOWN_AGENTDOJO_DEFECTS above: this table names the contract file and the known-VIOLATES
+# clause id, pinned against FINDINGS-VERIFIED.md Finding 7; it does not itself supply a field.
+KNOWN_MMTOOLSANDBOX_DEFECTS = (
+    KnownMMToolSandboxDefect(
+        tool="venmo_social",
+        contract_file="venmo_social.yaml",
+        clause_id="eff.sort_by_forwarded",
+        finding_citation="FINDINGS-VERIFIED.md Finding 7",
+    ),
+)
+
+
+def mmtoolsandbox_defect_write_fields(kd: KnownMMToolSandboxDefect) -> tuple[frozenset, list[tuple], HeadlineTier]:
+    """Step 1 for MM-ToolSandbox, contract-driven exactly as tau2_defect_write_fields() and
+    agentdojo_defect_write_fields() are: load the named clause from the shipped contract and
+    walk its own predicate AST for the 'post'-rooted state paths it reads (here,
+    post.boundary_calls -- adapters/_mmtoolsandbox_worker.py's recording stub for the one seam
+    this adapter can observe before AppWorld, per venmo_social.yaml's own header). Uses
+    terminal_field_names() for the same reason agentdojo_defect_write_fields() does: the
+    collection this clause reads (boundary_calls) sits directly under 'post', but the clause's
+    own comparisons are nested another two levels deeper (post.boundary_calls[*].kwargs.sort_by),
+    so collection_names' first-segment rule would strip only 'boundary_calls' and leave 'kwargs'
+    in the match set."""
+    contract = Contract.from_yaml(MMTOOLSANDBOX_CONTRACTS / kd.contract_file)
+    assert contract.tool == kd.tool, f"{kd.contract_file}: tool field {contract.tool!r} != {kd.tool!r}"
+    clause = next((c for c in contract.all_clauses() if c.id == kd.clause_id), None)
+    if clause is None:
+        raise ValueError(f"{kd.contract_file}: no clause {kd.clause_id!r}")
+
+    # check8_passed=True is a documented no-op here, not a bypass -- same justification as
+    # tau2_defect_write_fields() and agentdojo_defect_write_fields() above: check 8 only tests
+    # tool_return/prompt_template provenance surfaces, and this clause is 'docstring'.
+    tier = headline_tier(clause, check8_passed=True)
+
+    paths = extract_state_paths(clause.predicate, frozenset({"post"}))
+    max_paths = _maximal_paths(paths)
+    fields = terminal_field_names(max_paths, "post")
+    return fields, max_paths, tier
+
+
+def build_mmtoolsandbox_rows() -> list[dict]:
+    """Step 1 only. Steps 2 (field -> evaluator) and 3 (evaluator -> tasks) cannot run: the
+    AppWorld-tier scenarios that exercise venmo_social are graded by the `appworld` package
+    itself, which cannot currently be cloned (git-lfs quota exceeded --
+    FINDINGS-VERIFIED.md "Reproducibility blocker recorded -- AppWorld"). There is no local,
+    offline evaluator source to parse for read fields and no local task-definition file whose
+    verdict-dependency could be enumerated the way tau2's tasks.json or AgentDojo's
+    user_tasks.py are. Reporting a computed at-risk/experiment-frame count here would mean
+    silently treating an unreachable evaluator as a state-grounded one; instead this emits an
+    explicit `not_computable_appworld_unreachable` status, the same W2 "never print zero, say
+    why" discipline MedAgentBench's transcript-grounded verdict already applies for a different
+    reason."""
+    rows: list[dict] = []
+    for kd in KNOWN_MMTOOLSANDBOX_DEFECTS:
+        fields, max_paths, tier = mmtoolsandbox_defect_write_fields(kd)
+
+        rows.append(
+            {
+                "kind": "defect",
+                "benchmark": "mm-toolsandbox",
+                "domain": "",
+                "tool": kd.tool,
+                "clause_id": kd.clause_id,
+                "defect_class": DefectClass.IGNORED_ARGUMENT.value,
+                "headline_tier": tier.value,
+                "finding_citation": kd.finding_citation,
+                "write_paths": [".".join(str(s) for s in p) for p in max_paths],
+                "field_names": sorted(fields),
+            }
+        )
+
+        rows.append(
+            {
+                "kind": "summary",
+                "benchmark": "mm-toolsandbox",
+                "domain": "",
+                "tool": kd.tool,
+                "clause_id": kd.clause_id,
+                "defect_class": DefectClass.IGNORED_ARGUMENT.value,
+                "headline_tier": tier.value,
+                "finding_citation": kd.finding_citation,
+                "n_tasks_total": None,
+                "n_at_risk": None,
+                "n_experiment_frame": None,
+                "experiment_frame_subset_of_at_risk": None,
+                "oracle_grounding": "not_computable",
+                "score_at_risk_status": "not_computable_appworld_unreachable",
+                "bound_direction": (
+                    "Step 2 (field -> evaluator) and Step 3 (evaluator -> tasks) do not run: "
+                    "MM-ToolSandbox's grading logic for the AppWorld-tier scenarios that "
+                    "exercise venmo_social lives inside the appworld package itself, which "
+                    "cannot currently be cloned (git-lfs quota exceeded, FINDINGS-VERIFIED.md "
+                    "'Reproducibility blocker recorded -- AppWorld'). Only Step 1 (defect -> "
+                    "field, from the shipped contract's own violated effect clause) is reported "
+                    "here; no at-risk or experiment-frame count is computed, implied, or should "
+                    "be read as zero."
+                ),
+            }
+        )
+    return rows
+
+
+# =============================================================================================
 # Orchestration / CLI
 # =============================================================================================
 
@@ -893,6 +1094,7 @@ def build_all_rows() -> list[dict]:
     rows.extend(build_tau2_rows())
     rows.extend(build_medagentbench_rows())
     rows.extend(build_agentdojo_rows())
+    rows.extend(build_mmtoolsandbox_rows())
     return rows
 
 
