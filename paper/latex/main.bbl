@@ -77,6 +77,25 @@ Iyer and Babu, ``The gate is only as honest as its contracts: {ContractGuard}
 Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
   taxonomy of types, symptoms, and root causes,'' 2026, preprint.
 
+\bibitem{abcchecklist25}
+Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
+  building rigorous agentic benchmarks,'' 2025, v5. Preprint. Referred to in
+  text as the Agentic Benchmark Checklist.
+
+\bibitem{taubench24}
+Yao, Shinn, Razavi, and Narasimhan, ``$\tau$-bench: A benchmark for
+  tool-agent-user interaction in real-world domains,'' 2024, preprint; distinct
+  artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,II).
+
+\bibitem{tau2bench25}
+Barres, Dong, Ray, Si, and Narasimhan, ``$\tau^2$-bench: Evaluating
+  conversational agents in a dual-control environment,'' 2025, preprint.
+
+\bibitem{constructvalidity25}
+Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
+  validity in large language model benchmarks,'' 2025, self-listed as NeurIPS
+  2025 Datasets and Benchmarks Track; not independently confirmed.
+
 \bibitem{jcontractor05}
 Karaorman and Abercrombie, ``j{C}ontractor: Introducing design-by-contract to
   {Java} using reflective bytecode instrumentation,'' \emph{Formal Methods in
@@ -144,25 +163,6 @@ Atlidakis, Godefroid, and Polishchuk, ``{RESTler}: Stateful {REST} {API}
 Godefroid, Lehmann, and Polishchuk, ``Differential regression testing for
   {REST} {APIs},'' in \emph{Proceedings of the 29th ACM SIGSOFT International
   Symposium on Software Testing and Analysis (ISSTA)}, 2020.
-
-\bibitem{abcchecklist25}
-Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
-  building rigorous agentic benchmarks,'' 2025, v5. Preprint. Referred to in
-  text as the Agentic Benchmark Checklist.
-
-\bibitem{taubench24}
-Yao, Shinn, Razavi, and Narasimhan, ``$\tau$-bench: A benchmark for
-  tool-agent-user interaction in real-world domains,'' 2024, preprint; distinct
-  artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,II).
-
-\bibitem{tau2bench25}
-Barres, Dong, Ray, Si, and Narasimhan, ``$\tau^2$-bench: Evaluating
-  conversational agents in a dual-control environment,'' 2025, preprint.
-
-\bibitem{constructvalidity25}
-Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
-  validity in large language model benchmarks,'' 2025, self-listed as NeurIPS
-  2025 Datasets and Benchmarks Track; not independently confirmed.
 
 \bibitem{agentdojo24}
 Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
