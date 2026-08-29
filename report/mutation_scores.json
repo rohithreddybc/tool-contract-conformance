@@ -3883,8 +3883,20 @@
   },
   "open_world": {
     "tau2-telecom": {
-      "path": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\report\\mutation_open_world_tau2_raw.jsonl",
-      "status": "no data"
+      "adjudication_note": "Only mechanical rule 2 (declared-volatile field) applied. Rule 1 (interface-invisible) and the pre-registered 20% second-annotator dual-adjudication sample both require a human annotator and were NOT performed in this automated run -- flagged here rather than silently assumed. The adjudicated rate above is therefore a conservative one: a human pass could remove more escapes via rule 1, never fewer.",
+      "ambiguous_flagged_for_human_review": [],
+      "behaviorally_live_fraction_of_pairs": 0.0,
+      "escape_decomposition": {},
+      "escape_rate_adjudicated": null,
+      "escape_rate_raw": null,
+      "escape_reason_codes": {},
+      "n_behaviorally_live": 0,
+      "n_escapes_adjudicated": 0,
+      "n_escapes_raw": 0,
+      "n_mutation_tool_pairs": 2325,
+      "n_mutations_scored": 465,
+      "n_reclassified_equivalent_by_rule2": 0,
+      "per_tool": null
     },
     "toy": {
       "adjudication_note": "Only mechanical rule 2 (declared-volatile field) applied. Rule 1 (interface-invisible) and the pre-registered 20% second-annotator dual-adjudication sample both require a human annotator and were NOT performed in this automated run -- flagged here rather than silently assumed. The adjudicated rate above is therefore a conservative one: a human pass could remove more escapes via rule 1, never fewer.",
@@ -4042,7 +4054,7 @@
     "closed_world_seed": 20260902,
     "closed_world_source": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\report\\mutation_closed_world_raw.jsonl",
     "generated_by": "experiments/build_mutation_report.py",
-    "git_commit": "3ee976cf5349a602897dc9e6084aa845a87d85f5"
+    "git_commit": "fa3cb4a3810662a4376bdc33b975fbb915de75d2"
   },
   "v1_vs_v2_comparison": {
     "note": "v1 was scored against checker-freeze-v1, which had no code path for M-RESET or M-INVAR (both hard-UNTESTABLE structurally, not weak detection), never evaluated any frame clause, and silently skipped 17 of 19 tau2 contracts behind a two-entry lookup table. v2 (checker-freeze-v2) fixes all four; the mutant sample was invalidated and rescored per detector_analysis_plan.md sec 8. M-RESET and M-INVAR's v2 columns above are this refreeze's first REAL per-operator data for those two classes.",
@@ -4056,7 +4068,12 @@
           "n_behaviorally_live": 33,
           "n_mutations_scored": 281
         },
-        "v2": null
+        "v2": {
+          "escape_decomposition": {},
+          "escape_rate_raw_claim": null,
+          "n_behaviorally_live": 0,
+          "n_mutations_scored": 465
+        }
       },
       "toy": {
         "v1": {

@@ -106,3 +106,21 @@ Escape classification (sec 4.3) reuses `mutation.score.classify_escape` verbatim
   reason code; the run does not stall indefinitely on the next one. This same class of hang was
   not observed in the (equally subprocess-heavy) open-world tau2 run, which spawns a brand-new
   process per mutation rather than reusing one long-lived worker across hundreds of calls.
+
+---
+
+## v2 rerun, 2026-08-28: the tau2-telecom arm produces no usable escape rate
+
+Recorded by the session owner. `build_mutation_report.py` emits "See the caveat below" for this case and then prints no caveat — a dangling reference in generated output, and a generator bug worth fixing before the artifact is deposited.
+
+**The result.** 465 mutations scored, 2325 (mutation, tool) pairs, **0 behaviourally live**. Escape rate undefined, denominator zero.
+
+**This is not a statement about the checker.** A mutant counts as behaviourally live only if it produces a canonicalized difference on at least one probe from the frozen equivalence corpus (`detector_analysis_plan.md` §4.1). Zero live means the corpus never drove any mutated tool into a state where its mutation could show — so the arm measures the probe corpus, not the detector.
+
+**Why, specifically.** §2 of the plan defines the corpus as three parts: recorded real calls, signature-derived boundary probes, and precondition satisfy/violate probes. **Part 1 has no artifact** — no recorded-call corpus exists anywhere in this project independent of the checker's own probe generator, and borrowing from `dynamic/probes.py` would violate the §4.3 separation that makes the clause-gap/probe-gap decomposition measurable at all. That leaves parts 2 and 3, whose values are type-generic placeholders. On tau2's entity-keyed tools those fail existence checks (`customer_id="probe_value"` matches no customer) and raise before reaching any write.
+
+**What changed from v1.** v1 reported 33 live and 16 escapes on this arm. That run used a precompute cache built 2026-08-27 01:26, before the v2 checker existed; the cache was archived, not reused, and the v2 precompute produced a corpus that reaches even less of the code. Whether v1's 33 were genuine or artefacts of a stale cache is now unresolvable, which is itself a reason the archived file was kept.
+
+**How the paper must report this.** The open-world arm yields a usable escape rate on the toy domain only. For tau2-telecom the honest statement is that the arm could not be run to a meaningful conclusion, with the reason named. It must not be reported as a low escape rate, and it must not be quietly omitted — a denominator of zero is not evidence of a well-covered taxonomy.
+
+**What would fix it.** A recorded-call corpus captured from real benchmark runs, kept strictly separate from `dynamic/probes.py`. That is the missing §2 item 1 and it is the single highest-value piece of future work for this experiment.
