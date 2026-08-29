@@ -18,8 +18,9 @@ Rohith Reddy, Wenbin Zhang
 
 ## Abstract
 
-<!-- PLACEHOLDER — drafted last, after report/render.py tables exist.
-Committed shape (PAPER-OUTLINE.md, abstract rule):
+Agentic benchmarks score an agent by executing tool calls against a simulated environment and reading the resulting state, assuming the tool did what its interface advertised. No published benchmark audit tests that assumption; existing audits inspect tasks, gold solutions, and graders, never the tool implementation. We author executable contracts from each tool's advertised surfaces (docstring, schema, prompt text, return value), check implementations and state transitions against those contracts with a static and dynamic checker, and trace which task verdicts depend on state a defective tool should have written. Across four benchmarks we confirm four headline-eligible tool-layer defect cells, from eight verified instances: three demonstrated dynamically and one, MedAgentBench's Phantom Effect, statically. Its write path is a no-op, and its only grader reconstructs the write from the agent's transcript, gated on a fabricated success string, so its published action-success figures measure whether a well-formed request was emitted, not whether any record changed. Score-at-risk bounds are basis-tagged rather than pooled: an exact-field evaluator puts 1,135 of 2,285 telecom task verdicts at risk, while a coarser whole-database-hash basis puts all 50 airline tasks at risk by construction. Detection is precise (≥0.867, zero false positives over 25 flags) but recall is weak at Wilson lower bounds on real tools; an open-world mutation arm gives an escape rate ≥0.956 on a toy domain and an undefined rate, zero live mutants, on tau2. A pre-registered trajectory-replay check on ten affected tasks exercises the defect zero times and records zero verdict flips.
+
+<!-- COMMITTED SHAPE (source of record, PAPER-OUTLINE.md abstract rule) — retained after drafting, not a placeholder.
   - leads with the count that survives inspection: 4 HEADLINE-ELIGIBLE tool-layer cells
     across 4 benchmarks, counted from report/findings.jsonl, which is the artifact of record.
     Superseded twice: this block said 7 cells, then 5. AgentDojo's Phantom Effect cell went
@@ -42,9 +43,13 @@ Committed shape (PAPER-OUTLINE.md, abstract rule):
   - benchmark count N filled last [N11: per ARCHITECTURE-FINAL.md §9 risk 3].
 Two variants exist per REVIEW-RESPONSE.md Journal-Fit W2 (N=2 floor, N=4 target); the
 Sep 6 kill gate outcome (cleared 2026-08-21: 8 instances across 4 environments, 4 of them
-headline-eligible per report/findings.jsonl) selects the target variant. -->
+headline-eligible per report/findings.jsonl) selects the target variant.
+DRAFTED 2026-08-29: N=4 target variant selected (kill gate cleared 8/4 on 2026-08-21).
+Word count 245. Numbers sourced from report/findings.jsonl, report/score_at_risk.jsonl,
+report/mutation_summary.md, report/ab_summary.md — see drafting notes for the per-number
+citation. -->
 
-**Keywords** — agentic benchmarks, tool calling, measurement validity, design by contract, conformance testing, data quality. <!-- finalize with abstract -->
+**Keywords** — agentic benchmarks, tool calling, measurement validity, design by contract, conformance testing, data quality.
 
 ---
 
