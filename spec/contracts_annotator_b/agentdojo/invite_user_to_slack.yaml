@@ -1,0 +1,121 @@
+contract_version: "1.0"
+tool: invite_user_to_slack
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/slack.py
+  start_line: 93
+  end_line: 103
+
+signature:
+  args:
+    user:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/slack.py
+        line: 96
+        quote: ":param user: The user to invite."
+    user_email:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/slack.py
+        line: 97
+        quote: ":param user_email: The user email where invite should be sent."
+  returns: "None (the function has no return statement and is annotated -> None)."
+
+preconditions:
+  - id: pre.user_not_already_present
+    text: "the user must not already be a member of the workspace"
+    predicate: "args.user not in pre.slack.users"
+    provenance:
+      surface: tool_return
+      file: src/agentdojo/default_suites/v1/tools/slack.py
+      line: 100
+      quote: "User {user} already in the users list"
+
+effects:
+  - id: eff.user_added_to_workspace
+    text: "the user is added to the Slack workspace's user list"
+    predicate: "args.user in post.slack.users"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/slack.py
+      line: 94
+      quote: "Invites a user to the Slack workspace."
+
+frame:
+  - id: frame.channels_unchanged
+    path: slack.channels
+    mode: unchanged
+    text: "inviting a user to the workspace does not create or remove channels"
+    inferred: true
+
+  - id: frame.channel_inbox_unchanged
+    path: slack.channel_inbox
+    mode: unchanged
+    text: "inviting a user to the workspace does not touch any channel's message history"
+    inferred: true
+
+  - id: frame.other_users_unchanged
+    path: slack.users.[]
+    mode: unchanged
+    text: "existing users' entries in the user list are not altered by inviting a new one"
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    invite_user_to_slack is annotated -> None and has no return statement; the sole advertised
+    outcome branch besides the unconditional docstring promise is the raise on line 100. Since
+    the function's only documented way of not fulfilling "Invites a user to the Slack workspace"
+    is that raise, a call that does not raise is the interface's only available signal that the
+    invite (i.e. the user-list addition) went through.
+  provenance:
+    surface: docstring
+    file: src/agentdojo/default_suites/v1/tools/slack.py
+    line: 94
+    quote: "Invites a user to the Slack workspace."
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/slack.py
+    line: 100
+    quote: "User {user} already in the users list"
+
+notes: >
+  user_email is documented as "The user email where invite should be sent" -- a promise that the
+  argument does something -- but the function body (lines 99-103) never reads it; only `user` is
+  used. There is also no field anywhere in the Slack state model (users, channels,
+  user_channels, user_inbox, channel_inbox; see tests/fixtures/agentdojo_slack_state.json) that
+  could record "an invite email was sent," so this specific promise is not checkable against the
+  available state schema at all -- I did not fabricate a path for it. It is left as effective:
+  true on the argSpec per the schema's own guidance ("effective" reflects what is advertised, not
+  what is checkable), which routes it to the Ignored Argument prober rather than to a clause I
+  would have to invent evidence for.
+
+  The function also initializes slack.user_inbox[user] = [] and slack.user_channels[user] = []
+  (lines 102-103); the docstring says nothing about inboxes or channel membership for a newly
+  invited user, so no effect clause was written for either -- adding one would be inferring
+  intent from the implementation, which the task instructions rule out.
+
+  frame.other_users_unchanged uses the "[]" wildcard over the whole users list rather than
+  excluding the newly appended entry, because the frame-path grammar has no way to reference
+  "all entries except the one this call is documented to add" (the same grammar limitation noted
+  in the worked cancel_reservation example for state.reservations.*). Since users are represented
+  as bare strings rather than keyed records, and this clause's predicate only needs to hold over
+  the elements that existed pre-call, this one happens to still be sound: every element of
+  pre.slack.users is drawn from a fixed dict-of-users style is not applicable here (it's a plain
+  list of strings), so "unchanged" over the wildcard is checking that the existing string entries
+  are not mutated in place, which is true regardless of the append; I flag it because path
+  scoping over a growing list is a fine target for adjudication if the second annotator reads the
+  grammar differently.

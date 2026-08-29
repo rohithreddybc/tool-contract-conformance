@@ -1,0 +1,157 @@
+contract_version: "1.0"
+tool: refuel_data
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/telecom/tools.py
+  start_line: 607
+  end_line: 657
+  note: "@is_tool(ToolType.WRITE) at line 607 marks this as a mutating tool."
+
+signature:
+  args:
+    customer_id:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/tau2/domains/telecom/tools.py
+        line: 617
+        quote: "customer_id: ID of the customer who owns the line."
+    line_id:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/tau2/domains/telecom/tools.py
+        line: 618
+        quote: "line_id: ID of the line to refuel data for."
+    gb_amount:
+      type: float
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/tau2/domains/telecom/tools.py
+        line: 619
+        quote: "gb_amount: Amount of data to add in gigabytes."
+  returns: "Dictionary with success status, message, charge amount, and updated line if applicable."
+
+preconditions:
+  - id: pre.line_active
+    text: "Line status must be Active"
+    predicate: "any(l.line_id == args.line_id and l.status == 'Active' for l in pre.lines)"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 613
+      quote: "Checks: Line status must be Active, Customer owns the line."
+
+  - id: pre.customer_owns_line
+    text: "Customer owns the line"
+    predicate: "any(c.customer_id == args.customer_id and args.line_id in c.line_ids for c in pre.customers)"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 613
+      quote: "Checks: Line status must be Active, Customer owns the line."
+
+effects:
+  - id: eff.data_refueling_increases
+    text: "Adds data to the line"
+    predicate: >
+      any(
+        pre_l.line_id == args.line_id and post_l.line_id == args.line_id
+        and post_l.data_refueling_gb == pre_l.data_refueling_gb + args.gb_amount
+        for pre_l in pre.lines for post_l in post.lines
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 614
+      quote: "Logic: Adds data to the line and charges customer based on the plan's refueling rate."
+
+  - id: eff.customer_billed
+    text: "charges customer based on the plan's refueling rate, added to the customer's bill"
+    predicate: >
+      (
+        sum(b.total_due for b in post.bills if b.bill_id in [bi for c in post.customers if c.customer_id == args.customer_id for bi in c.bill_ids])
+        >
+        sum(b.total_due for b in pre.bills if b.bill_id in [bi for c in pre.customers if c.customer_id == args.customer_id for bi in c.bill_ids])
+      ) if args.gb_amount > 0 else (
+        sum(b.total_due for b in post.bills if b.bill_id in [bi for c in post.customers if c.customer_id == args.customer_id for bi in c.bill_ids])
+        ==
+        sum(b.total_due for b in pre.bills if b.bill_id in [bi for c in pre.customers if c.customer_id == args.customer_id for bi in c.bill_ids])
+      )
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/telecom/tools.py
+      line: 612
+      quote: "Refuels data for a specific line, adding to the customer's bill."
+
+frame:
+  - id: frame.devices_unchanged
+    path: state.devices
+    mode: unchanged
+    text: "refueling data never touches device records"
+    inferred: true
+
+  - id: frame.plans_unchanged
+    path: state.plans
+    mode: unchanged
+    text: "the plan catalog is not modified by a data refuel"
+    inferred: true
+
+  - id: frame.line_status_unchanged
+    path: state.lines.[].status
+    mode: unchanged
+    text: "refueling does not change a line's status"
+    inferred: true
+
+  - id: frame.line_phone_unchanged
+    path: state.lines.[].phone_number
+    mode: unchanged
+    text: "refueling does not change a line's phone number"
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The docstring's Raises section states the tool raises ValueError whenever the declared
+    checks fail or an entity is not found, and its Returns section describes the dict as
+    carrying "success status, message, charge amount, and updated line" -- i.e. the returned
+    dict is presented as the record of a completed refuel, not a partial-success envelope. No
+    effect on this tool is advertised as deferred, so an error-free result is the interface's
+    only agent-visible signal that both the data addition and the charge were applied.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/telecom/tools.py
+    line: 625
+    quote: "ValueError: If customer, line, or plan not found, or if checks fail."
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/telecom/tools.py
+    line: 625
+    quote: "ValueError: If customer, line, or plan not found, or if checks fail."
+
+reset:
+  predicate: "post == pre"
+  scope: unknown
+
+notes: >
+  The docstring's own "Checks:" line names exactly two preconditions (line active, customer
+  owns line); it does not mention gb_amount positivity, so no precondition clause was written
+  for that even though the body independently guards it -- inventing it would not be grounded
+  in an advertised surface. eff.customer_billed cannot cite an exact charge formula: the
+  docstring only says "based on the plan's refueling rate" without stating the multiplier, so
+  the clause asserts direction of change (strictly greater when gb_amount > 0, unchanged
+  otherwise) rather than an exact amount. The predicate for eff.customer_billed deliberately
+  avoids referencing result.charge: the shared synthetic fixture's "result" key is empty for
+  this domain, and subscripting a missing result field raises PathError under check 5, so the
+  charge is verified through the bill total instead.

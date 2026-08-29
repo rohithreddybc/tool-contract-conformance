@@ -1,0 +1,143 @@
+contract_version: "1.0"
+tool: cancel_reservation
+benchmark: tau2-bench
+commit: c3398666
+source:
+  file: src/tau2/domains/airline/tools.py
+  start_line: 338
+  end_line: 368
+  note: "@is_tool(ToolType.WRITE) at line 338 marks this as a mutating tool."
+
+# CONTAMINATION DISCLOSURE (see report): this contract was NOT authored blind. The required
+# reading spec/PREDICATE-GRAMMAR.md sec 5 is a full worked example for this exact tool, at this
+# exact commit, including the finished contract, the grounding-tier correction for the seat
+# clause, the "Finding 3" narrative, and the frame-grammar workaround below. Everything in this
+# file should be read as contaminated, not as an independent replicate.
+
+signature:
+  args:
+    reservation_id:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/tau2/domains/airline/tools.py
+        line: 344
+        quote: "reservation_id: The reservation ID, such as 'ZFA04Y'."
+  returns: "The updated reservation."
+
+preconditions:
+  - id: pre.reservation_exists
+    text: "the reservation must exist"
+    predicate: "args.reservation_id in pre.reservations"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 350
+      quote: "ValueError: If the reservation is not found."
+
+effects:
+  - id: eff.status_cancelled
+    text: "the reservation is marked cancelled"
+    predicate: "post.reservations[args.reservation_id].status == 'cancelled'"
+    provenance:
+      surface: docstring
+      file: src/tau2/domains/airline/tools.py
+      line: 341
+      quote: "Cancel the whole reservation."
+
+  - id: eff.payment_refunded
+    text: "the amount paid for the reservation is refunded to the original payment methods"
+    predicate: >
+      sum(p.amount for p in post.reservations[args.reservation_id].payment_history) == 0
+    provenance:
+      surface: prompt_template
+      file: data/tau2/domains/airline/policy.md
+      line: 152
+      quote: "The refund will go to original payment methods within 5 to 7 business days."
+
+  - id: eff.seats_released
+    text: "cancelling a reservation releases the seats it held back to inventory"
+    predicate: >
+      all(
+        post.flights[f.flight_number].dates[f.date].available_seats[pre.reservations[args.reservation_id].cabin]
+        == pre.flights[f.flight_number].dates[f.date].available_seats[pre.reservations[args.reservation_id].cabin]
+           + len(pre.reservations[args.reservation_id].passengers)
+        for f in pre.reservations[args.reservation_id].flights
+      )
+    provenance:
+      surface: maintainer_annotation
+      file: src/tau2/domains/airline/tools.py
+      line: 367
+      quote: "Seats release not implemented for cancellation!!!"
+    inferred: false
+
+frame:
+  - id: frame.users_unchanged
+    path: state.users
+    mode: unchanged
+    text: "cancelling one reservation does not modify user records"
+    inferred: true
+
+success_signal:
+  predicate: "'error' not in result"
+  biconditional: true
+  justification: >
+    The tool returns the mutated reservation object on the success path and raises on the one
+    declared failure (reservation not found), so a returned reservation is the interface's only
+    signal that the whole cancellation was applied. No effect on this tool carries a deferral
+    quote that matches the grammar's deferral-word check (see notes), so none is marked
+    advertised_deferred even though eff.payment_refunded's own provenance names a multi-day
+    window.
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 341
+    quote: "Cancel the whole reservation."
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: docstring
+    file: src/tau2/domains/airline/tools.py
+    line: 350
+    quote: "ValueError: If the reservation is not found."
+
+invariants:
+  - id: inv.seat_conservation
+    text: "available seats never go negative"
+    predicate: >
+      all(
+        post.flights[fn].dates[d].available_seats[c] >= 0
+        for fn in post.flights for d in post.flights[fn].dates
+        if 'available_seats' in post.flights[fn].dates[d]
+        for c in post.flights[fn].dates[d].available_seats
+      )
+    inferred: true
+
+reset:
+  predicate: "post == pre"
+  scope: unknown
+
+notes: >
+  eff.seats_released is grounded in maintainer_annotation, not tool_return: the quoted text is
+  the argument of a logger.warning call (line 367), not part of the return expression at line
+  368, so it fails validator check 8 for the tool_return tier and is not headline-eligible.
+  I looked for an agent-visible promise of seat release in the docstring and in
+  data/tau2/domains/airline/policy.md and found none; "## Cancel flight" describes eligibility
+  rules and refund timing but says nothing about inventory. eff.payment_refunded is grounded in
+  policy.md, which is a prompt_template surface (it reaches the agent's system prompt) and is
+  therefore headline-eligible in principle -- but its own provenance quote ("within 5 to 7
+  business days") states the refund is not instantaneous, and the schema's advertised_deferred
+  flag exists exactly for this situation. I could not set it: validate.py's check 6 requires the
+  provenance quote to contain one of a fixed word list (defer/async/lag/later/eventually/
+  pending/"not implemented"/"not applied"), and "within 5 to 7 business days" contains none of
+  them. The clause is therefore written as an ordinary same-call postcondition, which may not
+  faithfully represent a multi-day-deferred promise -- this is a grammar gap, not a claim that
+  the refund is synchronous. frame.other_reservations could not be expressed for the same reason
+  documented in PREDICATE-GRAMMAR.md sec 5 (state.reservations.* under mode:unchanged would
+  contradict eff.status_cancelled, and there is no exclusion syntax), so frame.users_unchanged
+  substitutes a true but strictly weaker claim.

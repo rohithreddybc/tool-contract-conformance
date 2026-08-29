@@ -1,0 +1,197 @@
+contract_version: "1.0"
+tool: venmo_social
+benchmark: mmtoolsandbox
+commit: 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
+source:
+  file: mmtoolsandbox/tools/mini/venmo.py
+  start_line: 345
+  end_line: 486
+  note: >
+    venmo_social is a domain/action dispatcher that forwards to functions in
+    mmtoolsandbox.tools.appworld.venmo via the _get() indirection at lines 417-481; this
+    contract covers only the friend-add, friend-remove, and like-toggle branches, the clearest
+    single-sentence promises in the docstring. See notes for what was left uncovered.
+
+signature:
+  args:
+    domain:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 393
+        quote: "domain: The social domain."
+    action:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 394
+        quote: "action: The specific action within the domain."
+    user_email:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 395
+        quote: "user_email: Email address (for friend add/remove)."
+    entity_type:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 399
+        quote: "entity_type: Entity type for like - \"transaction\" or \"comment\"."
+    entity_id:
+      type: int
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 400
+        quote: "entity_id: Entity ID for like (transaction_id or comment_id)."
+    like:
+      type: bool
+      effective: true
+      provenance:
+        surface: docstring
+        file: mmtoolsandbox/tools/mini/venmo.py
+        line: 401
+        quote: "like: True to like, False to unlike."
+  returns: "dict[str, Any] | list[dict[str, Any]], shape dependent on domain/action; see docstring Returns section."
+
+preconditions:
+  - id: pre.friend_add_requires_email
+    text: "friend add requires user_email"
+    predicate: >
+      (args.user_email != None) if (args.domain == 'friend' and args.action == 'add') else True
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 376
+      quote: "add - Add a friend. Requires user_email."
+
+  - id: pre.friend_remove_requires_email
+    text: "friend remove requires user_email"
+    predicate: >
+      (args.user_email != None) if (args.domain == 'friend' and args.action == 'remove') else True
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 377
+      quote: "remove - Remove a friend. Requires user_email."
+
+  - id: pre.like_toggle_requires_fields
+    text: "like toggle requires entity_type, entity_id, and like"
+    predicate: >
+      (args.entity_type != None and args.entity_id != None and args.like != None)
+      if (args.domain == 'like' and args.action == 'toggle') else True
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 380
+      quote: "toggle - Like or unlike. Requires entity_type (transaction/comment),"
+
+effects:
+  - id: eff.friend_add_delegated
+    text: "a friend-add request for the given user_email is issued"
+    predicate: >
+      (
+        any(
+          c.tool == 'venmo_add_friend' and c.kwargs.user_email == args.user_email
+          for c in post.boundary_calls
+        )
+      ) if (args.domain == 'friend' and args.action == 'add') else True
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 376
+      quote: "add - Add a friend. Requires user_email."
+
+  - id: eff.friend_remove_delegated
+    text: "a friend-remove request for the given user_email is issued"
+    predicate: >
+      (
+        any(
+          c.tool == 'venmo_remove_friend' and c.kwargs.user_email == args.user_email
+          for c in post.boundary_calls
+        )
+      ) if (args.domain == 'friend' and args.action == 'remove') else True
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 377
+      quote: "remove - Remove a friend. Requires user_email."
+
+  - id: eff.like_toggle_delegated
+    text: "a like or unlike request for the given entity is issued, transaction-liking routed by the like flag"
+    predicate: >
+      (
+        any(
+          c.tool == 'venmo_like_transaction' and c.kwargs.transaction_id == args.entity_id
+          for c in post.boundary_calls
+        ) if args.like == True else any(
+          c.tool == 'venmo_unlike_transaction' and c.kwargs.transaction_id == args.entity_id
+          for c in post.boundary_calls
+        )
+      ) if (args.domain == 'like' and args.action == 'toggle' and args.entity_type == 'transaction') else True
+    provenance:
+      surface: docstring
+      file: mmtoolsandbox/tools/mini/venmo.py
+      line: 380
+      quote: "toggle - Like or unlike. Requires entity_type (transaction/comment),"
+
+success_signal:
+  predicate: "'error' not in result"
+  provenance:
+    surface: docstring
+    file: mmtoolsandbox/tools/mini/venmo.py
+    line: 372
+    quote: "Browse and interact with the Venmo social feed."
+
+notes: >
+  This tool multiplexes four domains (friend, like, comment, feed) across up to nine actions
+  behind one signature; a full contract would need one precondition/effect pair per
+  domain/action combination the docstring documents (friend search; comment create, show,
+  update, delete, list; feed show). Given the annotation budget for this study I operationalized
+  only friend add, friend remove, and like toggle on entity_type == "transaction" -- the three
+  branches with the plainest single-sentence "Requires X" promises and directly attributable
+  underlying delegate calls (venmo_add_friend, venmo_remove_friend, venmo_like_transaction,
+  venmo_unlike_transaction at lines 417-438). The remaining domain/action branches are left
+  uncovered rather than filled in speculatively; per the annotation protocol's segmentation rule
+  3 they should be recorded as uncovered advertised-surface sentences, not silently dropped.
+
+  Grounding tier for the effect predicates: venmo_social is itself a thin dispatcher -- the
+  actual mutation happens in mmtoolsandbox.tools.appworld.venmo, a module this contract does not
+  have visibility into, and this benchmark's adapter does not snapshot that module's state at
+  all. tests/fixtures/mmtoolsandbox_venmo_boundary_state.json shows the only observable snapshot
+  key is `boundary_calls`, a list of {tool, kwargs} records of what venmo_social forwarded to.
+  Given that, the effect predicates above check boundary_calls entries rather than any Venmo
+  domain state (friends, likes) -- there is no such state to check through this adapter. The
+  literal tool-name strings ("venmo_add_friend" etc.) are not agent-visible; they come from
+  reading the dispatch table in the source (lines 417, 419, 436, 438), not from the docstring.
+  I kept each clause's provenance on the docstring sentence that states the promise ("Add a
+  friend. Requires user_email.") on the reasoning that the provenance records what is being
+  operationalized, while the predicate's exact state path is simply whatever the adapter exposes
+  -- the same relationship the worked cancel_reservation example has between a docstring
+  sentence and a `post.reservations[...]` path the docstring never names. A second annotator
+  could reasonably instead mark these inferred: true on the theory that the boundary_calls proxy
+  is itself an adapter artifact rather than part of what the interface advertises; I consider
+  this one of the more genuinely ambiguous calls in this batch and would not be surprised if it
+  is adjudicated the other way.
+
+  No frame clauses are written: the only observable state is an append-only call log, and the
+  frame-path grammar has no way to assert "prior entries are unmodified, only a new one is
+  appended" (no slice/index-range primitive, only "*"/"[]"/"**" wildcards that would each also
+  match the newly appended record) -- the same class of expressiveness gap noted elsewhere in
+  this batch.
+
+  args.like is typed bool but defaults to a NotGiven sentinel, not None, when omitted; the
+  precondition/effect guards above compare against None as a best-effort proxy for "was this
+  argument supplied," since I do not know how this adapter's `args` binding represents an
+  omitted NotGiven-defaulted parameter (whether the key is absent, set to None, or serializes the
+  sentinel itself) and no convention for it is documented in spec/PREDICATE-GRAMMAR.md.

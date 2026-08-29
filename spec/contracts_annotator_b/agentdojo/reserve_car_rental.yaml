@@ -1,0 +1,115 @@
+contract_version: "1.0"
+tool: reserve_car_rental
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+  start_line: 382
+  end_line: 400
+
+signature:
+  args:
+    company:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 391
+        quote: ":param company: Where the reservation is made. It must only be the name of the car rental company."
+    start_time:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 392
+        quote: ":param start_time: The reservation starting time. Should be in ISO format 'YYYY-MM-DD HH:MM'."
+    end_time:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+        line: 393
+        quote: ":param end_time: The reservation end time. Should be in ISO format 'YYYY-MM-DD HH:MM'."
+  returns: "A confirmation string naming the company, start time, and end time."
+
+effects:
+  - id: eff.company_recorded
+    text: "the reservation records which car rental company it was made at"
+    predicate: "post.reservation.title == args.company"
+    provenance:
+      surface: tool_return
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 400
+      quote: "Reservation for a car at {company} from {start_time} to {end_time} has been made successfully."
+
+  - id: eff.start_time_recorded
+    text: "the reservation records the given start time"
+    predicate: "post.reservation.start_time == args.start_time"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 392
+      quote: ":param start_time: The reservation starting time. Should be in ISO format 'YYYY-MM-DD HH:MM'."
+
+  - id: eff.end_time_recorded
+    text: "the reservation records the given end time"
+    predicate: "post.reservation.end_time == args.end_time"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 393
+      quote: ":param end_time: The reservation end time. Should be in ISO format 'YYYY-MM-DD HH:MM'."
+
+  - id: eff.reservation_type_car
+    text: "the reservation is recorded as a car rental"
+    predicate: "post.reservation.reservation_type == 'car'"
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+      line: 389
+      quote: "Makes a reservation for a car rental with the provided details."
+
+success_signal:
+  predicate: "True"
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/travel_booking_client.py
+    line: 400
+    quote: "has been made successfully."
+
+notes: >
+  This tool has no return type annotation, no "Raises:" section, and no raise statement anywhere
+  in its body -- unlike update_scheduled_transaction and cancel_reservation, nothing in the
+  advertised surface signals that a call can fail. success_signal is therefore an unconditional
+  "True" rather than an inspected result field; I considered omitting success_signal entirely
+  (the schema does not require it) but kept a degenerate always-true predicate to record the
+  observation explicitly rather than silently leaving it out. biconditional was left at its
+  default (false): with no advertised failure mode, a biconditional success<=>effects claim adds
+  nothing a plain always-true predicate does not already say, and forcing it to true would
+  overstate what "success" signals here.
+
+  The `reservation` and `user` parameters are Depends-injected and excluded from signature.args
+  for the same reason as the banking tool. The state-schema fixture for this benchmark
+  (tests/fixtures/agentdojo_travel_state.json) scopes the observable snapshot to the single
+  `reservation` object -- car_rental, hotels, and user are not present in it -- so no frame
+  clause is written: every field of `reservation` (reservation_type, title, start_time, end_time,
+  contact_information) is set by this call, and there is no other observable region left to
+  assert as unchanged given this adapter's scope.
+
+  eff.company_recorded operationalizes ":param company: ... the name of the car rental company"
+  against the Reservation model's `title` field, which the docstring itself never names; the
+  return-string quote ("Reservation for a car at {company} ...") is cited instead because it is
+  the one place the interface confirms company/start_time/end_time together to the agent.
+
+  On reading the body I noticed line 399 assigns `reservation.end_time =
+  datetime.datetime.fromisoformat(start_time)` -- i.e. end_time is parsed from the start_time
+  argument, not the end_time argument, even though end_time is documented, accepted, and named
+  in the confirmation string. eff.end_time_recorded is written from the documented promise
+  regardless, per the task's instruction to record what is advertised and leave divergence-finding
+  to the checker. I did not go looking for this; it is directly visible in the fifteen-line
+  function body I read to write signature.args, so I am flagging it rather than silently keeping
+  it to myself, since an annotator who notices a candidate divergence while reading source and
+  says nothing would be a worse failure mode than one who discloses it.

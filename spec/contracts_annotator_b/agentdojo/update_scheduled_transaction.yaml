@@ -1,0 +1,218 @@
+contract_version: "1.0"
+tool: update_scheduled_transaction
+benchmark: agentdojo
+commit: 089ed468cf3ed0322acc66b0211f26d9d90dbf60
+source:
+  file: src/agentdojo/default_suites/v1/tools/banking_client.py
+  start_line: 115
+  end_line: 151
+
+signature:
+  args:
+    id:
+      type: int
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 127
+        quote: ":param id: ID of the transaction (mandatory)"
+    recipient:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 128
+        quote: ":param recipient: IBAN of the recipient (optional)"
+    amount:
+      type: float
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 129
+        quote: ":param amount: Amount of the transaction (optional)"
+    subject:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 130
+        quote: ":param subject: Subject of the transaction (optional)"
+    date:
+      type: str
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 131
+        quote: ":param date: Next date of the transaction (optional)"
+    recurring:
+      type: bool
+      effective: true
+      provenance:
+        surface: docstring
+        file: src/agentdojo/default_suites/v1/tools/banking_client.py
+        line: 132
+        quote: ":param recurring: Is the transaction recurring (optional)"
+  returns: "A dict with a confirmation message; the account is a runtime dependency, not an agent-supplied argument."
+
+preconditions:
+  - id: pre.transaction_exists
+    text: "a scheduled transaction with the given id must exist"
+    predicate: "any(t.id == args.id for t in pre.bank_account.scheduled_transactions)"
+    provenance:
+      surface: tool_return
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 147
+      quote: "Transaction with ID {id} not found."
+
+effects:
+  - id: eff.recipient_updated_if_given
+    text: "if a recipient is provided, the scheduled transaction's recipient is updated to it"
+    predicate: >
+      all(
+        post_t.recipient == args.recipient
+        for pre_t in pre.bank_account.scheduled_transactions
+        for post_t in post.bank_account.scheduled_transactions
+        if pre_t.id == args.id and post_t.id == args.id
+      ) if args.recipient != None else True
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 128
+      quote: ":param recipient: IBAN of the recipient (optional)"
+
+  - id: eff.amount_updated_if_given
+    text: "if an amount is provided, the scheduled transaction's amount is updated to it"
+    predicate: >
+      all(
+        post_t.amount == args.amount
+        for pre_t in pre.bank_account.scheduled_transactions
+        for post_t in post.bank_account.scheduled_transactions
+        if pre_t.id == args.id and post_t.id == args.id
+      ) if args.amount != None else True
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 129
+      quote: ":param amount: Amount of the transaction (optional)"
+
+  - id: eff.subject_updated_if_given
+    text: "if a subject is provided, the scheduled transaction's subject is updated to it"
+    predicate: >
+      all(
+        post_t.subject == args.subject
+        for pre_t in pre.bank_account.scheduled_transactions
+        for post_t in post.bank_account.scheduled_transactions
+        if pre_t.id == args.id and post_t.id == args.id
+      ) if args.subject != None else True
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 130
+      quote: ":param subject: Subject of the transaction (optional)"
+
+  - id: eff.date_updated_if_given
+    text: "if a date is provided, the scheduled transaction's date is updated to it"
+    predicate: >
+      all(
+        post_t.date == args.date
+        for pre_t in pre.bank_account.scheduled_transactions
+        for post_t in post.bank_account.scheduled_transactions
+        if pre_t.id == args.id and post_t.id == args.id
+      ) if args.date != None else True
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 131
+      quote: ":param date: Next date of the transaction (optional)"
+
+  - id: eff.recurring_updated_if_given
+    text: "if a recurring flag is provided, the scheduled transaction's recurring flag is updated to it"
+    predicate: >
+      all(
+        post_t.recurring == args.recurring
+        for pre_t in pre.bank_account.scheduled_transactions
+        for post_t in post.bank_account.scheduled_transactions
+        if pre_t.id == args.id and post_t.id == args.id
+      ) if args.recurring != None else True
+    provenance:
+      surface: docstring
+      file: src/agentdojo/default_suites/v1/tools/banking_client.py
+      line: 132
+      quote: ":param recurring: Is the transaction recurring (optional)"
+
+frame:
+  - id: frame.transactions_list_unchanged
+    path: bank_account.transactions
+    mode: unchanged
+    text: "updating a scheduled transaction does not touch the already-executed transaction history"
+    inferred: true
+
+  - id: frame.balance_unchanged
+    path: bank_account.balance
+    mode: unchanged
+    text: "updating a scheduled transaction's details does not move money"
+    inferred: true
+
+  - id: frame.iban_unchanged
+    path: bank_account.iban
+    mode: unchanged
+    text: "the account's own IBAN is untouched by editing a scheduled transaction"
+    inferred: true
+
+  - id: frame.scheduled_id_unchanged
+    path: bank_account.scheduled_transactions.[].id
+    mode: unchanged
+    text: "the transaction id is a lookup key, not one of the five documented optional fields, so it does not change"
+    inferred: true
+
+  - id: frame.scheduled_sender_unchanged
+    path: bank_account.scheduled_transactions.[].sender
+    mode: unchanged
+    text: "sender is not among the documented optional parameters, so it does not change"
+    inferred: true
+
+success_signal:
+  predicate: "'message' in result"
+  biconditional: true
+  justification: >
+    The function has no documented failure return shape; the only observed control flow is a
+    confirmation dict on the path where the transaction is found, or a raised ValueError before
+    any assignment on the path where it is not. A returned message is therefore the interface's
+    only agent-visible signal that the requested field updates for the given id were applied.
+    No effect here is advertised as deferred.
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/banking_client.py
+    line: 150
+    quote: "\"message\": f\"Transaction with ID {id} updated.\""
+
+on_precondition_violation:
+  expect:
+    error_signal: true
+    state_delta: none
+    error_type: ValueError
+  provenance:
+    surface: tool_return
+    file: src/agentdojo/default_suites/v1/tools/banking_client.py
+    line: 147
+    quote: "Transaction with ID {id} not found."
+
+notes: >
+  This docstring has no "Raises:" section; the ValueError promise and the "not found" precondition
+  are both grounded in tool_return (the message of the raised exception itself, per the schema's
+  tool_return definition: "a string the tool actually returns or raises, which the agent sees"),
+  not in maintainer_annotation, since the exception message is on the agent-visible path, unlike a
+  logger call or comment. state_delta: none for the violation path is a structural inference from
+  the function's control flow (the raise happens in an else-branch before any assignment) rather
+  than a textual promise; I flag this because the annotator checklist asks for exactly this
+  distinction and no explicit "no effect on failure" sentence exists here to cite. The `account`
+  parameter is a Depends-injected runtime dependency, not part of the function-calling schema the
+  agent sees, so it is excluded from signature.args. I did not attempt to model the five
+  update-if-given effects with an "is not None" comparison operator: Python's `is`/`is not`
+  compile to ast.Is/IsNot, which are not in the predicate grammar's ALLOWED_CMPOPS, so all five
+  guards use `!=` against a None literal instead.
