@@ -1,0 +1,807 @@
+{
+  "generated_by": "experiments/decompose_closed_world_misses.py",
+  "source_raw": "report\\mutation_closed_world_raw.jsonl",
+  "n_real_defect_rows": 51,
+  "n_missed_real": 33,
+  "operators_fully_decomposed": [
+    "M-PRECOND",
+    "M-IGNARG",
+    "M-PARTIAL"
+  ],
+  "operators_liveness_only": [
+    "M-INVAR"
+  ],
+  "operators_excluded": [],
+  "results": [
+    {
+      "operator": "M-PRECOND",
+      "benchmark": "tau2-bench",
+      "tool": "send_payment_request",
+      "site_params": {
+        "body_index": 5,
+        "mode": "negate"
+      },
+      "site_detail": "negate guard at body[5]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:customer_id:valid;boundary:bill_id:valid;precondition_satisfy:pre.no_bill_awaiting_payment;precondition_violate:pre.bill_belongs_to_customer",
+        "boundary:customer_id:domain_invalid",
+        "boundary:customer_id:zero_empty",
+        "boundary:bill_id:domain_invalid",
+        "boundary:bill_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PRECOND",
+      "benchmark": "tau2-bench",
+      "tool": "send_payment_request",
+      "site_params": {
+        "body_index": 2,
+        "mode": "delete"
+      },
+      "site_detail": "delete guard at body[2]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:customer_id:valid;boundary:bill_id:valid;precondition_satisfy:pre.no_bill_awaiting_payment;precondition_violate:pre.bill_belongs_to_customer",
+        "boundary:customer_id:domain_invalid",
+        "boundary:customer_id:zero_empty",
+        "boundary:bill_id:domain_invalid",
+        "boundary:bill_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PRECOND",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_items",
+      "site_params": {
+        "body_index": 5,
+        "mode": "delete"
+      },
+      "site_detail": "delete guard at body[5]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PRECOND",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_items",
+      "site_params": {
+        "body_index": 9,
+        "mode": "negate"
+      },
+      "site_detail": "negate guard at body[9]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PRECOND",
+      "benchmark": "tau2-bench",
+      "tool": "cancel_pending_order",
+      "site_params": {
+        "body_index": 3,
+        "mode": "delete"
+      },
+      "site_detail": "delete guard at body[3]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:reason:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:reason:domain_invalid",
+        "boundary:reason:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PRECOND",
+      "benchmark": "tau2-bench",
+      "tool": "book_reservation",
+      "site_params": {
+        "body_index": 14,
+        "mode": "delete"
+      },
+      "site_detail": "delete guard at body[14]",
+      "n_probes_in_corpus": 17,
+      "n_probes_attempted": 17,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:user_id:valid;boundary:origin:valid;boundary:destination:valid;boundary:flight_type:valid;boundary:cabin:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:insurance:valid;precondition_violate:pre.user_exists",
+        "boundary:user_id:domain_invalid",
+        "boundary:user_id:zero_empty",
+        "boundary:origin:domain_invalid",
+        "boundary:origin:zero_empty",
+        "boundary:destination:domain_invalid",
+        "boundary:destination:zero_empty",
+        "boundary:flight_type:domain_invalid",
+        "boundary:flight_type:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:total_baggages:domain_invalid",
+        "boundary:total_baggages:zero_empty",
+        "boundary:nonfree_baggages:domain_invalid",
+        "boundary:nonfree_baggages:zero_empty",
+        "boundary:insurance:domain_invalid",
+        "boundary:insurance:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "suspend_line",
+      "site_params": {
+        "arg_name": "line_id"
+      },
+      "site_detail": "shadow argument 'line_id' to its type default",
+      "cause": "target_not_found"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_items",
+      "site_params": {
+        "arg_name": "new_item_ids"
+      },
+      "site_detail": "shadow argument 'new_item_ids' to its type default",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "book_reservation",
+      "site_params": {
+        "arg_name": "insurance"
+      },
+      "site_detail": "shadow argument 'insurance' to its type default",
+      "n_probes_in_corpus": 17,
+      "n_probes_attempted": 17,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:user_id:valid;boundary:origin:valid;boundary:destination:valid;boundary:flight_type:valid;boundary:cabin:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:insurance:valid;precondition_violate:pre.user_exists",
+        "boundary:user_id:domain_invalid",
+        "boundary:user_id:zero_empty",
+        "boundary:origin:domain_invalid",
+        "boundary:origin:zero_empty",
+        "boundary:destination:domain_invalid",
+        "boundary:destination:zero_empty",
+        "boundary:flight_type:domain_invalid",
+        "boundary:flight_type:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:total_baggages:domain_invalid",
+        "boundary:total_baggages:zero_empty",
+        "boundary:nonfree_baggages:domain_invalid",
+        "boundary:nonfree_baggages:zero_empty",
+        "boundary:insurance:domain_invalid",
+        "boundary:insurance:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "book_reservation",
+      "site_params": {
+        "arg_name": "user_id"
+      },
+      "site_detail": "shadow argument 'user_id' to its type default",
+      "n_probes_in_corpus": 17,
+      "n_probes_attempted": 1,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:user_id:valid;boundary:origin:valid;boundary:destination:valid;boundary:flight_type:valid;boundary:cabin:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:insurance:valid;precondition_violate:pre.user_exists",
+        "boundary:user_id:domain_invalid",
+        "boundary:user_id:zero_empty",
+        "boundary:origin:domain_invalid",
+        "boundary:origin:zero_empty",
+        "boundary:destination:domain_invalid",
+        "boundary:destination:zero_empty",
+        "boundary:flight_type:domain_invalid",
+        "boundary:flight_type:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:total_baggages:domain_invalid",
+        "boundary:total_baggages:zero_empty",
+        "boundary:nonfree_baggages:domain_invalid",
+        "boundary:nonfree_baggages:zero_empty",
+        "boundary:insurance:domain_invalid",
+        "boundary:insurance:zero_empty"
+      ],
+      "cause": "clause_gap",
+      "witness_probe_origin": "boundary:user_id:valid;boundary:origin:valid;boundary:destination:valid;boundary:flight_type:valid;boundary:cabin:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:insurance:valid;precondition_violate:pre.user_exists",
+      "witness_args": {
+        "user_id": "probe_value",
+        "origin": "probe_value",
+        "destination": "probe_value",
+        "flight_type": "probe_value",
+        "cabin": "probe_value",
+        "flights": "probe_value",
+        "passengers": "probe_value",
+        "payment_methods": "probe_value",
+        "total_baggages": 7,
+        "nonfree_baggages": 7,
+        "insurance": "probe_value"
+      }
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "update_reservation_flights",
+      "site_params": {
+        "arg_name": "payment_id"
+      },
+      "site_detail": "shadow argument 'payment_id' to its type default",
+      "n_probes_in_corpus": 7,
+      "n_probes_attempted": 7,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:reservation_id:valid;boundary:cabin:valid;boundary:payment_id:valid;precondition_violate:pre.reservation_exists",
+        "boundary:reservation_id:domain_invalid",
+        "boundary:reservation_id:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:payment_id:domain_invalid",
+        "boundary:payment_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "mm-toolsandbox",
+      "tool": "remove_reminder",
+      "site_params": {
+        "arg_name": "reminder_id"
+      },
+      "site_detail": "shadow argument 'reminder_id' to its type default",
+      "n_probes_in_corpus": 3,
+      "n_probes_attempted": 1,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:reminder_id:valid;precondition_violate:pre.reminder_exists",
+        "boundary:reminder_id:domain_invalid",
+        "boundary:reminder_id:zero_empty"
+      ],
+      "cause": "clause_gap",
+      "witness_probe_origin": "boundary:reminder_id:valid;precondition_violate:pre.reminder_exists",
+      "witness_args": {
+        "reminder_id": "probe_value"
+      }
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "return_delivered_order_items",
+      "site_params": {
+        "arg_name": "item_ids"
+      },
+      "site_detail": "shadow argument 'item_ids' to its type default",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "send_payment_request",
+      "site_params": {
+        "arg_name": "bill_id"
+      },
+      "site_detail": "shadow argument 'bill_id' to its type default",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:customer_id:valid;boundary:bill_id:valid;precondition_satisfy:pre.no_bill_awaiting_payment;precondition_violate:pre.bill_belongs_to_customer",
+        "boundary:customer_id:domain_invalid",
+        "boundary:customer_id:zero_empty",
+        "boundary:bill_id:domain_invalid",
+        "boundary:bill_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "return_delivered_order_items",
+      "site_params": {
+        "arg_name": "order_id"
+      },
+      "site_detail": "shadow argument 'order_id' to its type default",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "book_reservation",
+      "site_params": {
+        "arg_name": "flight_type"
+      },
+      "site_detail": "shadow argument 'flight_type' to its type default",
+      "n_probes_in_corpus": 17,
+      "n_probes_attempted": 17,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:user_id:valid;boundary:origin:valid;boundary:destination:valid;boundary:flight_type:valid;boundary:cabin:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:insurance:valid;precondition_violate:pre.user_exists",
+        "boundary:user_id:domain_invalid",
+        "boundary:user_id:zero_empty",
+        "boundary:origin:domain_invalid",
+        "boundary:origin:zero_empty",
+        "boundary:destination:domain_invalid",
+        "boundary:destination:zero_empty",
+        "boundary:flight_type:domain_invalid",
+        "boundary:flight_type:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:total_baggages:domain_invalid",
+        "boundary:total_baggages:zero_empty",
+        "boundary:nonfree_baggages:domain_invalid",
+        "boundary:nonfree_baggages:zero_empty",
+        "boundary:insurance:domain_invalid",
+        "boundary:insurance:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "book_reservation",
+      "site_params": {
+        "arg_name": "nonfree_baggages"
+      },
+      "site_detail": "shadow argument 'nonfree_baggages' to its type default",
+      "n_probes_in_corpus": 17,
+      "n_probes_attempted": 17,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:user_id:valid;boundary:origin:valid;boundary:destination:valid;boundary:flight_type:valid;boundary:cabin:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:insurance:valid;precondition_violate:pre.user_exists",
+        "boundary:user_id:domain_invalid",
+        "boundary:user_id:zero_empty",
+        "boundary:origin:domain_invalid",
+        "boundary:origin:zero_empty",
+        "boundary:destination:domain_invalid",
+        "boundary:destination:zero_empty",
+        "boundary:flight_type:domain_invalid",
+        "boundary:flight_type:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:total_baggages:domain_invalid",
+        "boundary:total_baggages:zero_empty",
+        "boundary:nonfree_baggages:domain_invalid",
+        "boundary:nonfree_baggages:zero_empty",
+        "boundary:insurance:domain_invalid",
+        "boundary:insurance:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-IGNARG",
+      "benchmark": "tau2-bench",
+      "tool": "exchange_delivered_order_items",
+      "site_params": {
+        "arg_name": "new_item_ids"
+      },
+      "site_detail": "shadow argument 'new_item_ids' to its type default",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "tau2-bench",
+      "tool": "exchange_delivered_order_items",
+      "site_params": {
+        "body_index": 12
+      },
+      "site_detail": "delete top-level write #2/5: Assign(targets=[Attribute(value=Name(id='order', ctx=Load())",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "tau2-bench",
+      "tool": "return_delivered_order_items",
+      "site_params": {
+        "body_index": 9
+      },
+      "site_detail": "delete top-level write #2/3: Assign(targets=[Attribute(value=Name(id='order', ctx=Load())",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "tau2-bench",
+      "tool": "return_delivered_order_items",
+      "site_params": {
+        "body_index": 8
+      },
+      "site_detail": "delete top-level write #1/3: Assign(targets=[Attribute(value=Name(id='order', ctx=Load())",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "agentdojo",
+      "tool": "reserve_hotel",
+      "site_params": {
+        "body_index": 1
+      },
+      "site_detail": "delete top-level write #1/5: Assign(targets=[Attribute(value=Name(id='reservation', ctx=L",
+      "n_probes_in_corpus": 7,
+      "n_probes_attempted": 1,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:hotel:valid",
+        "boundary:hotel:domain_invalid",
+        "boundary:hotel:zero_empty",
+        "boundary:start_day:declared_0",
+        "boundary:start_day:declared_1",
+        "boundary:end_day:declared_0",
+        "boundary:end_day:declared_1"
+      ],
+      "cause": "probe_gap",
+      "witness_probe_origin": "boundary:hotel:valid",
+      "witness_args": {
+        "hotel": "probe_value",
+        "start_day": "probe_value",
+        "end_day": "probe_value"
+      }
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_items",
+      "site_params": {
+        "body_index": 13
+      },
+      "site_detail": "delete top-level write #2/2: Assign(targets=[Attribute(value=Name(id='order', ctx=Load())",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "tau2-bench",
+      "tool": "update_reservation_flights",
+      "site_params": {
+        "body_index": 10
+      },
+      "site_detail": "delete top-level write #1/2: Assign(targets=[Attribute(value=Name(id='reservation', ctx=L",
+      "n_probes_in_corpus": 7,
+      "n_probes_attempted": 7,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:reservation_id:valid;boundary:cabin:valid;boundary:payment_id:valid;precondition_violate:pre.reservation_exists",
+        "boundary:reservation_id:domain_invalid",
+        "boundary:reservation_id:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:payment_id:domain_invalid",
+        "boundary:payment_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-PARTIAL",
+      "benchmark": "tau2-bench",
+      "tool": "exchange_delivered_order_items",
+      "site_params": {
+        "body_index": 15
+      },
+      "site_detail": "delete top-level write #5/5: Assign(targets=[Attribute(value=Name(id='order', ctx=Load())",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_items",
+      "site_params": {
+        "if_index": 11,
+        "branch": "body",
+        "branch_index": 1
+      },
+      "site_detail": "delete conditional write in body[11].body[1]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "update_reservation_baggages",
+      "site_params": {
+        "if_index": 5,
+        "branch": "body",
+        "branch_index": 0
+      },
+      "site_detail": "delete conditional write in body[5].body[0]",
+      "n_probes_in_corpus": 9,
+      "n_probes_attempted": 9,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:reservation_id:valid;boundary:total_baggages:valid;boundary:nonfree_baggages:valid;boundary:payment_id:valid;precondition_violate:pre.reservation_exists",
+        "boundary:reservation_id:domain_invalid",
+        "boundary:reservation_id:zero_empty",
+        "boundary:total_baggages:domain_invalid",
+        "boundary:total_baggages:zero_empty",
+        "boundary:nonfree_baggages:domain_invalid",
+        "boundary:nonfree_baggages:zero_empty",
+        "boundary:payment_id:domain_invalid",
+        "boundary:payment_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_items",
+      "site_params": {
+        "if_index": 11,
+        "branch": "body",
+        "branch_index": 0
+      },
+      "site_detail": "delete conditional write in body[11].body[0]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_payment",
+      "site_params": {
+        "if_index": 11,
+        "branch": "body",
+        "branch_index": 0
+      },
+      "site_detail": "delete conditional write in body[11].body[0]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_payment",
+      "site_params": {
+        "if_index": 11,
+        "branch": "body",
+        "branch_index": 1
+      },
+      "site_detail": "delete conditional write in body[11].body[1]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "update_reservation_flights",
+      "site_params": {
+        "if_index": 9,
+        "branch": "body",
+        "branch_index": 0
+      },
+      "site_detail": "delete conditional write in body[9].body[0]",
+      "n_probes_in_corpus": 7,
+      "n_probes_attempted": 7,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:reservation_id:valid;boundary:cabin:valid;boundary:payment_id:valid;precondition_violate:pre.reservation_exists",
+        "boundary:reservation_id:domain_invalid",
+        "boundary:reservation_id:zero_empty",
+        "boundary:cabin:domain_invalid",
+        "boundary:cabin:zero_empty",
+        "boundary:payment_id:domain_invalid",
+        "boundary:payment_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_payment",
+      "site_params": {
+        "if_index": 9,
+        "branch": "body",
+        "branch_index": 1
+      },
+      "site_detail": "delete conditional write in body[9].body[1]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    },
+    {
+      "operator": "M-INVAR",
+      "benchmark": "tau2-bench",
+      "tool": "modify_pending_order_payment",
+      "site_params": {
+        "if_index": 9,
+        "branch": "body",
+        "branch_index": 0
+      },
+      "site_detail": "delete conditional write in body[9].body[0]",
+      "n_probes_in_corpus": 5,
+      "n_probes_attempted": 5,
+      "n_probe_invoke_errors": 0,
+      "probe_origins_in_corpus": [
+        "boundary:order_id:valid;boundary:payment_method_id:valid",
+        "boundary:order_id:domain_invalid",
+        "boundary:order_id:zero_empty",
+        "boundary:payment_method_id:domain_invalid",
+        "boundary:payment_method_id:zero_empty"
+      ],
+      "cause": "probe_corpus_unreachable"
+    }
+  ],
+  "excluded_rows": [],
+  "cause_counts_by_operator": {
+    "M-PRECOND": {
+      "probe_corpus_unreachable": 6
+    },
+    "M-IGNARG": {
+      "target_not_found": 1,
+      "probe_corpus_unreachable": 9,
+      "clause_gap": 2
+    },
+    "M-PARTIAL": {
+      "probe_corpus_unreachable": 6,
+      "probe_gap": 1
+    },
+    "M-INVAR": {
+      "probe_corpus_unreachable": 8
+    }
+  },
+  "cause_counts_overall": {
+    "probe_corpus_unreachable": 29,
+    "target_not_found": 1,
+    "clause_gap": 2,
+    "probe_gap": 1
+  }
+}
