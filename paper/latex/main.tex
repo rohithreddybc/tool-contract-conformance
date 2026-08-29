@@ -77,13 +77,13 @@
 % denser table rows/columns and reduced float spacing. No prose, number, or
 % claim is affected by anything in this block.
 % ---------------------------------------------------------------------
-\renewcommand{\arraystretch}{0.92}
-\setlength{\tabcolsep}{4pt}
-\setlength{\abovecaptionskip}{4pt plus 1pt minus 1pt}
-\setlength{\belowcaptionskip}{2pt}
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
-\setlength{\floatsep}{6pt plus 2pt minus 2pt}
-\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\renewcommand{\arraystretch}{0.88}
+\setlength{\tabcolsep}{3.5pt}
+\setlength{\abovecaptionskip}{3pt plus 1pt minus 1pt}
+\setlength{\belowcaptionskip}{1.5pt}
+\setlength{\textfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\floatsep}{4pt plus 2pt minus 2pt}
+\setlength{\intextsep}{4pt plus 2pt minus 2pt}
 
 % ---------------------------------------------------------------------
 % listings configuration: small monospace Python, legible in one column.
@@ -517,9 +517,7 @@ All four benchmarks are cited at the specific commits audited \cite{medagentbenc
 % =======================================================================
 \section{Conclusion}
 
-This paper tested a layer no published benchmark audit reaches: the tool implementation that produces the state a grader reads. Four benchmarks yielded eight verified instances across six executable defect classes, four of them headline-eligible under a grounding rule that excludes what no agent ever saw. The score-at-risk analysis traced what those defects could have cost in published verdicts, tagged by evaluator basis rather than pooled into one number, and the open-world arm measured how much of the defect space six classes still miss. None of this establishes how common these defects are across agentic benchmarks generally: four anchor-driven audits are existence proofs, not a survey, and the paper does not claim otherwise. Benchmark scores are published measurement data that the field mines and reuses in leaderboards and model-selection decisions, and an instrument defect at this layer propagates into every downstream use of the number it produced.
-
-What follows for a benchmark maintainer is not a call for a new testing discipline, only for the one this paper already ran against someone else's code. Run a conformance checker like this one in continuous integration, against the tool layer specifically, not only against tasks and gold solutions. State every deliberate simplification on the surface an agent actually reads --- a docstring, a schema, a returned string --- because an undisclosed one is indistinguishable from a bug, both to the agent conditioned on it and to the grader scoring the result. And never let a grader's success condition be satisfied by a string the harness itself fabricates: that single pattern, present in the most clinically consequential benchmark in this study, is what let a construct-validity failure survive five prior audits. A benchmark's published numbers are only as trustworthy as the layer nobody has been checking.
+This paper tested a layer no published benchmark audit reaches: the tool implementation that produces the state a grader reads. Four benchmarks yielded eight verified instances across six executable defect classes, four of them headline-eligible under a grounding rule that excludes what no agent ever saw. The score-at-risk analysis traced what those defects could have cost in published verdicts, tagged by evaluator basis rather than pooled into one number, and the open-world arm measured how much of the defect space six classes still miss. None of this establishes how common these defects are across agentic benchmarks generally: four anchor-driven audits are existence proofs, not a survey, and the paper does not claim otherwise. Benchmark scores are published measurement data that the field mines and reuses in leaderboards and model-selection decisions, and an instrument defect at this layer propagates into every downstream use of the number it produced. Run a conformance checker like this one in continuous integration, against the tool layer specifically, not only against tasks and gold solutions; state every deliberate simplification on the surface an agent actually reads --- a docstring, a schema, a returned string --- because an undisclosed one is indistinguishable from a bug, both to the agent conditioned on it and to the grader scoring the result; and never let a grader's success condition be satisfied by a string the harness itself fabricates, the single pattern that let a construct-validity failure survive five prior audits in the most clinically consequential benchmark in this study. A benchmark's published numbers are only as trustworthy as the layer nobody has been checking.
 
 % =======================================================================
 % REFERENCES
