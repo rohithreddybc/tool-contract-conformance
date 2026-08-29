@@ -305,6 +305,20 @@ class Tau2Adapter(Adapter):
                 args[key] = value
         return self._send({"cmd": "record_trajectory", "args": args})
 
+    def record_reference_trajectory(self, domain: str, task_id: str) -> dict:
+        """Model-free trajectory source (agent-impact-experiment deviation from
+        experiments/analysis_plan.md sec 4, recorded in report/ab_summary.md: this project runs
+        with no model and no API credentials anywhere, so `record_trajectory` above -- the real
+        LLMAgent + UserSimulator path -- can never complete here). Holds the action sequence
+        fixed at the task's own reference solution (`task.evaluation_criteria.actions`) and
+        executes it once, deterministically, against a fresh UNPATCHED task-scoped environment.
+        No model in this call, at recording time or ever. Returns the same 'messages' wire shape
+        `record_trajectory` returns, so every downstream consumer (extract_calls_with_results,
+        exercised_f2/exercised_f3, replay_and_score) is unaware of which path produced it.
+
+        Raises Tau2AdapterError if the task has no reference-solution actions to replay."""
+        return self._send({"cmd": "record_reference_trajectory", "args": {"domain": domain, "task_id": task_id}})
+
     def replay_and_score(
         self,
         domain: str,

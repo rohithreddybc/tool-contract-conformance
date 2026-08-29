@@ -66,6 +66,7 @@ from tau2.data_model.message import (  # noqa: E402
     AssistantMessage,
     Message,
     SystemMessage,
+    ToolCall,
     ToolMessage,
     UserMessage,
 )
@@ -252,17 +253,14 @@ def _apply_patch(env: Any, tool: str, source: str) -> None:
     setattr(env.tools, tool, bound)
 
 
-def _cmd_fresh_task_env(args: dict) -> dict:
-    """Task-scoped environment construction -- the extension adapters/tau2.py's module
-    docstring flagged as "the natural next step" for the dynamic-harness / Tier-1 trajectory
-    replay work (ARCHITECTURE-FINAL.md sec 6). Unlike _cmd_fresh_env (bare domain name, loads
-    the on-disk default database), this loads ONE task's own initial_state -- the same
-    initialization_data / initialization_actions / message_history triple
-    tau2.evaluator.evaluator_env.EnvironmentEvaluator.calculate_reward itself applies via
-    Environment.set_state before replaying a trajectory -- so a tool invoked against the handle
-    this returns sees exactly the state a live simulation of this task would have started from."""
-    domain = args["domain"]
-    task_id = args["task_id"]
+def _build_fresh_task_environment(domain: str, task_id: str) -> tuple:
+    """Shared body of _cmd_fresh_task_env and _cmd_record_reference_trajectory: construct ONE
+    task's own initial_state (the same initialization_data / initialization_actions /
+    message_history triple tau2.evaluator.evaluator_env.EnvironmentEvaluator.calculate_reward
+    itself applies via Environment.set_state before replaying a trajectory) against a freshly
+    constructed, UNPATCHED environment. Returns (env, task) -- the caller decides whether to
+    register the env in _LIVE_ENVS (an interactive handle) or just use it once and let it be
+    garbage-collected (a one-shot recording pass)."""
     task = _load_task(domain, task_id)
     env = DOMAIN_CONSTRUCTORS[domain]()
     initial = task.initial_state
@@ -272,10 +270,78 @@ def _cmd_fresh_task_env(args: dict) -> dict:
         message_history=list(initial.message_history or []) if initial else [],
         strict=True,
     )
+    return env, task
+
+
+def _cmd_fresh_task_env(args: dict) -> dict:
+    """Task-scoped environment construction -- the extension adapters/tau2.py's module
+    docstring flagged as "the natural next step" for the dynamic-harness / Tier-1 trajectory
+    replay work (ARCHITECTURE-FINAL.md sec 6). Unlike _cmd_fresh_env (bare domain name, loads
+    the on-disk default database), this loads ONE task's own initial_state -- so a tool invoked
+    against the handle this returns sees exactly the state a live simulation of this task would
+    have started from."""
+    domain = args["domain"]
+    task_id = args["task_id"]
+    env, _task = _build_fresh_task_environment(domain, task_id)
     env_id = uuid.uuid4().hex
     scenario_id = f"{domain}:{task_id}"
     _LIVE_ENVS[env_id] = {"domain": domain, "scenario_id": scenario_id, "env": env}
     return {"env_id": env_id, "domain": domain, "scenario_id": scenario_id}
+
+
+def _cmd_record_reference_trajectory(args: dict) -> dict:
+    """Model-free trajectory source for the Tier 1 agent-impact experiment (deviation from
+    experiments/analysis_plan.md sec 4 recorded in report/ab_summary.md and
+    experiments/ab_run.py's module docstring: this project runs with no model and no API
+    credentials anywhere, so _cmd_record_trajectory's real LLMAgent + UserSimulator path -- the
+    only place a model appears -- can never be exercised here).
+
+    Holds the action sequence fixed at the task's OWN reference solution
+    (task.evaluation_criteria.actions -- the same gold trajectory
+    tau2.evaluator.evaluator_env.EnvironmentEvaluator.calculate_reward itself replays to build
+    the gold/target environment) and executes it once, in order, against a fresh, UNPATCHED,
+    task-scoped environment via Environment.get_response -- the exact method tau2's own live
+    orchestrator (and set_state()'s own trajectory replay) uses to turn a ToolCall into a
+    ToolMessage. Reusing that method rather than hand-rolling a JSON encoding means the recorded
+    message content strings this produces are byte-identical in shape to what a live run would
+    have recorded (same to_json_str serialization, same error-string convention on failure), so
+    every downstream consumer of a recorded trajectory (extract_calls_with_results,
+    exercised_f2/exercised_f3, replay_and_score) needs no special-casing for a reference-sourced
+    recording versus a model-recorded one.
+
+    No model anywhere in this call: action names/arguments come from the task's own on-disk
+    definition, not from any live inference.
+    """
+    domain = args["domain"]
+    task_id = args["task_id"]
+    env, task = _build_fresh_task_environment(domain, task_id)
+    ec = task.evaluation_criteria
+    actions = list(ec.actions or []) if ec is not None else []
+    if not actions:
+        raise ValueError(f"task {task_id!r} in domain {domain!r} has no reference-solution actions to replay")
+
+    messages_json: list = []
+    for action in actions:
+        tool_call = ToolCall(
+            id=action.action_id,
+            name=action.name,
+            arguments=action.arguments,
+            requestor=action.requestor,
+        )
+        tool_message = env.get_response(tool_call)  # also calls sync_tools(), same as a live turn
+        participant_cls = AssistantMessage if action.requestor == "assistant" else UserMessage
+        participant_message = participant_cls(role=action.requestor, content=None, tool_calls=[tool_call])
+        messages_json.append(_to_jsonable(participant_message))
+        messages_json.append(_to_jsonable(tool_message))
+
+    return {
+        "status": "recorded",
+        "source": "reference_solution",
+        "trajectory_hash": _trajectory_hash(messages_json),
+        "messages": messages_json,
+        "num_messages": len(messages_json),
+        "num_actions": len(actions),
+    }
 
 
 _MESSAGE_CLASS_BY_ROLE: dict = {
@@ -479,6 +545,7 @@ _HANDLERS: dict[str, Callable[[dict], dict]] = {
     "patch_tool": _cmd_patch_tool,
     "unpatch_tool": _cmd_unpatch_tool,
     "record_trajectory": _cmd_record_trajectory,
+    "record_reference_trajectory": _cmd_record_reference_trajectory,
     "replay_and_score": _cmd_replay_and_score,
 }
 

@@ -343,12 +343,33 @@ class TestAbRunMainSmoke(unittest.TestCase):
     """Full end-to-end run of experiments/ab_run.main(). Does not assume live model credentials
     are present or absent -- asserts the report is well-formed either way, and additionally
     checks the specific 'no credentials' shape if that is what actually happened (true in this
-    project's dev/CI environment as of this writing)."""
+    project's dev/CI environment as of this writing).
+
+    experiments/ab_run.py's default (no environment overrides) is now to record+score EVERY
+    affected task via the model-free reference-solution path (~1120 for F2 alone) -- the right
+    default for the actual pre-registered experiment run (experiments/analysis_plan.md sec 5:
+    "Run all affected tasks if it completes in reasonable wall-clock"), but far too slow to run
+    inside a routine `python -m unittest discover tests` invocation. This test bounds THIS
+    invocation only, via AB_REFERENCE_SAMPLE_N/AB_REFERENCE_SEED (ab_run.py's own documented
+    knob for exactly this purpose -- see its module docstring), leaving the script's real default
+    untouched for `python -m experiments.ab_run` itself."""
 
     def test_main_writes_a_well_formed_report(self):
+        import os
+
         from experiments.ab_run import RESULTS_JSON, SUMMARY_MD, main
 
-        rc = main()
+        env_overrides = {"AB_REFERENCE_SAMPLE_N": "5", "AB_REFERENCE_SEED": "1"}
+        saved = {k: os.environ.get(k) for k in env_overrides}
+        os.environ.update(env_overrides)
+        try:
+            rc = main()
+        finally:
+            for k, v in saved.items():
+                if v is None:
+                    os.environ.pop(k, None)
+                else:
+                    os.environ[k] = v
         self.assertEqual(rc, 0)
         self.assertTrue(RESULTS_JSON.exists())
         self.assertTrue(SUMMARY_MD.exists())
