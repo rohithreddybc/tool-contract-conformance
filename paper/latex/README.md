@@ -3,9 +3,21 @@
 This directory holds the LaTeX conversion of `paper/main.md`, the working draft for
 *Scores at Risk: When Benchmark Tools Violate Their Own Advertised Semantics* (IEEE BigData
 2026, Intelligent Data Mining special session). It is a format conversion, not an edit: the
-drafted prose (sections I, II, III, V, IX) is reproduced verbatim, sections are in their
+drafted prose (abstract, sections I–XI) is reproduced verbatim, sections are in their
 original order, and no number, citation key, file path, line number, or commit hash has been
 changed from the Markdown source.
+
+**Resync status (2026-08-29):** `paper/main.md` is now complete — abstract plus all eleven
+sections. This conversion was re-run against that finished draft: the abstract and §§IV, VI,
+VII, VIII, X, XI (previously red `\pendingblock` stubs) are now real prose, and Table II
+(score-at-risk), the §VII recall and mutant-pool tables, and the §VIII trajectory-replay table
+are rendered as `booktabs` tables. Two genuine placeholders remain, both named in
+`paper/main.md` itself: `N1` (Table III, per-benchmark totals — `report/render.py` does not
+exist yet) and `N12` (the disclosure log, dated 2026-09-10, in the future). `N7` (the
+dual-annotation agreement result in §V) is also still open. One inconsistency present in the
+earlier stub-era draft (a "12 evaluated models" / "11 evaluated models" mismatch in §II, and
+the abstract's own former "4 vs 5" discrepancy) is resolved in the current `main.md` and no
+longer appears here.
 
 ## Uploading to Overleaf
 
@@ -21,54 +33,53 @@ changed from the Markdown source.
 ## What compiles today
 
 Verified locally with MiKTeX (`pdfLaTeX`, MiKTeX-pdfTeX 4.23; `BibTeX`, MiKTeX-BibTeX 4.2) on
-2026-08-26, running the standard four-pass sequence (`pdflatex` → `bibtex` → `pdflatex` →
+2026-08-29, running the standard four-pass sequence (`pdflatex` → `bibtex` → `pdflatex` →
 `pdflatex`):
 
 - **Compiles cleanly.** No LaTeX errors, no undefined references, no undefined citations, in
   the final pass.
-- **9 pages**, two-column, IEEEtran `conference` class. This is well under the 10-page budget,
-  but six of the paper's eleven sections are still placeholder stubs (see below); the page
-  count will grow substantially once §IV, §VI, §VII, and §VIII carry real tables and prose,
-  and the 10-page ceiling becomes the binding constraint the outline already plans around.
+- **14 pages**, two-column, IEEEtran `conference` class, references included, no appendix.
+  This is **4 pages over** the venue's 10-page limit now that the full manuscript is drafted
+  (up from 9 pages when six sections were still red stubs). Closing that gap is a separate,
+  deliberately unstarted cut pass — see the cut-list analysis delivered alongside this
+  conversion; nothing has been cut from `main.tex` to hit 10 pages yet.
 - **All 32 citation keys used in the text resolve** against `references.bib` and appear in
   the rendered bibliography. No citation key is missing a bibliography entry.
-- A handful of `Overfull \hbox` warnings remain (each under 13pt, i.e. under two-tenths of an
-  inch), from long monospaced file paths inside table cells and from a few dense inline-math
-  spans in Table I. These are cosmetic and typical of an early draft; none causes text to run
-  off the page or lose content. They are candidates for a layout pass before submission,
-  listed in "Known rough edges" below.
+- A handful of `Overfull \hbox` warnings remain, all under 13pt (under two-tenths of an inch)
+  after two fixes made during the resync: Table II's `not_computable_appworld_unreachable`
+  cell was overflowing its column by 132pt (nearly 2 inches) and the §VIII trajectory-replay
+  table was overflowing by up to 70pt in single-column form. Both are fixed — the Table II
+  identifiers now break at underscores via the existing `\brk` macro, and the §VIII table
+  moved to `table*`. The remaining sub-13pt overfulls are cosmetic (dense inline math in
+  Table I, a few long monospaced tokens) and pre-date this resync.
 - The MedAgentBench, tau2-bench, AgentDojo, and MM-ToolSandbox papers each have their commit
   or table citation reproduced from `paper/main.md`; the `\S` section-reference macro,
   `\cite`, `\ref`, and `\label` cross-references were all checked and resolve.
 
 ## What is deliberately incomplete
 
-Per `PAPER-OUTLINE.md`, sections IV, VI, VII, VIII, X, and XI are stubs in the Markdown source
-that name the artifact (script, protocol, or log) that must generate their content. They are
-**not drafted here**, by instruction. Each stub is reproduced as a compiling, visibly red
-placeholder block using the `\pendingblock{...}` macro (defined in the preamble), so the PDF
-cannot be mistaken for a finished paper:
+`paper/main.md` is now fully drafted (abstract plus all eleven sections), so `main.tex` no
+longer carries `\pendingblock` stubs for whole sections. What remains genuinely outstanding is
+exactly what `paper/main.md` itself still marks as open, reproduced via the `\pending{Nk}{...}`
+macro (red, inline) rather than guessed or filled in:
 
-| Section | Status | Generating artifact |
+| Marker | Location | What it names |
 |---|---|---|
-| IV. Score-at-Risk Dependency Analysis | stub | `analysis/score_at_risk.py` |
-| VI. The Conformance Checker | stub | `core/`, `adapters/`, `static_check/checks.py`, dynamic harness, frozen at `checker-freeze-v1` |
-| VII. Detector Validation | stub | `experiments/detector_analysis_plan.md` (pre-registered), `mutation/score.py`, `spec/coverage.py` |
-| VIII. Evaluation Impact | stub | `experiments/analysis_plan.md` (pre-registered), `experiments/ab_run.py` |
-| X. Threats to Validity | stub | drafted after §IV and §VII numbers exist |
-| XI. Conclusion | stub | written last |
+| N1 | §IX (Table III, per-benchmark totals) | `report/render.py` — this script does not exist yet; Table III is rendered as a red placeholder float (`tab:table3`), not real content |
+| N7 | §V (dual-annotation agreement result) | `experiments/annotation_protocol.md` protocol run — not yet executed |
+| N12 | §IX (coordinated-disclosure log) | disclosure log dated 2026-09-10 — in the future relative to this draft |
 
-Every individual `[Nk: artifact]` marker inside those stubs, and inside the finished sections
-where one still appears (for example N1, N7, N12), is preserved and rendered in red via
-`\pending{Nk}{artifact}` — nothing was filled in or guessed.
+Three figures named in the Markdown source have not been drawn and are rendered as boxed red
+placeholders (Figure 1 in §II, Figure 2 in §IV) or as the Table III placeholder float above;
+§V's worked-contract listing and §VIII's verdict-flip discussion do not require a figure and
+have none pending. See "Known rough edges" below for their current footprint and why their
+final size is not yet known.
 
-The **abstract** is also a structured placeholder in the Markdown source, not a stub with a
-missing number. Its committed shape (what it must lead with, what it must promise, what it
-must never claim) is reproduced twice in `main.tex`: once as a visible red note in the
-compiled PDF, and once as an HTML-comment-equivalent LaTeX comment block carrying the full
-verbatim text of the source comment, so the constraints on the eventual abstract are not lost
-in translation. Nobody should compile this file and mistake the abstract placeholder for a
-finished abstract.
+The **abstract** is drafted, reproduced verbatim from `paper/main.md`. The stub-era comment
+block that used to carry the abstract's "committed shape" (what it had to lead with, promise,
+and never claim) has been removed from `main.tex` now that the real text satisfies it; a short
+comment records that the shape was met and that an earlier headline-count inconsistency in
+that block (4 vs. 5, and 7 vs. 4) is resolved in the current source.
 
 No appendix is used anywhere in this project. The venue's CFP forbids one, and `PAPER-OUTLINE.md`
 already reassigns everything that would have gone there (patch diffs, the permutation test) to
@@ -79,33 +90,24 @@ the artifact repository or drops it entirely.
 Every number below is reproduced from `paper/main.md` exactly as written; none was changed
 during conversion.
 
-- **§I contribution 5 and §IX** both state the finding count as **"seven unique
-  benchmark-class defect cells across four shipped benchmarks, eight instances."**
+- **§I contribution 5, §IX's opening sentence, and the abstract** are now consistent: eight
+  verified instances, four headline-eligible benchmark-class cells across four benchmarks. The
+  stub-era discrepancy this section used to document (three different headline counts — 4, 5,
+  and 7 — across the abstract placeholder, §I, and §IX) is resolved in the current
+  `paper/main.md`; nothing here needed reconciling with `report/findings.jsonl` during this
+  resync because the drafted prose already agrees with itself.
 - **§IX's findings table** lists 8 numbered instances, of which two are explicitly marked
   non-headline in the table itself: instance 3 (tau2-bench, Partial Effect) is
   maintainer-annotated, and instance 4 (MedAgentBench, Ungrounded Oracle) is an evaluator
   property rather than one of the six tool-layer classes.
-- **The abstract's own internal HTML comment** (reproduced verbatim in `main.tex`) states, in
-  its first bullet, that the count "that survives inspection" is **4 headline-eligible
-  tool-layer cells across 4 benchmarks**, counted from `report/findings.jsonl`, and explains
-  that the block previously said 7, then 5, before settling on 4. The same comment's closing
-  sentence, describing the kill-gate outcome, then states **"8 instances across 4 environments,
-  5 of them headline-eligible"** — a different number in the same comment block.
-
-**This is a source-of-record discrepancy, not a conversion error.** `CLAUDE.md` for this
-project fixes the headline count at 4 cells across 4 benchmarks and instructs that any
-disagreement in the draft be flagged rather than silently corrected. Three different figures
-(4, 5, 7) appear across the current draft for what should be the same headline count, in three
-different places (the abstract's own placeholder comment gives both 4 and 5; §I and §IX give
-7). All three are reproduced in this LaTeX conversion exactly as they stand in `paper/main.md`,
-because the conversion task is a format change, not a fact-check, and `paper/main.md` was not
-to be modified. **Before the abstract is drafted for real, §I's contribution list and §IX's
-opening sentence need to be reconciled with whichever count the finalized
-`report/findings.jsonl` supports.**
+- **One numeric fix was needed during this resync.** §II's "published numbers" paragraph said
+  MedAgentBench's Table 3 covers "all 11 evaluated models" in one sentence and "the 12
+  evaluated models" two sentences later — a leftover from the stub-era draft. The current
+  `paper/main.md` states 12 in both places; `main.tex` now matches it (12/12).
 
 Other headline figures carried through unchanged, with their source of record:
 
-- MedAgentBench Action SR range: 0.00%–71.33% across 11 models (Gemini-1.5 Pro highest,
+- MedAgentBench Action SR range: 0.00%–71.33% across 12 models (Gemini-1.5 Pro highest,
   two models at 0.00%), and the headline 69.67% overall SR for Claude 3.5 Sonnet v2 — both
   from the arXiv table (`medagentbench25`), read directly, per §II.
 - "Four of the eight instances are Ignored Argument" (§IX).
@@ -167,14 +169,22 @@ normal place a confirmed publication venue belongs.
 ## Known rough edges
 
 - **Minor overfull hboxes.** A few table cells and one inline-math run in Table I overflow
-  their column by a small amount (under 13pt / 0.2in). A short layout pass — slightly
-  rebalancing column widths in Tables I and II, or dropping to `\scriptsize` in the findings
+  their column by a small amount (under 13pt / 0.2in), pre-dating this resync. A short layout
+  pass — slightly rebalancing column widths, or dropping to `\scriptsize` in the findings
   table — would clear these; they do not affect content or pagination today.
-- **Figures 1–4 are not drawn.** The Markdown source specifies what each should show (the
-  three-layer positioning diagram in §II, the tau2 dependency graph in §IV, the worked
-  contract listing in §V, and the verdict-flip plot in §VIII) but none exists as an image or
-  TikZ source yet. §II's figure placeholder is rendered as a boxed red note; the other three
-  figures are described only inside their section's `\pendingblock`.
+- **Figures 1 and 2, and Table III, are not drawn.** The Markdown source specifies what each
+  should show (the three-layer positioning diagram in §II; the worked tau2 dependency graph in
+  §IV; per-benchmark totals in §IX's Table III) but none exists as an image, TikZ source, or
+  rendered table yet. All three are rendered as boxed red `\pending{...}` floats with a real
+  `\caption`/`\label` so cross-references resolve and the float correctly gets its own
+  figure/table number (an earlier version of the Table III placeholder sat outside any float
+  and silently inherited the preceding real table's number — fixed during this resync). Their
+  final size is genuinely unknown: Table III as real data is likely *smaller* than its current
+  red explanatory box, while Figures 1 and 2 as drawn diagrams could be larger or smaller than
+  their current placeholder boxes. The current 14-page count should not be read as a tight
+  estimate of the true figure/table footprint.
+- **10-page limit: 4 pages over.** See the cut-list analysis delivered alongside this
+  conversion for specific, costed candidate cuts. No cuts have been made to `main.tex` itself.
 - **Back matter** (Data Availability with a Zenodo DOI, funding/acknowledgment line) is
   deferred per the source comment: `EXTERNAL-VERIFICATION.md` Task 3 found no CFP requirement
   for these fields, but the camera-ready portal should be rechecked at submission time.
