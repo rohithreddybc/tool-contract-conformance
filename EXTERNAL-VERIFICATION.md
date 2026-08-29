@@ -59,7 +59,7 @@ ABC's finding is a **grading-rubric / ground-truth-data defect** in the original
 
 > "Among the 300 tasks in MedAgentBench, half (150) only require information retrieval via GET requests, while the other half require the modification of medical records through POST requests (often in combination with GET requests beforehand). We calculate task success rates for these two subgroups and name them as query SR and action SR respectively."
 
-**Action SR is exactly the write-task success rate Task 2 asks about**, and Table 3 reports it for all 11 evaluated models:
+**Action SR is exactly the write-task success rate Task 2 asks about**, and Table 3 reports it for all 12 evaluated models (corrected 2026-08-28: an earlier version of this line said 11, while the table below has always listed 12 — caught by experiments/numbers_audit.py, not by re-reading):
 
 | Model | Action SR |
 |---|---|

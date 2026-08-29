@@ -6,7 +6,7 @@
       "false_positive_mutants": [],
       "fp": 0,
       "n_equivalence_controls_scored": 24,
-      "n_flags": 24,
+      "n_flags": 25,
       "precision": {
         "n_tools": 15,
         "per_tool": {
@@ -83,12 +83,12 @@
             "wilson_upper": 1.0
           },
           "resume_line": {
-            "claim": "precision:resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
+            "claim": "precision:resume_line >= 0.342 (n=2; Wilson 95% CI [0.342, 1.000], point estimate 1.000)",
             "label": "precision:resume_line",
-            "n": 1,
+            "n": 2,
             "point": 1.0,
-            "successes": 1,
-            "wilson_lower": 0.20654931437723745,
+            "successes": 2,
+            "wilson_lower": 0.34238022750665303,
             "wilson_upper": 1.0
           },
           "send_certificate": {
@@ -147,16 +147,16 @@
           }
         },
         "pooled": {
-          "claim": "precision >= 0.862 (n=24; Wilson 95% CI [0.862, 1.000], point estimate 1.000)",
+          "claim": "precision >= 0.867 (n=25; Wilson 95% CI [0.867, 1.000], point estimate 1.000)",
           "label": "precision",
-          "n": 24.0,
+          "n": 25.0,
           "point": 1.0,
-          "successes": 24.0,
-          "wilson_lower": 0.8620237953250198,
-          "wilson_upper": 1.0
+          "successes": 25.0,
+          "wilson_lower": 0.8668077490609515,
+          "wilson_upper": 0.9999999999999999
         }
       },
-      "tp": 24
+      "tp": 25
     },
     "recall": {
       "by_operator": {
@@ -164,8 +164,8 @@
           "all": {
             "classification_counts": {
               "detected": 5,
-              "error": 5,
-              "missed": 14,
+              "error": 4,
+              "missed": 15,
               "untestable_no_clause_evaluated": 1
             },
             "n_drawn": 25,
@@ -331,8 +331,8 @@
           "real": {
             "classification_counts": {
               "detected": 4,
-              "error": 5,
-              "missed": 11,
+              "error": 4,
+              "missed": 12,
               "untestable_no_clause_evaluated": 1
             },
             "n_drawn": 21,
@@ -521,7 +521,7 @@
           "all": {
             "classification_counts": {
               "detected": 2,
-              "error": 8
+              "missed": 8
             },
             "n_drawn": 10,
             "recall": {
@@ -595,7 +595,7 @@
           },
           "real": {
             "classification_counts": {
-              "error": 8
+              "missed": 8
             },
             "n_drawn": 8,
             "recall": {
@@ -691,9 +691,8 @@
         "M-PARTIAL": {
           "all": {
             "classification_counts": {
-              "detected": 2,
-              "error": 7,
-              "missed": 2
+              "detected": 3,
+              "missed": 8
             },
             "n_drawn": 11,
             "recall": {
@@ -745,13 +744,13 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "resume_line": {
-                  "claim": "M-PARTIAL recall (all):resume_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PARTIAL recall (all):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
                   "label": "M-PARTIAL recall (all):resume_line",
                   "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 },
                 "return_delivered_order_items": {
                   "claim": "M-PARTIAL recall (all):return_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
@@ -773,20 +772,20 @@
                 }
               },
               "pooled": {
-                "claim": "M-PARTIAL recall (all) >= 0.042 (n=8; Wilson 95% CI [0.042, 0.528], point estimate 0.182)",
+                "claim": "M-PARTIAL recall (all) >= 0.082 (n=8; Wilson 95% CI [0.082, 0.611], point estimate 0.273)",
                 "label": "M-PARTIAL recall (all)",
                 "n": 8.0,
-                "point": 0.18181818181818182,
-                "successes": 1.4545454545454546,
-                "wilson_lower": 0.04231780625978812,
-                "wilson_upper": 0.5277597350299539
+                "point": 0.2727272727272727,
+                "successes": 2.1818181818181817,
+                "wilson_lower": 0.08229482473308336,
+                "wilson_upper": 0.6106177047595894
               }
             }
           },
           "real": {
             "classification_counts": {
-              "error": 7,
-              "missed": 1
+              "detected": 1,
+              "missed": 7
             },
             "n_drawn": 8,
             "recall": {
@@ -820,13 +819,13 @@
                   "wilson_upper": 0.7934506856227626
                 },
                 "resume_line": {
-                  "claim": "M-PARTIAL recall (real):resume_line >= 0.000 (n=1; Wilson 95% CI [0.000, 0.793], point estimate 0.000)",
+                  "claim": "M-PARTIAL recall (real):resume_line >= 0.207 (n=1; Wilson 95% CI [0.207, 1.000], point estimate 1.000)",
                   "label": "M-PARTIAL recall (real):resume_line",
                   "n": 1,
-                  "point": 0.0,
-                  "successes": 0,
-                  "wilson_lower": 0.0,
-                  "wilson_upper": 0.7934506856227626
+                  "point": 1.0,
+                  "successes": 1,
+                  "wilson_lower": 0.20654931437723745,
+                  "wilson_upper": 1.0
                 },
                 "return_delivered_order_items": {
                   "claim": "M-PARTIAL recall (real):return_delivered_order_items >= 0.000 (n=2; Wilson 95% CI [0.000, 0.658], point estimate 0.000)",
@@ -848,13 +847,13 @@
                 }
               },
               "pooled": {
-                "claim": "M-PARTIAL recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+                "claim": "M-PARTIAL recall (real) >= 0.018 (n=6; Wilson 95% CI [0.018, 0.525], point estimate 0.125)",
                 "label": "M-PARTIAL recall (real)",
-                "n": 8.0,
-                "point": 0.0,
-                "successes": 0.0,
-                "wilson_lower": 0.0,
-                "wilson_upper": 0.32440756488388023
+                "n": 6.0,
+                "point": 0.125,
+                "successes": 0.75,
+                "wilson_lower": 0.018158932433317898,
+                "wilson_upper": 0.5245917834933062
               }
             }
           },
@@ -1146,8 +1145,8 @@
           "all": {
             "classification_counts": {
               "detected": 3,
-              "error": 6,
-              "missed": 16
+              "error": 5,
+              "missed": 17
             },
             "n_drawn": 25,
             "recall": {
@@ -1303,8 +1302,7 @@
           "real": {
             "classification_counts": {
               "detected": 1,
-              "error": 1,
-              "missed": 5
+              "missed": 6
             },
             "n_drawn": 7,
             "recall": {
@@ -3885,98 +3883,8 @@
   },
   "open_world": {
     "tau2-telecom": {
-      "adjudication_note": "Only mechanical rule 2 (declared-volatile field) applied. Rule 1 (interface-invisible) and the pre-registered 20% second-annotator dual-adjudication sample both require a human annotator and were NOT performed in this automated run -- flagged here rather than silently assumed. The adjudicated rate above is therefore a conservative one: a human pass could remove more escapes via rule 1, never fewer.",
-      "ambiguous_flagged_for_human_review": [],
-      "behaviorally_live_fraction_of_pairs": 0.023487544483985764,
-      "escape_decomposition": {
-        "clause_gap": 16
-      },
-      "escape_rate_adjudicated": {
-        "claim": "tau2-telecom escape rate (adjudicated, rule-2 only) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
-        "label": "tau2-telecom escape rate (adjudicated, rule-2 only)",
-        "n": 33,
-        "point": 0.48484848484848486,
-        "successes": 16,
-        "wilson_lower": 0.32504042108133696,
-        "wilson_upper": 0.6478162455108585
-      },
-      "escape_rate_raw": {
-        "claim": "tau2-telecom escape rate (raw) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
-        "label": "tau2-telecom escape rate (raw)",
-        "n": 33,
-        "point": 0.48484848484848486,
-        "successes": 16,
-        "wilson_lower": 0.32504042108133696,
-        "wilson_upper": 0.6478162455108585
-      },
-      "escape_reason_codes": {
-        "checker_evaluated_and_did_not_flag": 16
-      },
-      "n_behaviorally_live": 33,
-      "n_escapes_adjudicated": 16,
-      "n_escapes_raw": 16,
-      "n_mutation_tool_pairs": 1405,
-      "n_mutations_scored": 281,
-      "n_reclassified_equivalent_by_rule2": 0,
-      "per_tool": {
-        "n_tools": 5,
-        "per_tool": {
-          "disable_roaming": {
-            "claim": "tau2-telecom escape rate:disable_roaming >= 0.158 (n=7; Wilson 95% CI [0.158, 0.750], point estimate 0.429)",
-            "label": "tau2-telecom escape rate:disable_roaming",
-            "n": 7,
-            "point": 0.42857142857142855,
-            "successes": 3,
-            "wilson_lower": 0.15821985525146975,
-            "wilson_upper": 0.7495416354723428
-          },
-          "enable_roaming": {
-            "claim": "tau2-telecom escape rate:enable_roaming >= 0.097 (n=6; Wilson 95% CI [0.097, 0.700], point estimate 0.333)",
-            "label": "tau2-telecom escape rate:enable_roaming",
-            "n": 6,
-            "point": 0.3333333333333333,
-            "successes": 2,
-            "wilson_lower": 0.09677141110578041,
-            "wilson_upper": 0.700006684861608
-          },
-          "resume_line": {
-            "claim": "tau2-telecom escape rate:resume_line >= 0.646 (n=7; Wilson 95% CI [0.646, 1.000], point estimate 1.000)",
-            "label": "tau2-telecom escape rate:resume_line",
-            "n": 7,
-            "point": 1.0,
-            "successes": 7,
-            "wilson_lower": 0.6456695649333126,
-            "wilson_upper": 1.0
-          },
-          "send_payment_request": {
-            "claim": "tau2-telecom escape rate:send_payment_request >= 0.158 (n=7; Wilson 95% CI [0.158, 0.750], point estimate 0.429)",
-            "label": "tau2-telecom escape rate:send_payment_request",
-            "n": 7,
-            "point": 0.42857142857142855,
-            "successes": 3,
-            "wilson_lower": 0.15821985525146975,
-            "wilson_upper": 0.7495416354723428
-          },
-          "suspend_line": {
-            "claim": "tau2-telecom escape rate:suspend_line >= 0.030 (n=6; Wilson 95% CI [0.030, 0.564], point estimate 0.167)",
-            "label": "tau2-telecom escape rate:suspend_line",
-            "n": 6,
-            "point": 0.16666666666666666,
-            "successes": 1,
-            "wilson_lower": 0.030053369748306635,
-            "wilson_upper": 0.5635028221864702
-          }
-        },
-        "pooled": {
-          "claim": "tau2-telecom escape rate >= 0.253 (n=13.4465; Wilson 95% CI [0.253, 0.724], point estimate 0.485)",
-          "label": "tau2-telecom escape rate",
-          "n": 13.446487284676982,
-          "point": 0.4848484848484849,
-          "successes": 6.519508986510052,
-          "wilson_lower": 0.2526065603704042,
-          "wilson_upper": 0.7238238779723968
-        }
-      }
+      "path": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\report\\mutation_open_world_tau2_raw.jsonl",
+      "status": "no data"
     },
     "toy": {
       "adjudication_note": "Only mechanical rule 2 (declared-volatile field) applied. Rule 1 (interface-invisible) and the pre-registered 20% second-annotator dual-adjudication sample both require a human annotator and were NOT performed in this automated run -- flagged here rather than silently assumed. The adjudicated rate above is therefore a conservative one: a human pass could remove more escapes via rule 1, never fewer.",
@@ -3985,33 +3893,33 @@
       "escape_decomposition": {
         "checker_crashed_uncategorized": 20,
         "clause_gap": 119,
-        "probe_gap": 90
+        "probe_gap": 86
       },
       "escape_rate_adjudicated": {
-        "claim": "toy escape rate (adjudicated, rule-2 only) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+        "claim": "toy escape rate (adjudicated, rule-2 only) >= 0.956 (n=229; Wilson 95% CI [0.956, 0.993], point estimate 0.983)",
         "label": "toy escape rate (adjudicated, rule-2 only)",
         "n": 229,
-        "point": 1.0,
-        "successes": 229,
-        "wilson_lower": 0.9835018263493515,
-        "wilson_upper": 0.9999999999999999
+        "point": 0.982532751091703,
+        "successes": 225,
+        "wilson_lower": 0.9559567913950685,
+        "wilson_upper": 0.9931868925490653
       },
       "escape_rate_raw": {
-        "claim": "toy escape rate (raw) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+        "claim": "toy escape rate (raw) >= 0.956 (n=229; Wilson 95% CI [0.956, 0.993], point estimate 0.983)",
         "label": "toy escape rate (raw)",
         "n": 229,
-        "point": 1.0,
-        "successes": 229,
-        "wilson_lower": 0.9835018263493515,
-        "wilson_upper": 0.9999999999999999
+        "point": 0.982532751091703,
+        "successes": 225,
+        "wilson_lower": 0.9559567913950685,
+        "wilson_upper": 0.9931868925490653
       },
       "escape_reason_codes": {
         "checker_crashed_or_probe_run_failed": 20,
-        "checker_evaluated_and_did_not_flag": 209
+        "checker_evaluated_and_did_not_flag": 205
       },
       "n_behaviorally_live": 229,
-      "n_escapes_adjudicated": 229,
-      "n_escapes_raw": 229,
+      "n_escapes_adjudicated": 225,
+      "n_escapes_raw": 225,
       "n_mutation_tool_pairs": 4048,
       "n_mutations_scored": 368,
       "n_reclassified_equivalent_by_rule2": 0,
@@ -4019,22 +3927,22 @@
         "n_tools": 11,
         "per_tool": {
           "acquire_lock": {
-            "claim": "toy escape rate:acquire_lock >= 0.839 (n=20; Wilson 95% CI [0.839, 1.000], point estimate 1.000)",
+            "claim": "toy escape rate:acquire_lock >= 0.764 (n=20; Wilson 95% CI [0.764, 0.991], point estimate 0.950)",
             "label": "toy escape rate:acquire_lock",
             "n": 20,
-            "point": 1.0,
-            "successes": 20,
-            "wilson_lower": 0.8388748419471806,
-            "wilson_upper": 1.0
+            "point": 0.95,
+            "successes": 19,
+            "wilson_lower": 0.763868806553258,
+            "wilson_upper": 0.9911185511992047
           },
           "deposit": {
-            "claim": "toy escape rate:deposit >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "claim": "toy escape rate:deposit >= 0.773 (n=21; Wilson 95% CI [0.773, 0.992], point estimate 0.952)",
             "label": "toy escape rate:deposit",
             "n": 21,
-            "point": 1.0,
-            "successes": 21,
-            "wilson_lower": 0.8453609810751531,
-            "wilson_upper": 1.0
+            "point": 0.9523809523809523,
+            "successes": 20,
+            "wilson_lower": 0.7733063992587743,
+            "wilson_upper": 0.9915440121901737
           },
           "freeze_account": {
             "claim": "toy escape rate:freeze_account >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
@@ -4046,13 +3954,13 @@
             "wilson_upper": 1.0
           },
           "release_item": {
-            "claim": "toy escape rate:release_item >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "claim": "toy escape rate:release_item >= 0.773 (n=21; Wilson 95% CI [0.773, 0.992], point estimate 0.952)",
             "label": "toy escape rate:release_item",
             "n": 21,
-            "point": 1.0,
-            "successes": 21,
-            "wilson_lower": 0.8453609810751531,
-            "wilson_upper": 1.0
+            "point": 0.9523809523809523,
+            "successes": 20,
+            "wilson_lower": 0.7733063992587743,
+            "wilson_upper": 0.9915440121901737
           },
           "release_lock": {
             "claim": "toy escape rate:release_lock >= 0.839 (n=20; Wilson 95% CI [0.839, 1.000], point estimate 1.000)",
@@ -4109,23 +4017,23 @@
             "wilson_upper": 1.0
           },
           "withdraw": {
-            "claim": "toy escape rate:withdraw >= 0.845 (n=21; Wilson 95% CI [0.845, 1.000], point estimate 1.000)",
+            "claim": "toy escape rate:withdraw >= 0.773 (n=21; Wilson 95% CI [0.773, 0.992], point estimate 0.952)",
             "label": "toy escape rate:withdraw",
             "n": 21,
-            "point": 1.0,
-            "successes": 21,
-            "wilson_lower": 0.8453609810751531,
-            "wilson_upper": 1.0
+            "point": 0.9523809523809523,
+            "successes": 20,
+            "wilson_lower": 0.7733063992587743,
+            "wilson_upper": 0.9915440121901737
           }
         },
         "pooled": {
-          "claim": "toy escape rate >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+          "claim": "toy escape rate >= 0.956 (n=229; Wilson 95% CI [0.956, 0.993], point estimate 0.983)",
           "label": "toy escape rate",
           "n": 229.0,
-          "point": 1.0,
-          "successes": 229.0,
-          "wilson_lower": 0.9835018263493515,
-          "wilson_upper": 0.9999999999999999
+          "point": 0.982532751091703,
+          "successes": 225.0,
+          "wilson_lower": 0.9559567913950685,
+          "wilson_upper": 0.9931868925490653
         }
       }
     }
@@ -4134,7 +4042,7 @@
     "closed_world_seed": 20260902,
     "closed_world_source": "C:\\Users\\rohit\\Documents\\Research Papers\\ResearchPaper20-ToolContractConformance\\report\\mutation_closed_world_raw.jsonl",
     "generated_by": "experiments/build_mutation_report.py",
-    "git_commit": "94adf1e4d0189b4c3840e6ccef409f469850503e"
+    "git_commit": "3ee976cf5349a602897dc9e6084aa845a87d85f5"
   },
   "v1_vs_v2_comparison": {
     "note": "v1 was scored against checker-freeze-v1, which had no code path for M-RESET or M-INVAR (both hard-UNTESTABLE structurally, not weak detection), never evaluated any frame clause, and silently skipped 17 of 19 tau2 contracts behind a two-entry lookup table. v2 (checker-freeze-v2) fixes all four; the mutant sample was invalidated and rescored per detector_analysis_plan.md sec 8. M-RESET and M-INVAR's v2 columns above are this refreeze's first REAL per-operator data for those two classes.",
@@ -4148,14 +4056,7 @@
           "n_behaviorally_live": 33,
           "n_mutations_scored": 281
         },
-        "v2": {
-          "escape_decomposition": {
-            "clause_gap": 16
-          },
-          "escape_rate_raw_claim": "tau2-telecom escape rate (raw) >= 0.325 (n=33; Wilson 95% CI [0.325, 0.648], point estimate 0.485)",
-          "n_behaviorally_live": 33,
-          "n_mutations_scored": 281
-        }
+        "v2": null
       },
       "toy": {
         "v1": {
@@ -4172,9 +4073,9 @@
           "escape_decomposition": {
             "checker_crashed_uncategorized": 20,
             "clause_gap": 119,
-            "probe_gap": 90
+            "probe_gap": 86
           },
-          "escape_rate_raw_claim": "toy escape rate (raw) >= 0.984 (n=229; Wilson 95% CI [0.984, 1.000], point estimate 1.000)",
+          "escape_rate_raw_claim": "toy escape rate (raw) >= 0.956 (n=229; Wilson 95% CI [0.956, 0.993], point estimate 0.983)",
           "n_behaviorally_live": 229,
           "n_mutations_scored": 368
         }
@@ -4196,8 +4097,8 @@
         "v2": {
           "classification_counts": {
             "detected": 4,
-            "error": 5,
-            "missed": 11,
+            "error": 4,
+            "missed": 12,
             "untestable_no_clause_evaluated": 1
           },
           "n_drawn": 21,
@@ -4219,7 +4120,7 @@
         },
         "v2": {
           "classification_counts": {
-            "error": 8
+            "missed": 8
           },
           "n_drawn": 8,
           "pool_size": 10,
@@ -4242,12 +4143,12 @@
         },
         "v2": {
           "classification_counts": {
-            "error": 7,
-            "missed": 1
+            "detected": 1,
+            "missed": 7
           },
           "n_drawn": 8,
           "pool_size": 36,
-          "recall_claim": "M-PARTIAL recall (real) >= 0.000 (n=8; Wilson 95% CI [0.000, 0.324], point estimate 0.000)",
+          "recall_claim": "M-PARTIAL recall (real) >= 0.018 (n=6; Wilson 95% CI [0.018, 0.525], point estimate 0.125)",
           "reused_full_pool": false,
           "unused_pool_size": 11
         }
@@ -4287,8 +4188,7 @@
         "v2": {
           "classification_counts": {
             "detected": 1,
-            "error": 1,
-            "missed": 5
+            "missed": 6
           },
           "n_drawn": 7,
           "pool_size": 126,
@@ -4321,11 +4221,11 @@
         "n_flags": 48,
         "tp": 48
       },
-      "v2_claim": "precision >= 0.862 (n=24; Wilson 95% CI [0.862, 1.000], point estimate 1.000)",
+      "v2_claim": "precision >= 0.867 (n=25; Wilson 95% CI [0.867, 1.000], point estimate 1.000)",
       "v2_tp_fp": {
         "fp": 0,
-        "n_flags": 24,
-        "tp": 24
+        "n_flags": 25,
+        "tp": 25
       }
     }
   }

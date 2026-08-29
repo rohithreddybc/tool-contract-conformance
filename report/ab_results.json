@@ -1,7 +1,7 @@
 {
   "provenance": {
-    "git_commit": "369119307d86cd7c5ff9773acd65cf83e4ad9767",
-    "generated_at": "2026-08-28T23:54:41Z",
+    "git_commit": "3ee976cf5349a602897dc9e6084aa845a87d85f5",
+    "generated_at": "2026-08-29T00:03:38Z",
     "python": "3.11.7",
     "script": "experiments/ab_run.py",
     "analysis_plan_note": "bound by experiments/analysis_plan.md (untouched by this run); Tier 2 not built per CLAUDE.md build instructions"
@@ -4624,7 +4624,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "87a612af0ea71f12eb70689132f078488e1221ddd0715f263195e548b4f60eb2",
+        "trajectory_hash": "dc6171f08f7f0f82dcd511b3e739c0c9dfa2522d70beb5104bb8568fb8d1dac8",
         "messages": [
           {
             "role": "user",
@@ -4641,7 +4641,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.516619",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4666,7 +4666,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.516619"
           },
           {
             "role": "user",
@@ -4681,7 +4681,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.516619",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4706,7 +4706,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.516619"
           },
           {
             "role": "user",
@@ -4721,7 +4721,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.516619",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4746,7 +4746,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.516619"
           },
           {
             "role": "user",
@@ -4764,7 +4764,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.517751",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4789,7 +4789,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.517751"
           },
           {
             "role": "user",
@@ -4804,7 +4804,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.517751",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4829,7 +4829,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.517751"
           },
           {
             "role": "assistant",
@@ -4848,7 +4848,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.517751",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4873,7 +4873,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.517751"
           },
           {
             "role": "user",
@@ -4888,7 +4888,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.517751",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4913,7 +4913,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.517751"
           },
           {
             "role": "assistant",
@@ -4931,7 +4931,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103",
+            "timestamp": "2026-08-28T20:03:44.517751",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -4956,7 +4956,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:46.439103"
+            "timestamp": "2026-08-28T20:03:44.517751"
           }
         ],
         "num_messages": 16,
@@ -4970,7 +4970,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "b8f4ca50d479c863027ef27f9d1e0e38cda31639b772797b59d6e5e223a2fc39",
+        "trajectory_hash": "466da7c3a57843fcf8ee8803ac43e9b7bbea4a0a228d6d1c8c595667ae977ce9",
         "messages": [
           {
             "role": "user",
@@ -4985,7 +4985,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618",
+            "timestamp": "2026-08-28T20:03:46.427668",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5010,7 +5010,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618"
+            "timestamp": "2026-08-28T20:03:46.427668"
           },
           {
             "role": "user",
@@ -5025,7 +5025,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618",
+            "timestamp": "2026-08-28T20:03:46.427668",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5050,7 +5050,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618"
+            "timestamp": "2026-08-28T20:03:46.427668"
           },
           {
             "role": "user",
@@ -5065,7 +5065,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618",
+            "timestamp": "2026-08-28T20:03:46.427668",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5090,7 +5090,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618"
+            "timestamp": "2026-08-28T20:03:46.427668"
           },
           {
             "role": "user",
@@ -5108,7 +5108,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618",
+            "timestamp": "2026-08-28T20:03:46.427668",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5133,7 +5133,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618"
+            "timestamp": "2026-08-28T20:03:46.427668"
           },
           {
             "role": "assistant",
@@ -5152,7 +5152,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618",
+            "timestamp": "2026-08-28T20:03:46.428738",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5177,7 +5177,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618"
+            "timestamp": "2026-08-28T20:03:46.428738"
           },
           {
             "role": "user",
@@ -5192,7 +5192,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618",
+            "timestamp": "2026-08-28T20:03:46.428738",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5217,7 +5217,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:47.872618"
+            "timestamp": "2026-08-28T20:03:46.428738"
           }
         ],
         "num_messages": 12,
@@ -5231,7 +5231,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "130e30c6a15394296df28872acf4c2441f29b043891ac0aa9408fb9e027e2251",
+        "trajectory_hash": "91d2871664cfc39d15cb08492ce0e86850495e4808ded5ae52a00356ceeeb0d2",
         "messages": [
           {
             "role": "user",
@@ -5246,7 +5246,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:49.187511",
+            "timestamp": "2026-08-28T20:03:48.226813",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5271,7 +5271,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:49.187511"
+            "timestamp": "2026-08-28T20:03:48.226813"
           },
           {
             "role": "assistant",
@@ -5290,7 +5290,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:49.187511",
+            "timestamp": "2026-08-28T20:03:48.226813",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5315,7 +5315,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:49.187511"
+            "timestamp": "2026-08-28T20:03:48.226813"
           }
         ],
         "num_messages": 4,
@@ -5329,7 +5329,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "f3e5a1ec04c52636d9827decaf109b744d475646917f1f64188504a6fb12604f",
+        "trajectory_hash": "62ecfc7e97db2401f27915d180d4e0966bf7701210cf98bb707523723aa82467",
         "messages": [
           {
             "role": "user",
@@ -5347,7 +5347,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405",
+            "timestamp": "2026-08-28T20:03:50.014045",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5372,7 +5372,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405"
+            "timestamp": "2026-08-28T20:03:50.014045"
           },
           {
             "role": "user",
@@ -5390,7 +5390,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405",
+            "timestamp": "2026-08-28T20:03:50.014045",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5415,7 +5415,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405"
+            "timestamp": "2026-08-28T20:03:50.014045"
           },
           {
             "role": "assistant",
@@ -5434,7 +5434,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405",
+            "timestamp": "2026-08-28T20:03:50.014045",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5459,7 +5459,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405"
+            "timestamp": "2026-08-28T20:03:50.014045"
           },
           {
             "role": "user",
@@ -5474,7 +5474,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405",
+            "timestamp": "2026-08-28T20:03:50.014045",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5499,7 +5499,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405"
+            "timestamp": "2026-08-28T20:03:50.014045"
           },
           {
             "role": "assistant",
@@ -5517,7 +5517,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405",
+            "timestamp": "2026-08-28T20:03:50.014045",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5542,7 +5542,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:50.607405"
+            "timestamp": "2026-08-28T20:03:50.014045"
           }
         ],
         "num_messages": 10,
@@ -5556,7 +5556,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "c51403fa7e53edd750300838c4586082877b32eb774ea6eab4be1dcbb112c9c8",
+        "trajectory_hash": "a9794d247e20ed080219897604c71daeff36a31c44a2d44408a4c8c327780066",
         "messages": [
           {
             "role": "user",
@@ -5574,7 +5574,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315",
+            "timestamp": "2026-08-28T20:03:52.029146",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5599,7 +5599,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315"
+            "timestamp": "2026-08-28T20:03:52.029146"
           },
           {
             "role": "user",
@@ -5614,7 +5614,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315",
+            "timestamp": "2026-08-28T20:03:52.029146",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5639,7 +5639,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315"
+            "timestamp": "2026-08-28T20:03:52.029146"
           },
           {
             "role": "assistant",
@@ -5658,7 +5658,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315",
+            "timestamp": "2026-08-28T20:03:52.029146",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5683,7 +5683,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315"
+            "timestamp": "2026-08-28T20:03:52.029146"
           },
           {
             "role": "assistant",
@@ -5701,7 +5701,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315",
+            "timestamp": "2026-08-28T20:03:52.029146",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5726,7 +5726,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315"
+            "timestamp": "2026-08-28T20:03:52.029146"
           },
           {
             "role": "user",
@@ -5741,7 +5741,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315",
+            "timestamp": "2026-08-28T20:03:52.029146",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5766,7 +5766,7 @@
             "requestor": "user",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:52.145315"
+            "timestamp": "2026-08-28T20:03:52.029146"
           }
         ],
         "num_messages": 10,
@@ -5780,7 +5780,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "c3efaa9369545de8e8da79655067c9fa39b5cfcaf10be8ffac23b40f7c6dc495",
+        "trajectory_hash": "de29ea1869a5b9ea61939f12266c0693e7df360221a420813b703cc6a6924fc7",
         "messages": [
           {
             "role": "assistant",
@@ -5797,7 +5797,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:53.280387",
+            "timestamp": "2026-08-28T20:03:53.442360",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5822,7 +5822,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:53.280387"
+            "timestamp": "2026-08-28T20:03:53.442360"
           },
           {
             "role": "assistant",
@@ -5895,7 +5895,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:53.282086",
+            "timestamp": "2026-08-28T20:03:53.442689",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5920,7 +5920,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:53.282086"
+            "timestamp": "2026-08-28T20:03:53.442689"
           }
         ],
         "num_messages": 4,
@@ -5934,7 +5934,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "656009bfcbc766283ecd077900d1eb9b2d36d37c4de4b767730b3b2c37b630aa",
+        "trajectory_hash": "b5f3739c51e2c4c69440fe219b147207186bf3269ef1b1c9c128cc24cf0e15b8",
         "messages": [
           {
             "role": "assistant",
@@ -5951,7 +5951,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:53.967866",
+            "timestamp": "2026-08-28T20:03:54.167400",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -5976,7 +5976,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:53.967866"
+            "timestamp": "2026-08-28T20:03:54.167400"
           }
         ],
         "num_messages": 2,
@@ -5990,7 +5990,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "a87cb5eeada9a80b05c0be05f22c4f1d39804c4b8f0125a537370df98bc007dc",
+        "trajectory_hash": "ed32276121a083ba79d559639c6a42e289a5e5c092c303d5e60035ae60622116",
         "messages": [
           {
             "role": "assistant",
@@ -6007,7 +6007,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:54.792211",
+            "timestamp": "2026-08-28T20:03:54.915696",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6032,7 +6032,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:54.792211"
+            "timestamp": "2026-08-28T20:03:54.915696"
           },
           {
             "role": "assistant",
@@ -6049,7 +6049,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:54.792211",
+            "timestamp": "2026-08-28T20:03:54.915696",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6074,7 +6074,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:54.792211"
+            "timestamp": "2026-08-28T20:03:54.915696"
           },
           {
             "role": "assistant",
@@ -6121,7 +6121,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:54.792211",
+            "timestamp": "2026-08-28T20:03:54.915696",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6146,7 +6146,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:54.792211"
+            "timestamp": "2026-08-28T20:03:54.915696"
           }
         ],
         "num_messages": 6,
@@ -6160,7 +6160,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "2ce7349db8535050d9d7d92937cea927cf51b919c2b05cfd839571e1aeb80034",
+        "trajectory_hash": "e9e8345f258771b7d10f632309ffe9fa6162cbe354ea2809321cfa7e439a58fd",
         "messages": [
           {
             "role": "assistant",
@@ -6177,7 +6177,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661070",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6202,7 +6202,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661070"
           },
           {
             "role": "assistant",
@@ -6219,7 +6219,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661070",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6244,7 +6244,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661070"
           },
           {
             "role": "assistant",
@@ -6261,7 +6261,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661070",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6286,7 +6286,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661070"
           },
           {
             "role": "assistant",
@@ -6303,7 +6303,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661070",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6328,7 +6328,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661070"
           },
           {
             "role": "assistant",
@@ -6345,7 +6345,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661792",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6370,7 +6370,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661792"
           },
           {
             "role": "assistant",
@@ -6387,7 +6387,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661792",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6412,7 +6412,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661792"
           },
           {
             "role": "assistant",
@@ -6429,7 +6429,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661792",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6454,7 +6454,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661792"
           },
           {
             "role": "assistant",
@@ -6471,7 +6471,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661792",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6496,7 +6496,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661792"
           },
           {
             "role": "assistant",
@@ -6513,7 +6513,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014",
+            "timestamp": "2026-08-28T20:03:55.661792",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6538,7 +6538,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.527014"
+            "timestamp": "2026-08-28T20:03:55.661792"
           },
           {
             "role": "assistant",
@@ -6555,7 +6555,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.528017",
+            "timestamp": "2026-08-28T20:03:55.661792",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6580,7 +6580,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.528017"
+            "timestamp": "2026-08-28T20:03:55.661792"
           },
           {
             "role": "assistant",
@@ -6597,7 +6597,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.528017",
+            "timestamp": "2026-08-28T20:03:55.663187",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6622,7 +6622,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:55.528017"
+            "timestamp": "2026-08-28T20:03:55.663187"
           }
         ],
         "num_messages": 22,
@@ -6636,7 +6636,7 @@
           "source": "reference_solution"
         },
         "source": "reference_solution",
-        "trajectory_hash": "07ac27d6ce06125e6170351780fbf83cf011d69e96784f41cd1201ffbf27e1dc",
+        "trajectory_hash": "cb89d925bb535e004c5395429c1fb849315ae99f8956957b4639622173c9f961",
         "messages": [
           {
             "role": "assistant",
@@ -6653,7 +6653,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488",
+            "timestamp": "2026-08-28T20:03:56.434925",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6678,7 +6678,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488"
+            "timestamp": "2026-08-28T20:03:56.434925"
           },
           {
             "role": "assistant",
@@ -6695,7 +6695,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488",
+            "timestamp": "2026-08-28T20:03:56.434925",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6720,7 +6720,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488"
+            "timestamp": "2026-08-28T20:03:56.434925"
           },
           {
             "role": "assistant",
@@ -6749,7 +6749,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488",
+            "timestamp": "2026-08-28T20:03:56.434925",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6774,7 +6774,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488"
+            "timestamp": "2026-08-28T20:03:56.434925"
           },
           {
             "role": "assistant",
@@ -6791,7 +6791,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488",
+            "timestamp": "2026-08-28T20:03:56.434925",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6816,7 +6816,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488"
+            "timestamp": "2026-08-28T20:03:56.434925"
           },
           {
             "role": "assistant",
@@ -6833,7 +6833,7 @@
             ],
             "is_audio": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488",
+            "timestamp": "2026-08-28T20:03:56.434925",
             "cost": null,
             "usage": null,
             "raw_data": null,
@@ -6858,7 +6858,7 @@
             "requestor": "assistant",
             "error": false,
             "turn_idx": null,
-            "timestamp": "2026-08-28T19:54:56.258488"
+            "timestamp": "2026-08-28T20:03:56.434925"
           }
         ],
         "num_messages": 10,
@@ -7712,11 +7712,13 @@
   },
   "outcome_cells_by_basis": {
     "F2|per_task_state_assertion": {
+      "not_at_risk": "n/a -- population pre-filtered to the experiment frame, a confirmed subset of at-risk",
       "at_risk_not_exercised": 5,
       "exercised_no_flip": 0,
       "flipped": 0
     },
     "F3|gold_vs_agent_db_comparison": {
+      "not_at_risk": "n/a -- population pre-filtered to the experiment frame, a confirmed subset of at-risk",
       "at_risk_not_exercised": 5,
       "exercised_no_flip": 0,
       "flipped": 0
