@@ -124,3 +124,30 @@ Recorded by the session owner. `build_mutation_report.py` emits "See the caveat 
 **How the paper must report this.** The open-world arm yields a usable escape rate on the toy domain only. For tau2-telecom the honest statement is that the arm could not be run to a meaningful conclusion, with the reason named. It must not be reported as a low escape rate, and it must not be quietly omitted — a denominator of zero is not evidence of a well-covered taxonomy.
 
 **What would fix it.** A recorded-call corpus captured from real benchmark runs, kept strictly separate from `dynamic/probes.py`. That is the missing §2 item 1 and it is the single highest-value piece of future work for this experiment.
+
+---
+
+## Closed-world v2: three anomalies diagnosed, 2026-08-28
+
+**Sample-size shortfall is genuine, not a bug.** Per-operator pools and draws:
+
+| Operator | Full pool | v1 drew | v2 unused | v2 drew | Pre-registered |
+|---|---:|---:|---:|---:|---:|
+| M-PHANTOM | 35 | 25 | 10 | 10 | 25 |
+| M-PRECOND | 126 | 101 | 101 | **25** | 25 |
+| M-IGNARG | 106 | 81 | 81 | **25** | 25 |
+| M-PARTIAL | 36 | 25 | 11 | 11 | 25 |
+| M-INVAR | 10 | 10 | 0 | 10 (fallback) | 25 |
+| M-RESET | 5 | 5 | 0 | 5 (fallback) | 25 |
+
+Two operators met the pre-registered N. The rest are §8's no-reuse rule meeting structurally small pools: M-PHANTOM admits one site per tool, so 35 exist corpus-wide and v1 consumed 25. The paper reports achieved N against pre-registered N with this reason. It is a real constraint on the study, not a scoring artifact.
+
+**M-RESET has no real-tool sites, and the reason is structural.** No tool-implementation file in any of the three real benchmarks defines a state-restoring function. Their `reset()` methods live at the adapter layer and reconstruct the environment wholesale. Only `toy/bank.py` colocates reset with its tools, deliberately, so the corpus has something to enumerate. The scoring harness looks for a `reset` function inside the contracted tool's own module, so the pool is empty before the exclusion list is consulted. Reported as "no data", never as 0/0.
+
+**Error rows are two distinct causes, not one.**
+
+Six real-tool errors are wall-clock timeouts at the 45-second watchdog, all tau2, from the frozen checker's probe-search cost on richly-parameterized tools. Correctly excluded from detected and missed, disclosed in their own column. `book_reservation` and `modify_pending_order_items` match the known `List[...]` combinatorial pattern; `modify_pending_order_address` does not — it has seven plain strings and completed in v1 under the same operator — so the List explanation does not cover every case and the exact trigger is unidentified. Pinning it down would mean instrumenting `dynamic/probes.py`, which is frozen.
+
+**Five toy errors are a real bug, and the interesting kind.** `toy/adapter.py`'s `invoke()` catches only `ToyError`. When M-PRECOND deletes a guard, a probe built to violate that clause drives the tool past the missing check into code that assumed it held — `transfer` reaches `dst["frozen"]` with `dst=None`, `release_lock` reaches `self.state["locks"]["bob"]` — raising raw `TypeError`/`KeyError` that escape and abort the whole mutant.
+
+The observation worth keeping: **a tool crashing uncontrolled on a call it should have rejected is itself evidence of non-conformance.** Those five are plausibly under-counted detections rather than neutral noise. Not fixed, because toy is labelled debug-reference and never enters the headline — but the same masking may operate invisibly on real tools, where the subprocess boundary absorbs arbitrary exceptions before the harness sees them. Whether an absorbed crash is scored as a violation or silently as a non-detection is unverified, and it bounds what the real-tools recall numbers mean. Recorded as a limitation rather than resolved.
