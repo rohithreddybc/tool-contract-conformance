@@ -1,0 +1,924 @@
+{
+  "provenance": {
+    "git_commit": "edc9482f4fe288873673f88038a84584124af5c4",
+    "generated_at": "2026-08-29T17:14:24Z",
+    "python": "3.11.7",
+    "script": "experiments/agreement.py",
+    "protocol": "experiments/annotation_protocol.md"
+  },
+  "protocol_deviations_and_gaps": [
+    {
+      "item": "detector_analysis_plan.md sec 2 component (1): recorded real calls from adapter smoke-testing",
+      "issue": "This repository does not persist a recorded-call store anywhere. Every existing production caller of mutation.probes.build_equivalence_probe_corpus passes recorded_calls=[] (confirmed by grep: experiments/open_world_cosmic_ray/*/scoring_lib.py). This script does the same, for the same reason -- component (1) contributes zero probes to every tool's corpus below, not a silent substitution."
+    },
+    {
+      "item": "venmo_social boundary-probe reachability",
+      "issue": "B's venmo_social clauses are guarded by args.domain/args.action equality checks against literals ('friend', 'add', 'like', 'toggle') that generic boundary-probe generation cannot produce without a contract-declared probe_values entry -- A declared probe_values for its own branch (comment/list) for the identical reason; B did not for friend/like. Four hand-written branch probes (manual_branch_probe:friend_add/friend_remove/like_toggle_true/like_toggle_false) were added so B's clauses are exercised at all, BEFORE any outcome was inspected -- see experiments/agreement.py's _venmo_branch_probes docstring. Both the base (frozen-corpus-only) and augmented corpus sizes are reported per tool."
+    }
+  ],
+  "tools": [
+    {
+      "benchmark": "tau2-bench",
+      "tool": "refuel_data",
+      "stratum": "blind",
+      "status": "ok",
+      "domain": "telecom",
+      "anchor_note": "Finding 2 (Unenforced Precondition) -- anchor clause pre.line_active",
+      "corpus_size": 9,
+      "corpus_size_before_venmo_branch_probes": 7,
+      "n_infra_errors": 0,
+      "clause_comparisons": [
+        {
+          "id_a": "pre.line_active",
+          "id_b": "pre.line_active",
+          "note": "same advertised precondition",
+          "n_probes_compared": 9,
+          "n_excluded_failed_call": 0,
+          "n_agree": 9,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "pre.customer_owns_line",
+          "id_b": "pre.customer_owns_line",
+          "note": "same advertised precondition",
+          "n_probes_compared": 9,
+          "n_excluded_failed_call": 0,
+          "n_agree": 9,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.data_refueled",
+          "id_b": "eff.data_refueling_increases",
+          "note": "same advertised effect (data added)",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 7,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.customer_charged",
+          "id_b": "eff.customer_billed",
+          "note": "same advertised effect (customer charged), DIFFERENT strength: A asserts an exact charge formula, B asserts direction of change only",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 7,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "frame.plans_unchanged",
+          "id_b": "frame.plans_unchanged",
+          "note": "same frame claim",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 7,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "frame.devices_unchanged",
+          "id_b": "frame.devices_unchanged",
+          "note": "same frame claim",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 7,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        }
+      ],
+      "a_only_clauses": [],
+      "b_only_clauses": [
+        "frame.line_status_unchanged",
+        "frame.line_phone_unchanged"
+      ],
+      "a_only_verdicts": [],
+      "b_only_verdicts": [
+        {
+          "clause_id": "frame.line_status_unchanged",
+          "side": "B",
+          "n_probes": 2,
+          "verdict_counts": {
+            "CONFORMS": 2,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "frame.line_phone_unchanged",
+          "side": "B",
+          "n_probes": 2,
+          "verdict_counts": {
+            "CONFORMS": 2,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        }
+      ],
+      "arg_robustness": [],
+      "notes": [],
+      "any_violates_flip": false,
+      "any_arg_finding_incomparable": false
+    },
+    {
+      "benchmark": "tau2-bench",
+      "tool": "cancel_reservation",
+      "stratum": "contaminated",
+      "status": "ok",
+      "domain": "airline",
+      "anchor_note": "Finding 3 (Partial Effect) -- anchor clause eff.seats_released. CONTAMINATED STRATUM.",
+      "corpus_size": 4,
+      "corpus_size_before_venmo_branch_probes": 3,
+      "n_infra_errors": 0,
+      "clause_comparisons": [
+        {
+          "id_a": "pre.reservation_exists",
+          "id_b": "pre.reservation_exists",
+          "note": "same advertised precondition",
+          "n_probes_compared": 4,
+          "n_excluded_failed_call": 0,
+          "n_agree": 4,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.status_cancelled",
+          "id_b": "eff.status_cancelled",
+          "note": "same advertised effect",
+          "n_probes_compared": 1,
+          "n_excluded_failed_call": 3,
+          "n_agree": 1,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.seats_released",
+          "id_b": "eff.seats_released",
+          "note": "same advertised effect (the Finding 3 clause; predicate text is byte-identical -- B disclosed copying the worked example)",
+          "n_probes_compared": 1,
+          "n_excluded_failed_call": 3,
+          "n_agree": 1,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "frame.users_unchanged",
+          "id_b": "frame.users_unchanged",
+          "note": "same frame claim",
+          "n_probes_compared": 1,
+          "n_excluded_failed_call": 3,
+          "n_agree": 1,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "inv.seat_conservation",
+          "id_b": "inv.seat_conservation",
+          "note": "same invariant (predicate text identical modulo line-wrapping)",
+          "n_probes_compared": 1,
+          "n_excluded_failed_call": 3,
+          "n_agree": 1,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        }
+      ],
+      "a_only_clauses": [],
+      "b_only_clauses": [
+        "eff.payment_refunded"
+      ],
+      "a_only_verdicts": [],
+      "b_only_verdicts": [
+        {
+          "clause_id": "eff.payment_refunded",
+          "side": "B",
+          "n_probes": 1,
+          "verdict_counts": {
+            "CONFORMS": 1,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        }
+      ],
+      "arg_robustness": [],
+      "notes": [],
+      "any_violates_flip": false,
+      "any_arg_finding_incomparable": false
+    },
+    {
+      "benchmark": "agentdojo",
+      "tool": "update_scheduled_transaction",
+      "stratum": "blind",
+      "status": "ok",
+      "domain": "banking",
+      "anchor_note": "Finding 5 (Ignored Argument + Phantom Effect) -- anchor clauses eff.recurring_propagated / eff.amount_propagated",
+      "corpus_size": 15,
+      "corpus_size_before_venmo_branch_probes": 12,
+      "n_infra_errors": 0,
+      "clause_comparisons": [
+        {
+          "id_a": "pre.transaction_exists",
+          "id_b": "pre.transaction_exists",
+          "note": "same advertised precondition",
+          "n_probes_compared": 15,
+          "n_excluded_failed_call": 0,
+          "n_agree": 15,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.recurring_propagated",
+          "id_b": "eff.recurring_updated_if_given",
+          "note": "same advertised effect -- the Finding 5 'recurring' clause",
+          "n_probes_compared": 13,
+          "n_excluded_failed_call": 2,
+          "n_agree": 13,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.amount_propagated",
+          "id_b": "eff.amount_updated_if_given",
+          "note": "same advertised effect -- the Finding 5 'amount' clause",
+          "n_probes_compared": 13,
+          "n_excluded_failed_call": 2,
+          "n_agree": 13,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "frame.iban_unchanged",
+          "id_b": "frame.iban_unchanged",
+          "note": "same frame claim",
+          "n_probes_compared": 13,
+          "n_excluded_failed_call": 2,
+          "n_agree": 13,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        }
+      ],
+      "a_only_clauses": [],
+      "b_only_clauses": [
+        "eff.recipient_updated_if_given",
+        "eff.subject_updated_if_given",
+        "eff.date_updated_if_given",
+        "frame.transactions_list_unchanged",
+        "frame.balance_unchanged",
+        "frame.scheduled_id_unchanged",
+        "frame.scheduled_sender_unchanged"
+      ],
+      "a_only_verdicts": [],
+      "b_only_verdicts": [
+        {
+          "clause_id": "eff.recipient_updated_if_given",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 12,
+            "VIOLATES": 1,
+            "UNTESTABLE": 0
+          },
+          "example_violation": {
+            "probe_origin": "boundary:recipient:zero_empty;boundary:recipient:zero_empty",
+            "probe_args": {
+              "id": 7,
+              "recipient": "",
+              "amount": 7.5,
+              "subject": "probe_value",
+              "date": "probe_value",
+              "recurring": true
+            }
+          }
+        },
+        {
+          "clause_id": "eff.subject_updated_if_given",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 12,
+            "VIOLATES": 1,
+            "UNTESTABLE": 0
+          },
+          "example_violation": {
+            "probe_origin": "boundary:subject:zero_empty;boundary:subject:zero_empty",
+            "probe_args": {
+              "id": 7,
+              "recipient": "probe_value",
+              "amount": 7.5,
+              "subject": "",
+              "date": "probe_value",
+              "recurring": true
+            }
+          }
+        },
+        {
+          "clause_id": "eff.date_updated_if_given",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 12,
+            "VIOLATES": 1,
+            "UNTESTABLE": 0
+          },
+          "example_violation": {
+            "probe_origin": "boundary:date:zero_empty;boundary:date:zero_empty",
+            "probe_args": {
+              "id": 7,
+              "recipient": "probe_value",
+              "amount": 7.5,
+              "subject": "probe_value",
+              "date": "",
+              "recurring": true
+            }
+          }
+        },
+        {
+          "clause_id": "frame.transactions_list_unchanged",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 13,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "frame.balance_unchanged",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 13,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "frame.scheduled_id_unchanged",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 13,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "frame.scheduled_sender_unchanged",
+          "side": "B",
+          "n_probes": 13,
+          "verdict_counts": {
+            "CONFORMS": 13,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        }
+      ],
+      "arg_robustness": [
+        {
+          "arg": "recurring",
+          "A": {
+            "testable": true,
+            "verdict": "VIOLATES",
+            "reason_code": null,
+            "defect_class": "ignored_argument",
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 2,
+              "argument_values_tried": [
+                false,
+                true
+              ]
+            },
+            "n_variants_tried": 2
+          },
+          "B": {
+            "testable": true,
+            "verdict": "VIOLATES",
+            "reason_code": null,
+            "defect_class": "ignored_argument",
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 2,
+              "argument_values_tried": [
+                false,
+                true
+              ]
+            },
+            "n_variants_tried": 2
+          },
+          "comparable": true,
+          "flip": false
+        },
+        {
+          "arg": "amount",
+          "A": {
+            "testable": true,
+            "verdict": "CONFORMS",
+            "reason_code": null,
+            "defect_class": null,
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 3
+            },
+            "n_variants_tried": 3
+          },
+          "B": {
+            "testable": true,
+            "verdict": "CONFORMS",
+            "reason_code": null,
+            "defect_class": null,
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 3
+            },
+            "n_variants_tried": 3
+          },
+          "comparable": true,
+          "flip": false
+        }
+      ],
+      "notes": [],
+      "any_violates_flip": false,
+      "any_arg_finding_incomparable": false
+    },
+    {
+      "benchmark": "agentdojo",
+      "tool": "reserve_car_rental",
+      "stratum": "blind",
+      "status": "ok",
+      "domain": "travel",
+      "anchor_note": "Finding 6 (Ignored Argument) -- anchor clause eff.end_time_applied",
+      "corpus_size": 11,
+      "corpus_size_before_venmo_branch_probes": 11,
+      "n_infra_errors": 0,
+      "clause_comparisons": [
+        {
+          "id_a": "eff.start_time_applied",
+          "id_b": "eff.start_time_recorded",
+          "note": "same advertised effect, identical predicate text",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 9,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.end_time_applied",
+          "id_b": "eff.end_time_recorded",
+          "note": "same advertised effect (the Finding 6 clause), identical predicate text",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 9,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.title_set",
+          "id_b": "eff.company_recorded",
+          "note": "same advertised effect, identical predicate text",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 9,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.reservation_type_set",
+          "id_b": "eff.reservation_type_car",
+          "note": "same advertised effect, identical predicate text",
+          "n_probes_compared": 2,
+          "n_excluded_failed_call": 9,
+          "n_agree": 2,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        }
+      ],
+      "a_only_clauses": [
+        "frame.contact_information_changes"
+      ],
+      "b_only_clauses": [],
+      "a_only_verdicts": [
+        {
+          "clause_id": "frame.contact_information_changes",
+          "side": "A",
+          "n_probes": 2,
+          "verdict_counts": {
+            "CONFORMS": 2,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        }
+      ],
+      "b_only_verdicts": [],
+      "arg_robustness": [
+        {
+          "arg": "end_time",
+          "A": {
+            "testable": true,
+            "verdict": "VIOLATES",
+            "reason_code": null,
+            "defect_class": "ignored_argument",
+            "aggravation": {
+              "aggravating_signal": "result_disagrees_with_state",
+              "n_successful_variants": 3,
+              "argument_values_tried": [
+                "2024-05-01T12:00:00",
+                "2024-05-04T09:15:00",
+                "hotel_list"
+              ]
+            },
+            "n_variants_tried": 3
+          },
+          "B": {
+            "testable": true,
+            "verdict": "UNTESTABLE",
+            "reason_code": "no_observable_state",
+            "defect_class": null,
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 0
+            },
+            "n_variants_tried": 3
+          },
+          "comparable": true,
+          "flip": true
+        }
+      ],
+      "notes": [
+        "arg.end_time flip, root cause confirmed by direct reproduction (not left as a bare verdict pair): A's contract declares `probe_values` pinning start_time/end_time to round-trip-exact ISO strings (its own header comment explains why: the generic harvester has nothing ISO-datetime-shaped to draw from and would otherwise draw hotel/city names off the live travel snapshot). B's contract does not declare probe_values for either argument. Reproduced directly: dynamic.probes.generate_ignored_argument_probes against B's own contract builds every variant call's `start_time` from the harvested snapshot pool (e.g. 'hotel_list', 'Paris'), and every resulting call raises `ValueError: Invalid isoformat string` before the tool's ignored-argument defect could ever be observed -- 0 of 3 variant calls succeed, so check_ignored_argument reports UNTESTABLE/no_observable_state, not CONFORMS. The underlying tool behaviour is unchanged; B's own signature.args.end_time.provenance quote is textually identical to A's. This is a probe-generation-capability gap tied to whether an annotator remembered to populate a schema-optional `probe_values` hint for a string argument with an implicit syntactic format the docstring does not spell out as a regex -- not a disagreement about what reserve_car_rental advertises, and not evidence the defect is absent under B's contract. It is reported as a flip because the protocol's flip question is defined at the verdict level (VIOLATES vs. not-VIOLATES), and UNTESTABLE is not-VIOLATES."
+      ],
+      "any_violates_flip": true,
+      "any_arg_finding_incomparable": false
+    },
+    {
+      "benchmark": "agentdojo",
+      "tool": "invite_user_to_slack",
+      "stratum": "blind",
+      "status": "ok",
+      "domain": "slack",
+      "anchor_note": "Finding 8 (Ignored Argument) -- anchor is arg.user_email, no effect clause exists for it in either contract",
+      "corpus_size": 5,
+      "corpus_size_before_venmo_branch_probes": 5,
+      "n_infra_errors": 0,
+      "clause_comparisons": [
+        {
+          "id_a": "pre.user_not_already_present",
+          "id_b": "pre.user_not_already_present",
+          "note": "same advertised precondition, identical predicate text",
+          "n_probes_compared": 5,
+          "n_excluded_failed_call": 0,
+          "n_agree": 5,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        },
+        {
+          "id_a": "eff.user_added",
+          "id_b": "eff.user_added_to_workspace",
+          "note": "same advertised effect, identical predicate text",
+          "n_probes_compared": 5,
+          "n_excluded_failed_call": 0,
+          "n_agree": 5,
+          "agreement_rate": 1.0,
+          "disagreements": [],
+          "violates_flips_a_to_b": [],
+          "violates_flips_b_to_a": []
+        }
+      ],
+      "a_only_clauses": [],
+      "b_only_clauses": [
+        "frame.channels_unchanged",
+        "frame.channel_inbox_unchanged",
+        "frame.other_users_unchanged"
+      ],
+      "a_only_verdicts": [],
+      "b_only_verdicts": [
+        {
+          "clause_id": "frame.channels_unchanged",
+          "side": "B",
+          "n_probes": 5,
+          "verdict_counts": {
+            "CONFORMS": 5,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "frame.channel_inbox_unchanged",
+          "side": "B",
+          "n_probes": 5,
+          "verdict_counts": {
+            "CONFORMS": 5,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "frame.other_users_unchanged",
+          "side": "B",
+          "n_probes": 5,
+          "verdict_counts": {
+            "CONFORMS": 0,
+            "VIOLATES": 5,
+            "UNTESTABLE": 0
+          },
+          "example_violation": {
+            "probe_origin": "boundary:user:valid;boundary:user_email:valid;boundary:user:valid;boundary:user_email:valid;precondition_satisfy:pre.user_not_already_present;precondition_satisfy:pre.user_not_already_present",
+            "probe_args": {
+              "user": "probe_value",
+              "user_email": "probe_value"
+            }
+          }
+        }
+      ],
+      "arg_robustness": [
+        {
+          "arg": "user_email",
+          "A": {
+            "testable": true,
+            "verdict": "VIOLATES",
+            "reason_code": null,
+            "defect_class": "ignored_argument",
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 3,
+              "argument_values_tried": [
+                "Alice",
+                "Bob",
+                "Charlie"
+              ]
+            },
+            "n_variants_tried": 3
+          },
+          "B": {
+            "testable": true,
+            "verdict": "VIOLATES",
+            "reason_code": null,
+            "defect_class": "ignored_argument",
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 3,
+              "argument_values_tried": [
+                "Alice",
+                "Bob",
+                "Charlie"
+              ]
+            },
+            "n_variants_tried": 3
+          },
+          "comparable": true,
+          "flip": false
+        }
+      ],
+      "notes": [],
+      "any_violates_flip": false,
+      "any_arg_finding_incomparable": false
+    },
+    {
+      "benchmark": "mm-toolsandbox",
+      "tool": "venmo_social",
+      "stratum": "blind",
+      "status": "ok",
+      "domain": "venmo_boundary",
+      "anchor_note": "Finding 7 (Ignored Argument) -- anchor is arg.sort_by, which B's signature does not declare at all",
+      "corpus_size": 29,
+      "corpus_size_before_venmo_branch_probes": 25,
+      "n_infra_errors": 0,
+      "clause_comparisons": [],
+      "a_only_clauses": [
+        "eff.transaction_id_forwarded",
+        "eff.page_index_forwarded",
+        "eff.sort_by_forwarded"
+      ],
+      "b_only_clauses": [
+        "pre.friend_add_requires_email",
+        "pre.friend_remove_requires_email",
+        "pre.like_toggle_requires_fields",
+        "eff.friend_add_delegated",
+        "eff.friend_remove_delegated",
+        "eff.like_toggle_delegated"
+      ],
+      "a_only_verdicts": [
+        {
+          "clause_id": "eff.transaction_id_forwarded",
+          "side": "A",
+          "n_probes": 4,
+          "verdict_counts": {
+            "CONFORMS": 0,
+            "VIOLATES": 2,
+            "UNTESTABLE": 2
+          },
+          "example_violation": {
+            "probe_origin": "manual_branch_probe:friend_add",
+            "probe_args": {
+              "domain": "friend",
+              "action": "add",
+              "user_email": "probe_friend@example.com"
+            }
+          }
+        },
+        {
+          "clause_id": "eff.page_index_forwarded",
+          "side": "A",
+          "n_probes": 4,
+          "verdict_counts": {
+            "CONFORMS": 0,
+            "VIOLATES": 4,
+            "UNTESTABLE": 0
+          },
+          "example_violation": {
+            "probe_origin": "manual_branch_probe:friend_add",
+            "probe_args": {
+              "domain": "friend",
+              "action": "add",
+              "user_email": "probe_friend@example.com"
+            }
+          }
+        },
+        {
+          "clause_id": "eff.sort_by_forwarded",
+          "side": "A",
+          "n_probes": 4,
+          "verdict_counts": {
+            "CONFORMS": 0,
+            "VIOLATES": 4,
+            "UNTESTABLE": 0
+          },
+          "example_violation": {
+            "probe_origin": "manual_branch_probe:friend_add",
+            "probe_args": {
+              "domain": "friend",
+              "action": "add",
+              "user_email": "probe_friend@example.com"
+            }
+          }
+        }
+      ],
+      "b_only_verdicts": [
+        {
+          "clause_id": "pre.friend_add_requires_email",
+          "side": "B",
+          "n_probes": 29,
+          "verdict_counts": {
+            "CONFORMS": 29,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "pre.friend_remove_requires_email",
+          "side": "B",
+          "n_probes": 29,
+          "verdict_counts": {
+            "CONFORMS": 29,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "pre.like_toggle_requires_fields",
+          "side": "B",
+          "n_probes": 29,
+          "verdict_counts": {
+            "CONFORMS": 29,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "eff.friend_add_delegated",
+          "side": "B",
+          "n_probes": 4,
+          "verdict_counts": {
+            "CONFORMS": 4,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "eff.friend_remove_delegated",
+          "side": "B",
+          "n_probes": 4,
+          "verdict_counts": {
+            "CONFORMS": 4,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        },
+        {
+          "clause_id": "eff.like_toggle_delegated",
+          "side": "B",
+          "n_probes": 4,
+          "verdict_counts": {
+            "CONFORMS": 4,
+            "VIOLATES": 0,
+            "UNTESTABLE": 0
+          },
+          "example_violation": null
+        }
+      ],
+      "arg_robustness": [
+        {
+          "arg": "sort_by",
+          "A": {
+            "testable": true,
+            "verdict": "VIOLATES",
+            "reason_code": null,
+            "defect_class": "ignored_argument",
+            "aggravation": {
+              "aggravating_signal": null,
+              "n_successful_variants": 3,
+              "argument_values_tried": [
+                "-date",
+                "+amount",
+                "boundary_calls"
+              ]
+            },
+            "n_variants_tried": 3
+          },
+          "B": {
+            "testable": false,
+            "reason": "argument not declared in this contract's signature at all"
+          },
+          "comparable": false,
+          "flip": false
+        }
+      ],
+      "notes": [],
+      "any_violates_flip": false,
+      "any_arg_finding_incomparable": true
+    }
+  ],
+  "headline_robustness": {
+    "blind_stratum": {
+      "any_flip": true,
+      "tools_with_a_flip": [
+        "reserve_car_rental"
+      ],
+      "tools_with_an_incomparable_arg_finding": [
+        "venmo_social"
+      ]
+    },
+    "contaminated_stratum": {
+      "any_flip": false,
+      "tools_with_a_flip": [],
+      "tools_with_an_incomparable_arg_finding": []
+    },
+    "sentence": "At least one VIOLATES finding flips under Annotator B's contracts, in: reserve_car_rental. venmo_social carries an arg.* anchor finding that could not be tested under B's contract at all (the argument is not declared in B's signature), which is not evidence of robustness and is reported separately from the flip count."
+  }
+}

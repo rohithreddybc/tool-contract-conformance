@@ -181,3 +181,46 @@ removes the asymmetry this entry noted between them and `user_email`.
 only, per the change that produced it. tau2 and toy contracts were not touched and were not
 audited for the same gap here; if any of their `signature.args` entries are similarly
 under-provenanced, that is a separate, unverified question this amendment does not answer.
+
+## check 6's `advertised_deferred` keyword list is too narrow for real deferral language
+
+Found by Annotator B while authoring `spec/contracts_annotator_b/tau2/cancel_reservation.yaml`
+(the R1 dual-annotation exercise; see `experiments/annotation_protocol.md` and
+`report/agreement_summary.md`).
+
+`data/tau2/domains/airline/policy.md` line 152 promises, of a cancelled reservation: "The refund
+will go to original payment methods within 5 to 7 business days." This is an agent-visible,
+`prompt_template`-tier promise (`policy.md` reaches the agent's system prompt) that the refund is
+not applied within the same call -- exactly the situation schema.json's `advertised_deferred` flag
+on an effect clause exists to mark. B wrote `eff.payment_refunded` against this promise and tried
+to set `advertised_deferred: true`, and `spec/validate.py`'s check 6 rejected it.
+
+Check 6 requires the clause's own provenance `quote` to contain at least one of a fixed keyword
+list: `defer`, `async`, `lag`, `later`, `eventually`, `pending`, `"not implemented"`, `"not
+applied"`. "within 5 to 7 business days" contains none of them. It is unambiguous natural-language
+deferral -- a human reader has no doubt the refund does not land in the same call -- but it names a
+*duration* rather than using one of check 6's *deferral verbs/adjectives*, and the keyword list has
+no case for that phrasing family (compare: "will be refunded shortly", "processed within N
+days/hours", "may take up to N business days" -- none contain a listed keyword either).
+
+Consequence: `eff.payment_refunded` had to be written as an ordinary same-call postcondition
+(`sum(p.amount for p in post.reservations[...].payment_history) == 0`, asserted against the SAME
+call's `post` snapshot), which does not faithfully represent a promise that is explicitly multi-day.
+A same-call check of a multi-day promise will VIOLATES on every real call regardless of whether the
+benchmark's refund logic is correct, for a reason that has nothing to do with the benchmark's
+interface -- it is a grammar-checker gap, not evidence about tau2's airline domain. B's contract
+therefore does NOT mark this clause `advertised_deferred`, and its `notes:` block records the
+reason so the clause is not mistaken for a considered decision to treat the refund as synchronous.
+
+Two ways to close this, neither applied here (this document records gaps; it does not fix
+`spec/validate.py`, which CLAUDE.md's build instructions keep out of scope for contract-authoring
+work):
+- extend the keyword list with a duration-pattern check (a regex over "within/after/up to N
+  <unit>", not just a fixed word list), or
+- accept that check 6 only certifies the OBVIOUS deferral-verb phrasing family, document that a
+  duration-only promise must be either rephrased at the quote level (not invented -- the quote must
+  still appear verbatim) or left un-flagged with the gap noted in-contract, as B did here.
+
+Neither exists today. This is a `spec/validate.py` gap, not a `spec/schema.json` one (the
+`advertised_deferred` field itself is expressive enough; check 6 is what is too narrow), so no
+contract-version bump is implied.
