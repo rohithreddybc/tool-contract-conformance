@@ -94,286 +94,282 @@ fg)) (main.out) (main.out)
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd)
-Underfull \hbox (badness 1533) in paragraph at lines 167--168
+Underfull \hbox (badness 1533) in paragraph at lines 184--185
 []\OT1/ptm/m/n/10 The loss can be to-tal. Med-Agent-Bench [[]] eval-u-ates
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--168
+Underfull \hbox (badness 10000) in paragraph at lines 184--185
 \OT1/ptm/m/n/10 language-model agents against a sim-u-lated elec-tronic
 
-Underfull \hbox (badness 3168) in paragraph at lines 167--168
+Underfull \hbox (badness 3168) in paragraph at lines 184--185
 \OT1/ptm/m/n/10 health record. Its har-ness han-dles ev-ery write re-quest
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--168
+Underfull \hbox (badness 10000) in paragraph at lines 184--185
 \OT1/ptm/m/n/10 an agent emits in one branch of one func-tion
 
-Overfull \hbox (5.82996pt too wide) in paragraph at lines 167--168
+Overfull \hbox (5.82996pt too wide) in paragraph at lines 184--185
 \OT1/ptm/m/n/10 (\OT1/pcr/m/n/10 src/server/tasks/medagentbench/__init__.py\OT1
 /ptm/m/n/10 ,
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd)
-Underfull \hbox (badness 2409) in paragraph at lines 188--189
+Underfull \hbox (badness 2409) in paragraph at lines 205--206
 []\OT1/ptm/b/n/10 Score-at-risk de-pen-dency anal-y-sis\OT1/ptm/m/n/10 : a stat
 ic, per-
 [1{C:/Users/rohit/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/ro
 hit/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 230--230
+Underfull \hbox (badness 10000) in paragraph at lines 247--247
 []|\OT1/ptm/m/n/7 BenchGuard [[]], Au-to-mated
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--232
+Underfull \hbox (badness 10000) in paragraph at lines 249--249
 \OT1/ptm/m/n/7 Con-tracts [[]], Con-tract2Tool
 [2] [3]
-Underfull \hbox (badness 3219) in paragraph at lines 319--320
+Underfull \hbox (badness 3219) in paragraph at lines 336--337
 \OT1/ptm/b/n/10 tags are never pooled. \OT1/ptm/m/n/10 tau2's air-line do-main 
 grades
 
-Underfull \hbox (badness 3635) in paragraph at lines 319--320
+Underfull \hbox (badness 3635) in paragraph at lines 336--337
 \OT1/pcr/m/n/10 cancel_reservation \OT1/ptm/m/n/10 by hash-ing the full databas
 e
 
-Underfull \hbox (badness 3735) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 any field a de-fec-tive tool writes is, by con-struc-tion,
+Underfull \hbox (badness 1389) in paragraph at lines 336--337
+\OT1/ptm/m/n/10 coarse-ness, not the de-fect's reach, so Ta-ble []III[] tags it
 
-Underfull \hbox (badness 4543) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 the eval-u-a-tor's coarse-ness, not the de-fect's reach, so
 
-Underfull \hbox (badness 7291) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 through per-task as-ser-tion func-tions in-stead, and the
+Underfull \hbox (badness 1383) in paragraph at lines 336--337
+\OT1/ptm/m/n/10 1,120 on the spe-cific writ-ten at-tribute (\OT1/pcr/m/n/10 exa
+ct_field\OT1/ptm/m/n/10 )
 
-Underfull \hbox (badness 1917) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 them on the spe-cific writ-ten at-tribute (\OT1/pcr/m/n/10 exac
-t_field\OT1/ptm/m/n/10 )
-
-Underfull \hbox (badness 10000) in paragraph at lines 319--320
+Underfull \hbox (badness 10000) in paragraph at lines 336--337
 \OT1/ptm/m/n/10 and 15 more on the con-tain-ing col-lec-tion alone
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--320
+Underfull \hbox (badness 10000) in paragraph at lines 336--337
 \OT1/ptm/m/n/10 file (\OT1/pcr/m/n/10 data/tau2/domains/telecom/tasks.json\OT1/
 ptm/m/n/10 ),
 
-Underfull \hbox (badness 3525) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 car-ries both bases on dif-fer-ent tools; no project-wide
-
-Overfull \hbox (1.7029pt too wide) in paragraph at lines 328--328
+Overfull \hbox (1.7029pt too wide) in paragraph at lines 345--345
 []|\OT1/ptm/m/n/7 Experiment
 
-Underfull \hbox (badness 10000) in paragraph at lines 330--330
+Underfull \hbox (badness 10000) in paragraph at lines 347--347
 []|\OT1/ptm/m/n/7 tau2 air-line : \OT1/pcr/m/n/7 cancel_
 
-Underfull \hbox (badness 7238) in paragraph at lines 331--331
+Underfull \hbox (badness 7238) in paragraph at lines 348--348
 []|\OT1/ptm/m/n/7 Unenforced Pre-con-di-
 
-Underfull \hbox (badness 10000) in paragraph at lines 331--331
+Underfull \hbox (badness 10000) in paragraph at lines 348--348
 []|\OT1/pcr/m/n/7 exact_field \OT1/ptm/m/n/7 (1120)
 
-Underfull \hbox (badness 1975) in paragraph at lines 331--331
+Underfull \hbox (badness 1975) in paragraph at lines 348--348
 \OT1/ptm/m/n/7 + \OT1/pcr/m/n/7 collection_only
 
-Underfull \hbox (badness 10000) in paragraph at lines 335--335
+Underfull \hbox (badness 10000) in paragraph at lines 352--352
 []|\OT1/ptm/m/n/7 MM-ToolSandbox : \OT1/pcr/m/n/7 venmo_
 
-Underfull \hbox (badness 10000) in paragraph at lines 335--335
+Underfull \hbox (badness 10000) in paragraph at lines 352--352
 []|\OT1/pcr/m/n/7 not_
 
-Underfull \hbox (badness 10000) in paragraph at lines 335--335
+Underfull \hbox (badness 10000) in paragraph at lines 352--352
 \OT1/pcr/m/n/7 computable_
 
-Underfull \hbox (badness 10000) in paragraph at lines 335--335
+Underfull \hbox (badness 10000) in paragraph at lines 352--352
 \OT1/pcr/m/n/7 appworld_
 
-Underfull \hbox (badness 10000) in paragraph at lines 335--335
+Underfull \hbox (badness 10000) in paragraph at lines 352--352
 []|\OT1/ptm/m/n/7 not com-
 [4]
-Underfull \hbox (badness 1418) in paragraph at lines 344--345
+Underfull \hbox (badness 1418) in paragraph at lines 361--362
 \OT1/ptm/m/n/10 is bro-ken on ev-ery ar-gu-ment at falsy val-ues (\OT1/pcr/m/n/
 10 amount
 
-Underfull \vbox (badness 10000) has occurred while \output is active
-Underfull \hbox (badness 6641) in paragraph at lines 346--347
+Underfull \hbox (badness 6641) in paragraph at lines 363--364
 []\OT1/ptm/b/n/10 MM-ToolSandbox re-ports what it can com-pute
 
-Underfull \hbox (badness 10000) in paragraph at lines 346--347
+Underfull \hbox (badness 10000) in paragraph at lines 363--364
 \OT1/ptm/m/n/10 field \OT1/pcr/m/n/10 venmo_social \OT1/ptm/m/n/10 drops (Find-
 ing 7). Steps 2
 
-Underfull \hbox (badness 2970) in paragraph at lines 346--347
+Underfull \hbox (badness 2970) in paragraph at lines 363--364
 \OT1/ptm/m/n/10 and 3 do not run: AppWorld-tier sce-nar-ios ex-er-cis-ing
 
-Underfull \hbox (badness 4995) in paragraph at lines 346--347
+Underfull \hbox (badness 4995) in paragraph at lines 363--364
 \OT1/ptm/m/n/10 this tool are graded in-side the \OT1/pcr/m/n/10 appworld \OT1/
 ptm/m/n/10 pack-age,
 
-Underfull \hbox (badness 1803) in paragraph at lines 346--347
+Underfull \hbox (badness 1803) in paragraph at lines 363--364
 \OT1/ptm/m/n/10 which this project can-not clone. Ta-ble []III[]'s row reads
 
-Underfull \hbox (badness 10000) in paragraph at lines 346--347
+Underfull \hbox (badness 10000) in paragraph at lines 363--364
 \OT1/pcr/m/n/10 not_computable_appworld_unreachable\OT1/ptm/m/n/10 , not a
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 371--372
+
+Underfull \vbox (badness 4403) has occurred while \output is active [5]
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 []\OT1/ptm/m/n/10 The pre-registered plan fixes, be-fore any mu-tant
 
-Underfull \hbox (badness 10000) in paragraph at lines 371--372
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 \OT1/ptm/m/n/10 ex-isted, what each arm can and can-not li-cense
 
-Underfull \hbox (badness 10000) in paragraph at lines 371--372
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 \OT1/ptm/m/n/10 (\OT1/pcr/m/n/10 experiments/detector_analysis_plan.md\OT1/ptm/
 m/n/10 ,
 
-Underfull \hbox (badness 10000) in paragraph at lines 371--372
+Underfull \hbox (badness 10000) in paragraph at lines 388--389
 \OT1/ptm/m/n/10 com-mit-ted at tag \OT1/pcr/m/n/10 checker-freeze-v1\OT1/ptm/m/
 n/10 , com-mit
 
-Underfull \hbox (badness 10000) in paragraph at lines 397--398
+Underfull \hbox (badness 10000) in paragraph at lines 414--415
 []\OT1/ptm/m/n/10 Recall as shipped is low, and a post hoc
 
-Underfull \hbox (badness 10000) in paragraph at lines 397--398
+Underfull \hbox (badness 10000) in paragraph at lines 414--415
 \OT1/ptm/m/n/10 di-ag-nos-tic writ-ten af-ter the cor-pus was scored,
 
-Overfull \hbox (14.5pt too wide) in paragraph at lines 397--398
+Overfull \hbox (14.5pt too wide) in paragraph at lines 414--415
 \OT1/pcr/m/n/10 experiments/decompose_closed_world_misses.py\OT1/ptm/m/n/10 ,
 
-Underfull \hbox (badness 1721) in paragraph at lines 397--398
+Underfull \hbox (badness 1721) in paragraph at lines 414--415
 \OT1/ptm/m/n/10 29 (\OT1/pcr/m/n/10 probe_corpus_unreachable\OT1/ptm/m/n/10 , n
 ever driv-ing the
 
-Underfull \hbox (badness 10000) in paragraph at lines 397--398
+Underfull \hbox (badness 10000) in paragraph at lines 414--415
 \OT1/ptm/m/n/10 2 are \OT1/pcr/m/n/10 probe_gap \OT1/ptm/m/n/10 and \OT1/pcr/m/
 n/10 target_not_found\OT1/ptm/m/n/10 . The
 [6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 426--426
+Underfull \hbox (badness 10000) in paragraph at lines 443--443
 []|\OT1/ptm/m/n/7 Surfaced
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--428
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
 []|\OT1/ptm/m/n/7 MedAgentBench
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--428
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
 []|\OT1/ptm/m/n/7 POST branch,
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--428
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
 []|\OT1/ptm/m/n/7 agent-visible
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--428
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
 \OT1/ptm/m/n/7 (\OT1/pcr/m/n/7 prompt_
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--428
+Underfull \hbox (badness 10000) in paragraph at lines 445--445
 \OT1/pcr/m/n/7 template\OT1/ptm/m/n/7 ,
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--429
+Underfull \hbox (badness 10000) in paragraph at lines 446--446
 []|\OT1/ptm/m/n/7 tau2-bench @
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--429
+Underfull \hbox (badness 10000) in paragraph at lines 446--446
 []|\OT1/pcr/m/n/7 refuel_data\OT1/ptm/m/n/7 ,
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--429
+Underfull \hbox (badness 10000) in paragraph at lines 446--446
 \OT1/pcr/m/n/7 telecom/tools.py:
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--429
+Underfull \hbox (badness 10000) in paragraph at lines 446--446
 []|\OT1/ptm/m/n/7 agent-visible
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 447--447
 []|\OT1/ptm/m/n/7 tau2-bench @
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 447--447
 []|\OT1/pcr/m/n/7 cancel_
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 447--447
 \OT1/pcr/m/n/7 reservation\OT1/ptm/m/n/7 ,
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 447--447
 \OT1/pcr/m/n/7 airline/tools.py:
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 447--447
 []|\OT1/ptm/b/n/7 maintainer-
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 447--447
 \OT1/ptm/b/n/7 annotated: not
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--431
+Underfull \hbox (badness 10000) in paragraph at lines 448--448
 []|\OT1/ptm/m/n/7 MedAgentBench
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--431
+Underfull \hbox (badness 10000) in paragraph at lines 448--448
 []|\OT1/ptm/m/n/7 write graders,
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--431
+Underfull \hbox (badness 10000) in paragraph at lines 448--448
 \OT1/pcr/m/n/7 refsol.py \OT1/ptm/m/n/7 (SHA-
 
-Underfull \hbox (badness 2941) in paragraph at lines 431--431
+Underfull \hbox (badness 2941) in paragraph at lines 448--448
 []|\OT1/ptm/m/n/7 Ungrounded Or-a-cle
 
-Underfull \hbox (badness 4940) in paragraph at lines 431--431
+Underfull \hbox (badness 4940) in paragraph at lines 448--448
 \OT1/ptm/m/n/7 (eval-u-a-tor prop-erty,
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--432
+Underfull \hbox (badness 10000) in paragraph at lines 448--449
 []|\OT1/ptm/m/n/7 Gate string ``POST re-quest ac-cepted'' con-sumed by
 
-Underfull \hbox (badness 4084) in paragraph at lines 431--432
+Underfull \hbox (badness 4084) in paragraph at lines 448--449
 \OT1/pcr/m/n/7 extract_posts\OT1/ptm/m/n/7 ; 60/300 cases graded un-con-di-tion
 -ally
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--432
+Underfull \hbox (badness 10000) in paragraph at lines 449--449
 []|\OT1/ptm/m/n/7 AgentDojo @
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--432
+Underfull \hbox (badness 10000) in paragraph at lines 449--449
 []|\OT1/pcr/m/n/7 update_scheduled_
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--432
+Underfull \hbox (badness 10000) in paragraph at lines 449--449
 \OT1/pcr/m/n/7 transaction\OT1/ptm/m/n/7 ,
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--432
+Underfull \hbox (badness 10000) in paragraph at lines 449--449
 \OT1/pcr/m/n/7 banking_
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--432
+Underfull \hbox (badness 10000) in paragraph at lines 449--449
 []|\OT1/ptm/m/n/7 agent-visible
 
-Underfull \hbox (badness 10000) in paragraph at lines 433--433
+Underfull \hbox (badness 10000) in paragraph at lines 450--450
 []|\OT1/ptm/m/n/7 AgentDojo @
 
-Underfull \hbox (badness 10000) in paragraph at lines 433--433
+Underfull \hbox (badness 10000) in paragraph at lines 450--450
 []|\OT1/pcr/m/n/7 reserve_car_
 
-Underfull \hbox (badness 10000) in paragraph at lines 433--433
+Underfull \hbox (badness 10000) in paragraph at lines 450--450
 \OT1/pcr/m/n/7 rental\OT1/ptm/m/n/7 , \OT1/pcr/m/n/7 travel_
 
-Underfull \hbox (badness 10000) in paragraph at lines 433--433
+Underfull \hbox (badness 10000) in paragraph at lines 450--450
 \OT1/pcr/m/n/7 booking_
 
-Underfull \hbox (badness 10000) in paragraph at lines 433--433
+Underfull \hbox (badness 10000) in paragraph at lines 450--450
 []|\OT1/ptm/m/n/7 agent-visible
 
-Underfull \hbox (badness 10000) in paragraph at lines 434--434
+Underfull \hbox (badness 10000) in paragraph at lines 451--451
 []|\OT1/ptm/m/n/7 MM-
 
-Underfull \hbox (badness 10000) in paragraph at lines 434--434
+Underfull \hbox (badness 10000) in paragraph at lines 451--451
 \OT1/ptm/m/n/7 ToolSandbox
 
-Underfull \hbox (badness 3460) in paragraph at lines 434--434
+Underfull \hbox (badness 3460) in paragraph at lines 451--451
 []|\OT1/pcr/m/n/7 venmo_social\OT1/ptm/m/n/7 , \OT1/pcr/m/n/7 mini
 
-Underfull \hbox (badness 10000) in paragraph at lines 434--434
+Underfull \hbox (badness 10000) in paragraph at lines 451--451
 []|\OT1/ptm/m/n/7 agent-visible
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--435
+Underfull \hbox (badness 10000) in paragraph at lines 452--452
 []|\OT1/ptm/m/n/7 AgentDojo @
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--435
+Underfull \hbox (badness 10000) in paragraph at lines 452--452
 []|\OT1/pcr/m/n/7 invite_user_to_
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--435
+Underfull \hbox (badness 10000) in paragraph at lines 452--452
 \OT1/pcr/m/n/7 slack\OT1/ptm/m/n/7 , \OT1/pcr/m/n/7 slack.py:
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--435
+Underfull \hbox (badness 10000) in paragraph at lines 452--452
 []|\OT1/ptm/m/n/7 agent-visible
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--435
+Underfull \hbox (badness 10000) in paragraph at lines 452--452
 []|\OT1/ptm/m/n/7 static
 
-Underfull \hbox (badness 3029) in paragraph at lines 488--489
+Underfull \hbox (badness 3029) in paragraph at lines 505--506
 []\OT1/ptm/b/n/10 The sub-pro-cess bound-ary ab-sorbs ex-cep-tions the
 [8]
-Underfull \hbox (badness 2080) in paragraph at lines 496--497
+Underfull \hbox (badness 2080) in paragraph at lines 513--514
 []\OT1/ptm/b/n/10 Repository his-tory can-not sup-port ev-ery or-der-ing
 [9] (main.bbl
 Underfull \hbox (badness 1824) in paragraph at lines 63--65
 \OT1/ptm/m/n/8 Contract-grounded and ver-i-fied tool ex-e-cu-tion for LLMs,'' 2
 026,
+
+Underfull \hbox (badness 1383) in paragraph at lines 204--207
+[]\OT1/ptm/m/n/8 Bellibatlu, Singh, Ja-joo, Lakhan-pal, and Is-rani, ``RISED: A
+ pre-
 )
 
 ** Conference Paper **
@@ -387,8 +383,7 @@ Before submitting the final camera ready copy, remember to:
  process uses the appropriate paper size.
 
 
-Overfull \vbox (0.7559pt too high) has occurred while \output is active
-Overfull \vbox (5.94902pt too high) has occurred while \output is active
+Overfull \vbox (1.31499pt too high) has occurred while \output is active
 [10] (main.aux) )
 (see the transcript file for additional information)<C:/Users/rohit/AppData/Loc
 al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/rohit/App
@@ -405,6 +400,6 @@ onts/type1/urw/times/utmb8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/f
 onts/type1/urw/times/utmbi8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/
 fonts/type1/urw/times/utmr8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/
 fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (10 pages, 242304 bytes).
+Output written on main.pdf (10 pages, 242521 bytes).
 Transcript written on main.log.
 pdflatex: major issue: So far, you have not checked for MiKTeX updates.
