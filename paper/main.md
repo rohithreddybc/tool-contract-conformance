@@ -12,9 +12,9 @@ Citation keys match REFERENCES.md; keys marked (*) in the reference list are not
 logged there and must be added before the bibliography is frozen.
 -->
 
-# Scores at Risk: When Benchmark Tools Violate Their Own Advertised Semantics
+# Do Agent Benchmarks Do What They Say?
 
-**Subtitle:** Executable Tool-Contract Conformance Testing for Agentic Benchmarks
+**Subtitle:** Executable Contract Conformance Testing for Tool-Using Agent Environments
 
 Rohith Reddy, Wenbin Zhang
 
