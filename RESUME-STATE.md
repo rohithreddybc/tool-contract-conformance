@@ -1,63 +1,70 @@
-# Resume state — paused 2026-08-29 01:21, resume 05:21
+# State — 2026-08-29, after round 3 revisions
 
-## Where the paper is
+## The paper
 
-Complete draft, all eleven sections plus abstract. Compiles clean under pdflatex:
-**14 pages against a hard 10-page limit** (references counted, no appendix).
-390 tests pass. Numbers audit: 75 pass, 2 fail (both known and listed below).
+Complete. **10 pages**, IEEE two-column, references counted, no appendix. Compiles
+clean: zero errors, zero undefined references, 32 of 32 citations resolving.
+416 tests pass. Numbers audit: one failure, `[N12]`, a disclosure log dated
+2026-09-10 that cannot exist yet.
 
-Round-3 full reviewer panel returned **Major Revision**, 8 required items, 6 suggested.
-No finding questioned the truth of any claim — only completeness, internal
-consistency, and length.
+Round-3 full panel returned Major Revision with eight required items. **All eight
+are closed.** A round-4 panel is running against the finished draft.
 
-## The eight required items
+## What the eight items produced
 
-| # | Item | Status |
+| # | Item | Outcome |
 |---|---|---|
-| R1 | Dual-annotation study (§V, N7) promised but never executed | **Critical, not started.** Blind annotator-B agent was dispatched and stopped at pause; it produced no files. Plan: a blind agent instance authors contracts for six tools with no access to existing contracts or findings, then compare extensionally. Must be disclosed as two LLM-agent annotations, one blind — NOT independent human annotation |
-| R2 | §IX headline arithmetic fails visibly: 7 cells − 2 stated exclusions ≠ 4 | Not started. Third compression (AgentDojo Phantom, dropped because the biconditional re-tag never fires under the fixture) is explained only in an HTML comment. Also: instance count ambiguous (8 vs 9 with `update_user_info`), and the clause→instance→cell mapping is never stated |
-| R3 | Cut 14 pages to 10 | Not started. Cut list exists; see below |
-| R4 | `report/render.py` does not exist; Table III never generated | Not started. Agent dispatched and stopped; produced no files |
-| R5 | v1 open-world tau2 result (281/465, 33 live, ≥0.325, invalidated by stale cache) absent from the manuscript | Not started. Two sentences in §VII |
-| R6 | Abstract's MedAgentBench sentence overreaches §IV's own decomposition | Not started. §IV says 60 transcript-grounded / 90 mixed / 150 no write oracle / 0 state-grounded; the abstract says "its only grader" and "measures whether a well-formed request was emitted", which is not true of the 150 |
-| R7 | Closed-world misses undecomposed | Not started. The probe-corpus failure that zeroed the tau2 open-world arm is a live alternative explanation for part of the miss rate — the paper may be overstating its own weakness |
-| R8 | Ledger inconsistencies + bibliography | Not started. §IV "broken on exactly one argument" contradicts `eff.amount_propagated` VIOLATES; §VI "every table rendered from findings.jsonl" is false for MedAgentBench (zero rows, static findings); `suspend_line arg.reason` VIOLATES row is unmentioned anywhere; ten references unconfirmed |
+| R1 | Dual-annotation study, promised but never run | Run. A blind agent authored contracts for six tools. **Blind stratum agrees 98/98.** One finding flips, root-caused to a missing `probe_values` annotation, not a disagreement about advertised semantics. One tool contaminated and excluded — see below |
+| R2 | §VIII arithmetic failed by subtraction | Full chain visible: 12 ledger rows → 8 instances → 7 cells → 4 headline-eligible, all three compressions stated |
+| R3 | 14 pages against a 10-page limit | **10 pages.** Mechanism relocated to the artifact with in-line pointers; §V and §VI compressed from ~1400 words to 557 |
+| R4 | `report/render.py` did not exist | Written. Table III generated, `--verify` round-trips |
+| R5 | v1 open-world result absent from the paper | Disclosed: 281/465 scored, 33 live, ≥0.325, invalidated by a stale cache |
+| R6 | Abstract overreached §IV's own decomposition | Leads with the claim true of all 300 cases: no grader reads the record back |
+| R7 | Closed-world misses undecomposed | **29 of 33 are probe unreachability; only 2 are clause gaps.** The paper had been understating itself |
+| R8 | Sentences the ledger falsified | Four corrected; precision denominator scoped to mutation-arm flags |
 
-## The page problem, which is worse than it looked
+## Three findings worth carrying forward
 
-14 pages, not the ~12 I estimated from word count. The measured cut list recovers
-only **~1–1.3 pages** even including typesetting tightening:
+**The paper was conceding more weakness than the evidence supports.** M-INVAR's
+0.000 recall reads as a taxonomy failure and is not — no probe ever reached a
+mutated invariant path. Only 2 of 33 misses are gaps the checker owns.
 
-1. §VI refreeze + expressiveness-gap paragraphs (~0.25p) — near-zero cost, both retold in §VII/§X
-2. §V worked-contract YAML listing (~0.2p) — prose already narrates it
-3. §II contract-inference paragraph compression (~0.2p) — no citation dropped
-4. §X final refreeze paragraph → pointer (~0.12p) — third telling
-5. §I "one result deserves a preview" → one sentence (~0.05p)
+**One missing artifact explains three separate weak results.** The pre-registered
+recorded-real-calls corpus (`detector_analysis_plan.md` §2, item 1) was never
+built; every production caller passes an empty list. It causes the tau2
+open-world zero denominator, the `reserve_car_rental` agreement flip, and 29 of
+33 closed-world misses. §IX names it as the highest-value future work.
 
-**That leaves ~2.7–3 pages unaccounted for.** Every section runs 15–35% over its
-own outline budget; this is systemic overshoot, not a few fat passages. Closing it
-needs either a broad compression pass across protected sections or a venue with a
-larger limit. Do NOT solve it by cutting §X's ten limitations or §II's eight
-disposal sentences — both were bought with real work and both answer specific
-reviewers.
+**Our own annotation protocol cannot produce a blind annotation for one tool.**
+It requires reading `PREDICATE-GRAMMAR.md`, whose §5 is a complete worked example
+of `cancel_reservation` including its grounding correction. Disclosed, that tool
+excluded from the blind stratum, and reported as a defect in the protocol.
 
-## Standing constraints that survive any cut
+## Open, and honest about it
 
-- §III taxonomy, §IV score-at-risk, §IX findings: the contribution, never cut
-- §VII: both mutation arms, Wilson lower bounds, escape decomposition, pool table
-- Every score-at-risk figure keeps its basis tag; never pool across bases
-- MedAgentBench hedges are load-bearing armor: "the numbers are not wrong",
-  "measures emitted-request well-formedness"
-- Checker is frozen at `checker-freeze-v2` (5824376). Any change to `core/`,
-  `dynamic/`, `adapters/contract_check.py` or `spec/validate.py` is refreeze
-  cycle two and needs an explicit decision
+- **`[N12]`** — the disclosure log. Maintainer disclosure is scheduled for
+  2026-09-10; the artifact cannot exist before then. Fallback text for
+  non-response needs drafting before submission, not at the deadline.
+- **`invite_user_to_slack`'s `frame.other_users_unchanged`** violates on every
+  probe under annotator B's contract. Either a real unadvertised side effect or
+  an over-broad frame path. Neither confirmed nor dismissed.
+- **Two sub-questions** from the miss decomposition: whether closed-world mutants
+  were liveness-screened before entering the recall denominator, and whether the
+  six watchdog timeouts are exchangeable with misses for the printed bounds.
+  Both stated as open in §VII.
+- **Venue.** IEEE BigData Intelligent Data Mining (Sep 27) is the plan of record.
+  SE4AgenticAI (Oct 10, 8–10 pages) is the better topical fit — its reviewers know
+  the ConTract and IcePICK lineage this paper positions against. No workshop
+  allows more than 10 pages; that was checked and my earlier assumption was wrong.
 
-## Known-good state
+## Constraints that still bind
 
-- `checker-freeze-v1` = 57b019d, `checker-freeze-v2` = 5824376,
-  agent-experiment pre-registration = ec5dbf4
-- `report/findings.jsonl` 440 rows, 12 VIOLATES, regenerated under v2
-- `report/score_at_risk.jsonl` 1208 rows, `--verify` clean, contract-derived
-- Headline: **4 headline-eligible cells across 4 benchmarks**, 8 instances
-- Two audit failures are legitimate: `report/render.py` missing (R4 fixes it),
-  `[N12]` disclosure log dated 2026-09-10 (cannot exist yet)
+- Checker frozen at `checker-freeze-v2` (5824376). Changing `core/`, `dynamic/`,
+  `adapters/contract_check.py` or `spec/validate.py` is refreeze cycle two.
+- `paper/tables/` is generated only.
+- Never cut §IX's ten limitations or §II's eight disposals.
+- Every score-at-risk figure keeps its basis tag; never pool across bases.
+- The MedAgentBench hedges are armor: "the numbers are not wrong", "measures
+  emitted-request well-formedness", "no grader reads the record back".
+- Run `PYTHONUTF8=1 python experiments/numbers_audit.py` before every commit to
+  `paper/`.
