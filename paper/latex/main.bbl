@@ -48,6 +48,17 @@ Bhat, Vaghasiya, Mohsin, and Aali, ``Benchmarking the benchmarks: A validity
 Chen, Yan, Zhang, and Zhang, ``Who tests the testers? systematic enumeration
   and coverage audit of {LLM} agent tool call safety,'' 2026, preprint.
 
+\bibitem{wangstrong96}
+Wang and Strong, ``Beyond accuracy: What data quality means to data
+  consumers,'' \emph{Journal of Management Information Systems}, vol.~12,
+  no.~4, 1996.
+
+\bibitem{bunemantan01}
+Buneman, Khanna, and Tan, ``Why and where: A characterization of data
+  provenance,'' in \emph{International Conference on Database Theory (ICDT)},
+  ser. Lecture Notes in Computer Science, vol. 1973.\hskip 1em plus 0.5em minus
+  0.4em\relax Springer, 2001.
+
 \bibitem{toolgate26}
 Liu, Peng, Cao, Wang, Deng, Chen, Yin, and Zhang, ``{ToolGate}:
   Contract-grounded and verified tool execution for {LLMs},'' 2026, preprint.

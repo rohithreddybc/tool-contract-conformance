@@ -30,6 +30,18 @@ Source key: **AX** = arXiv direct fetch, **CO** = Consensus connector, **SC** = 
 | dlcontract23 | Design by Contract for Deep Learning APIs | Ahmed, Cruz, Imtiaz, Khairunnesa, Rajan | 2023 | ESEC/FSE 2023 — **confirmed**, Scopus DOI match | CO, SC | 10.1145/3611643.3616247 |
 | cogent23 | An Active Learning Approach to Synthesizing Program Contracts | Ghosal, Jonsson, Rümmer | 2023 | **Springer LNCS vol. 14323** (conference paper) — **corrected from "—"**; confirmed via Scopus DOI match; specific host conference not independently identified | CO, SC | 10.1007/978-3-031-47115-5_8 |
 
+## Data quality and provenance literature (§I venue-bridge citations, added 2026-08-30)
+
+Added to strengthen §I's data-quality framing paragraph for the IEEE BigData Intelligent Data Mining special session (per `EXTERNAL-VERIFICATION.md` Task 3, the session's 34-topic CFP names nothing about benchmark quality, evaluation methodology, or reproducibility, so the paper's fit rested on an uncited claim). All three confirmed via the Consensus connector (tool `mcp__3e9661f8-0c32-46d8-9a53-dcee9d411a4b__search`, which indexes Scopus among other sources) on 2026-08-30, cross-checked against independent WebSearch hits resolving to the publisher's own page (Taylor & Francis for JMIS, Springer for the ICDT proceedings, ACM DL for SIGMOD Record); full Scopus advanced search (DOI query) was unreachable this session — the logged-in browser session had only "Scopus Preview" access (author/source search, no document search by DOI/title) — so Consensus, which CLAUDE.md lists as the first-choice connector, is the source of record here, not a fallback.
+
+| Key | Title | Authors | Year | Venue | Source | DOI |
+|---|---|---|---|---|---|---|
+| wangstrong96 | Beyond Accuracy: What Data Quality Means to Data Consumers | Wang, Strong | 1996 | Journal of Management Information Systems, 12(4), pp. 5-33 — **confirmed**, Consensus DOI match (4967 citations), cross-checked against the Taylor & Francis abstract page | CO, WS | 10.1080/07421222.1996.11518099 |
+| bunemantan01 | Why and Where: A Characterization of Data Provenance | Buneman, Khanna, Tan | 2001 | ICDT 2001 (LNCS 1973, pp. 316-330), Springer — **confirmed**, cross-checked against dblp, the Springer chapter page, and ACM DL's ICDT 2001 proceedings entry (DOI 10.5555/645504.656274); the exact paper did not surface as its own row in the Consensus query (a same-authors 2000 abstract, DOI 10.1007/3-540-45033-5_12, confirms the joint Buneman/Khanna/Tan authorship and the why/where distinction instead) | WS, AX | 10.1007/3-540-44503-X_20 |
+| simmhanplale05 | A Survey of Data Provenance in e-Science | Simmhan, Plale, Gannon | 2005 | ACM SIGMOD Record, 34(3), pp. 31-36 — **confirmed**, Consensus DOI match (1370 citations), cross-checked against the ACM DL page | CO, WS | 10.1145/1084805.1084812 |
+
+`wangstrong96` supplies the data-quality-dimensions vocabulary (a data product's quality is judged against its consumers' use, here: leaderboards and model-selection decisions); `bunemantan01` and `simmhanplale05` supply the provenance/lineage vocabulary for the paper's core move — tracing which recorded verdicts depend on state a defective tool produced is a why/where-provenance dependency analysis applied to a benchmark's tool layer instead of a database query.
+
 `frames25` matters more than its obscurity suggests: frame conditions — which parts of state a call may modify — are exactly the formal device our Partial Effect and Invariant Break classes rest on. `cogent23` synthesizes contracts for *mutators* of stateful modules in terms of *observers*, which is structurally what our adapter does.
 
 ## Metamorphic and stateful API testing (our detectors are metamorphic relations in all but name)
