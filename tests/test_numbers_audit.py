@@ -17,6 +17,7 @@ Five scenarios are required by CLAUDE.md's audit-script mandate and covered expl
 from __future__ import annotations
 
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -372,6 +373,139 @@ class TestLexicalRule(unittest.TestCase):
         report = na.Report()
         na.check_lexical_rule(text, report)
         self.assertTrue(all(f.verdict != na.FAIL for f in report.findings))
+
+
+# ---------------------------------------------------------------------------
+# Item R4 (round-5 panel): the numbers audit must also gate paper/latex/main.tex,
+# the file actually submitted, not just paper/main.md. Two things are covered:
+# (a) a numeric-token equivalence check between the two files, and (b) the
+# script must not crash under a non-UTF-8 Windows console codepage.
+# ---------------------------------------------------------------------------
+
+class TestDetexForNumericScan(unittest.TestCase):
+    def test_strips_comments_and_scopes_to_document_body(self):
+        tex = (
+            "% header narration with 999 unrelated numbers\n"
+            "\\documentclass{article}\n"
+            "\\begin{document}\n"
+            "Six \\texttt{executable} defect classes appear here. % trailing comment 123\n"
+            "\\end{document}\n"
+            "% footer narration with 888\n"
+        )
+        result = na.detex_for_numeric_scan(tex)
+        self.assertIn("Six executable defect classes", result)
+        self.assertNotIn("999", result)
+        self.assertNotIn("888", result)
+        self.assertNotIn("123", result)
+
+    def test_unwraps_text_formatting_macros_and_escapes(self):
+        tex = ("\\begin{document}\n"
+               "\\textbf{Precision} is \\texttt{50\\%} and the bound is $\\geq$0.867, "
+               "\\S\\,IV discusses \\texttt{cancel\\_reservation}.\n"
+               "\\end{document}\n")
+        result = na.detex_for_numeric_scan(tex)
+        self.assertIn("Precision is 50% and the bound is \u22650.867", result)
+        self.assertIn("\u00a7IV", result)
+        self.assertIn("cancel_reservation", result)
+
+
+class TestTexNumericEquivalence(unittest.TestCase):
+    def test_catches_divergence_between_md_and_tex(self):
+        md_text = "There are six executable defect classes described here.\n"
+        tex_text = ("\\begin{document}\n"
+                    "There are seven executable defect classes described here.\n"
+                    "\\end{document}\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            tex_path = write(Path(tmp) / "main.tex", tex_text)
+            report = na.Report()
+            na.check_manuscript_tex_numeric_equivalence(md_text, tex_path, report)
+        fails = [f for f in report.findings if f.verdict == na.FAIL]
+        self.assertTrue(any("defect_class_count" in f.claim for f in fails),
+                         msg=f"no FAIL for defect_class_count in {report.findings}")
+
+    def test_matching_values_pass(self):
+        md_text = "There are six executable defect classes described here.\n"
+        tex_text = ("\\begin{document}\n"
+                    "There are six executable defect classes described here.\n"
+                    "\\end{document}\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            tex_path = write(Path(tmp) / "main.tex", tex_text)
+            report = na.Report()
+            na.check_manuscript_tex_numeric_equivalence(md_text, tex_path, report)
+        matched = [f for f in report.findings if "defect_class_count" in f.claim]
+        self.assertTrue(matched)
+        self.assertTrue(all(f.verdict == na.PASS for f in matched))
+
+    def test_concept_in_only_one_file_is_informational_not_failing(self):
+        md_text = "There are six executable defect classes described here.\n"
+        tex_text = "\\begin{document}\nNo matching sentence appears here at all.\n\\end{document}\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            tex_path = write(Path(tmp) / "main.tex", tex_text)
+            report = na.Report()
+            na.check_manuscript_tex_numeric_equivalence(md_text, tex_path, report)
+        self.assertFalse(any(f.verdict == na.FAIL for f in report.findings))
+        self.assertTrue(any(f.verdict == na.INFO and "defect_class_count" in f.found
+                             for f in report.findings))
+
+    def test_missing_tex_file_is_unverifiable(self):
+        missing = Path(tempfile.gettempdir()) / "does-not-exist-main-tex-test.tex"
+        self.assertFalse(missing.exists())
+        report = na.Report()
+        na.check_manuscript_tex_numeric_equivalence(
+            "six executable defect classes", missing, report)
+        self.assertEqual(report.findings[0].verdict, na.UNVERIFIABLE)
+
+    def test_wired_into_run_audit(self):
+        """run_audit() must actually invoke the cross-file check, not just expose it."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            md_path = write(tmp_path / "main.md",
+                             "There are six executable defect classes described here.\n")
+            tex_path = write(tmp_path / "main.tex",
+                              "\\begin{document}\nThere are nine executable defect classes "
+                              "described here.\n\\end{document}\n")
+            report = na.run_audit(md_path, tex_path)
+        fails = [f for f in report.failed() if "defect_class_count" in f.claim]
+        self.assertTrue(fails, "run_audit did not surface the cross-file divergence")
+
+
+class TestWindowsEncodingFix(unittest.TestCase):
+    def test_script_does_not_crash_under_legacy_console_codepage(self):
+        """Regression test for the reported bug: paper/latex/main.tex and paper/main.md are
+        full of characters (>=, section-sign, en dashes) that a plain Windows console codepage
+        (e.g. cp1252) cannot encode, so printing a report row that echoes manuscript prose
+        verbatim (check_lexical_rule's excerpts, in particular) used to raise
+        UnicodeEncodeError and crash before the exit code even mattered. The script now
+        reconfigures stdout/stderr to UTF-8 at import time regardless of the invoking
+        environment; this drives that exact code path end to end under a forced legacy
+        encoding and asserts it does not crash."""
+        import os
+        import subprocess
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            md_path = write(tmp_path / "main.md",
+                             "50% of tasks are at risk (whole_state_hash), a figure "
+                             "\u22650.867 that depends on the tool's write path \u00a7IV.\n")
+            tex_path = write(tmp_path / "main.tex",
+                              "\\begin{document}\n50\\% of tasks are at risk "
+                              "(whole\\_state\\_hash), a figure $\\geq$0.867 that depends on "
+                              "the tool's write path \\S\\,IV.\n\\end{document}\n")
+            repo_root = Path(__file__).resolve().parent.parent
+            env = dict(os.environ)
+            env["PYTHONIOENCODING"] = "cp1252"
+            env.pop("PYTHONUTF8", None)
+            result = subprocess.run(
+                [sys.executable, str(repo_root / "experiments" / "numbers_audit.py"),
+                 "--manuscript", str(md_path), "--tex-manuscript", str(tex_path)],
+                cwd=str(repo_root), env=env, capture_output=True, timeout=120)
+
+        self.assertNotIn(b"UnicodeEncodeError", result.stderr)
+        self.assertNotIn(b"Traceback", result.stderr)
+        # exit code is either 0 (clean) or 1 (a real FAIL row) -- never a crash (2, or a
+        # nonstandard code from an unhandled exception)
+        self.assertIn(result.returncode, (0, 1),
+                       msg=f"stderr: {result.stderr.decode('utf-8', errors='replace')}")
 
 
 if __name__ == "__main__":

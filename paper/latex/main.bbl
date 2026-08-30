@@ -197,13 +197,13 @@ Lam, Oei, Shi, Marinov, and Xie, ``{iDFlakies}: A framework for detecting and
   partially classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
 
 \bibitem{judgesense26}
-Bellibatlu, Raff, and Zhang, ``{JudgeSense}: A benchmark for prompt sensitivity
-  in {LLM}-as-a-judge systems,'' 2026, preprint.
+R.~R. Bellibatlu, E.~Raff, and W.~Zhang, ``{JudgeSense}: A benchmark for prompt
+  sensitivity in {LLM}-as-a-judge systems,'' 2026, preprint.
 
 \bibitem{rised26}
-Bellibatlu, Singh, Jajoo, Lakhanpal, and Israni, ``{RISED}: A pre-deployment
-  evaluation framework for high-stakes {AI} decision-support systems, with
-  application to healthcare,'' 2026, preprint.
+R.~R. Bellibatlu, M.~Singh, Y.~Jajoo, S.~Lakhanpal, and A.~Israni, ``{RISED}: A
+  pre-deployment evaluation framework for high-stakes {AI} decision-support
+  systems, with application to healthcare,'' 2026, preprint.
 
 \bibitem{agentdojo24}
 Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,

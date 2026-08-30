@@ -49,13 +49,31 @@ import functools
 import subprocess
 import re
 import sys
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any, Callable, Optional
 
+# ---------------------------------------------------------------------------
+# Windows console encoding: this script prints non-ASCII characters (≥, §, en
+# dashes, etc.) that pass through cleanly under PYTHONUTF8=1/PYTHONIOENCODING
+# but raise UnicodeEncodeError on a plain Windows console using the default
+# codepage. The gate must exit 0 (or FAIL for a real reason) regardless of the
+# invoking shell's locale, so the stream encoding is fixed here rather than
+# left to the caller's environment. reconfigure() is Python 3.7+; guarded for
+# any stream that does not support it (e.g. when stdout is already replaced
+# by a non-file-like object in a test harness).
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except (ValueError, OSError):
+            pass
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MANUSCRIPT = PROJECT_ROOT / "paper" / "main.md"
+DEFAULT_TEX_MANUSCRIPT = PROJECT_ROOT / "paper" / "latex" / "main.tex"
 FINDINGS_VERIFIED_MD = PROJECT_ROOT / "FINDINGS-VERIFIED.md"
 EXTERNAL_VERIFICATION_MD = PROJECT_ROOT / "EXTERNAL-VERIFICATION.md"
 GATE_MD = PROJECT_ROOT / "GATE.md"
@@ -424,6 +442,97 @@ def check_internal_consistency(matches: list[ConceptMatch], report: Report) -> d
                 detail=f"distinct values found: {values}",
             )
     return consensus
+
+
+# ---------------------------------------------------------------------------
+# Check 2b: numeric-token equivalence between paper/main.md and the submission
+# artifact, paper/latex/main.tex. CLAUDE.md's standing rule ("a script parses
+# every numeric claim in the manuscript") was previously enforced only against
+# main.md, the file nobody submits -- main.tex is cut and reworded independently
+# (see its own header comment) and could silently drift on a tracked headline
+# number without this check ever seeing it. Rather than a literal text diff
+# (the two files are deliberately not verbatim -- see CLAUDE.md), this reuses
+# the same CONCEPT_PATTERNS that check 2 already trusts to find a tracked
+# quantity in prose: a lightly de-TeXed projection of main.tex is scanned with
+# the identical patterns, and any concept found in BOTH files with DIFFERENT
+# consensus values is a FAIL. A concept found in only one file is not a
+# failure -- main.tex deliberately relocates some supporting detail to the
+# artifact (per its own header comment) and is not required to restate every
+# number main.md does -- so that case is reported as INFO, not PASS or FAIL.
+# ---------------------------------------------------------------------------
+
+_TEX_TEXT_CMD_RE = re.compile(
+    r"\\(?:texttt|textbf|textit|emph|text)\{([^{}]*)\}")
+_TEX_LSTINLINE_RE = re.compile(r"\\lstinline\|([^|]*)\|")
+_TEX_LINE_COMMENT_RE = re.compile(r"(?<!\\)%.*")
+_TEX_BODY_RE = re.compile(r"\\begin\{document\}(.*)\\end\{document\}", re.DOTALL)
+
+
+def detex_for_numeric_scan(tex_raw: str) -> str:
+    """Strip just enough LaTeX markup that CONCEPT_PATTERNS (written against main.md's
+    Markdown prose) also fires on main.tex's prose, without attempting a full LaTeX parse.
+    Scope is deliberately narrow: unwrap the handful of text-formatting macros this
+    manuscript actually uses around numbers, normalize the handful of math/spacing macros
+    that appear next to figures, and drop everything outside \\begin{document}..\\end{document}
+    (the file's own header/footer commentary is process narration, not manuscript content,
+    and would otherwise pollute the number census with unrelated dates and page counts)."""
+    m = _TEX_BODY_RE.search(tex_raw)
+    body = m.group(1) if m else tex_raw
+    body = _TEX_LINE_COMMENT_RE.sub("", body)
+    body = body.replace("\\%", "%").replace("\\_", "_").replace("\\brk", "")
+    body = body.replace("$\\geq$", "\u2265").replace("\\geq", "\u2265")
+    body = body.replace("$\\leq$", "\u2264").replace("\\leq", "\u2264")
+    body = re.sub(r"\\S\\,?", "\u00a7", body)
+    for _ in range(3):  # a few passes: \textbf{\texttt{x}} nests one level in this manuscript
+        body = _TEX_TEXT_CMD_RE.sub(r"\1", body)
+    body = _TEX_LSTINLINE_RE.sub(r"\1", body)
+    return body
+
+
+def check_manuscript_tex_numeric_equivalence(md_text: str, tex_path: Path,
+                                              report: Report) -> None:
+    section = "2-internal-consistency"
+    claim_prefix = "cross-file: quantity"
+    if not tex_path.exists():
+        report.add(section, f"{claim_prefix} equivalence check (main.md vs main.tex)",
+                    str(tex_path), "file to exist", "file missing", UNVERIFIABLE)
+        return
+
+    tex_text = detex_for_numeric_scan(read_text(tex_path))
+    md_matches = extract_concept_matches(md_text)
+    tex_matches = extract_concept_matches(tex_text)
+
+    def modes_by_concept(matches: list[ConceptMatch]) -> dict[str, tuple[float, list[ConceptMatch]]]:
+        by: dict[str, list[ConceptMatch]] = {}
+        for mm in matches:
+            by.setdefault(mm.concept, []).append(mm)
+        return {c: (Counter(x.value for x in ms).most_common(1)[0][0], ms)
+                for c, ms in by.items()}
+
+    md_modes = modes_by_concept(md_matches)
+    tex_modes = modes_by_concept(tex_matches)
+
+    for concept in sorted(set(md_modes) & set(tex_modes)):
+        md_val, md_ms = md_modes[concept]
+        tex_val, tex_ms = tex_modes[concept]
+        verdict = PASS if md_val == tex_val else FAIL
+        report.add(
+            section, f"{claim_prefix} '{concept}' agrees between main.md and main.tex",
+            f"{DEFAULT_MANUSCRIPT.name} vs {tex_path.name}",
+            f"main.md={md_val:g}", f"main.tex={tex_val:g}", verdict,
+            detail=(f"main.md: {', '.join(f'L{x.line}={x.raw}' for x in md_ms)}; "
+                    f"main.tex (post-detex): {', '.join(f'L{x.line}={x.raw}' for x in tex_ms)}"))
+
+    only_md = sorted(set(md_modes) - set(tex_modes))
+    if only_md:
+        report.add(section, "cross-file: quantities matched in main.md only (not cross-checked)",
+                    str(tex_path), "n/a", ", ".join(only_md), INFO,
+                    detail="expected where main.tex relocated supporting detail to the "
+                    "artifact per its own header comment; not itself a failure")
+    only_tex = sorted(set(tex_modes) - set(md_modes))
+    if only_tex:
+        report.add(section, "cross-file: quantities matched in main.tex only (not cross-checked)",
+                    str(DEFAULT_MANUSCRIPT), "n/a", ", ".join(only_tex), INFO)
 
 
 # ---------------------------------------------------------------------------
@@ -1120,7 +1229,7 @@ def render_report(report: Report) -> str:
 # Main
 # ---------------------------------------------------------------------------
 
-def run_audit(manuscript_path: Path) -> Report:
+def run_audit(manuscript_path: Path, tex_manuscript_path: Path = DEFAULT_TEX_MANUSCRIPT) -> Report:
     text = read_text(manuscript_path)
     report = Report()
 
@@ -1129,6 +1238,7 @@ def run_audit(manuscript_path: Path) -> Report:
     matches = extract_concept_matches(text)
     consensus = check_internal_consistency(matches, report)
     check_commit_hash_consistency(text, report)
+    check_manuscript_tex_numeric_equivalence(text, tex_manuscript_path, report)
 
     check_findings_jsonl_headline_cells(consensus, report)
     check_findings_verified_instance_count(consensus, report)
@@ -1151,13 +1261,17 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n", 1)[0])
     parser.add_argument("--manuscript", type=Path, default=DEFAULT_MANUSCRIPT,
                          help="path to the manuscript markdown file (default: paper/main.md)")
+    parser.add_argument("--tex-manuscript", type=Path, default=DEFAULT_TEX_MANUSCRIPT,
+                         help="path to the submitted LaTeX manuscript, cross-checked against "
+                         "--manuscript for numeric-token equivalence (default: "
+                         "paper/latex/main.tex)")
     args = parser.parse_args(argv)
 
     if not args.manuscript.exists():
         print(f"ERROR: manuscript not found: {args.manuscript}", file=sys.stderr)
         return 2
 
-    report = run_audit(args.manuscript)
+    report = run_audit(args.manuscript, args.tex_manuscript)
     print(render_report(report))
     return 1 if report.failed() else 0
 
