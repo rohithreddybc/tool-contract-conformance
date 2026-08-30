@@ -46,6 +46,43 @@ If this needs fixing later, the two options above are the shape of the fix; a v2
 would be needed since it changes the frame-path grammar's expressive power, not just this
 document.
 
+### Second instance: `slack.users.[]` on AgentDojo `invite_user_to_slack` (REV-5 adjudication, 2026-08-29)
+
+Same gap, append side rather than update side. Found via the pre-submission panel's REV-5 item:
+Annotator B's blind contract, `spec/contracts_annotator_b/agentdojo/invite_user_to_slack.yaml`,
+carries
+
+```yaml
+  - id: frame.other_users_unchanged
+    path: slack.users.[]
+    mode: unchanged
+    text: "existing users' entries in the user list are not altered by inviting a new one"
+```
+
+`invite_user_to_slack` (`repos/agentdojo/src/agentdojo/default_suites/v1/tools/slack.py`, pinned
+commit `089ed468cf3ed0322acc66b0211f26d9d90dbf60`, lines 93-103) is advertised, and confirmed by
+its own `eff.user_added_to_workspace` clause, to append exactly one new element to `slack.users`
+on every successful call. `dynamic/harness.py`'s `_frame_concrete_paths` resolves a frame path by
+unioning `match_paths` against **both** `pre` and `post` (deliberately, to avoid missing a key
+added or removed by the call — see that function's docstring). For `slack.users.[]`, that union
+always includes the one list index that exists only in `post`; `core/canonical.py`'s `_descend`
+resolves that index to the sentinel `_MISSING` against `pre`, which never compares equal to the
+post-call value there. The clause therefore VIOLATES on every successful call, independent of
+whether any pre-existing entry is altered — confirmed by direct reproduction (see
+`report/rev5_adjudication.md`) and consistent with the empirical 5/5 VIOLATES rate recorded in
+`report/agreement_summary.md`.
+
+B's own authoring notes already anticipated the ambiguity but assumed the wildcard is matched only
+against `pre` ("this clause's predicate only needs to hold over the elements that existed
+pre-call"); the checker's actual, documented pre/post-union resolution rule (adopted specifically
+to catch keys added/removed by a call — the opposite motivation) is what makes the assumption
+false here. Adjudicated **(b) over-broad frame path, unsatisfiable by construction** — not a
+finding about AgentDojo — in `report/rev5_adjudication.md`. It is a second, independently
+authored instance of the identical missing-exclusion-segment gap described above for
+`state.reservations.*`, this time over a list that grows rather than a dict whose one key is
+rewritten, which strengthens rather than merely repeats the case that the frame grammar needs an
+exclusion segment (or `args`-interpolation) as described above.
+
 ## check 5's synthetic-argument table has no case for list/object-typed arguments
 
 Found while authoring the 17-contract batch of remaining tau2 mutating tools (airline
