@@ -164,11 +164,32 @@ Godefroid, Lehmann, and Polishchuk, ``Differential regression testing for
   {REST} {APIs},'' in \emph{Proceedings of the 29th ACM SIGSOFT International
   Symposium on Software Testing and Analysis (ISSTA)}, 2020.
 
+\bibitem{kapoor24matter}
+Kapoor, Vaithilingam \emph{et~al.}, ``{AI} agents that matter,''
+  \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
+
+\bibitem{betterbench24}
+Reuel, Hardy, Smith, Lamparth, Hardy, and Kochenderfer, ``{BetterBench}:
+  Assessing {AI} benchmarks, uncovering issues, and establishing best
+  practices,'' in \emph{NeurIPS Datasets and Benchmarks Track}, 2024.
+
+\bibitem{utboost25}
+Yu, Zhu, He, and Kang, ``{UTBoost}: Rigorous evaluation of coding agents on
+  {SWE}-bench,'' in \emph{Proceedings of ACL}, 2025.
+
+\bibitem{gyori15}
+Gyori, Shi, Hariri, and Marinov, ``Reliable testing: Detecting state-polluting
+  tests to prevent test dependency,'' in \emph{Proceedings of ISSTA}, 2015.
+
+\bibitem{idflakies19}
+Lam, Oei, Shi, Marinov, and Xie, ``{iDFlakies}: A framework for detecting and
+  partially classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
+
 \bibitem{agentdojo24}
 Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
   ``{AgentDojo}: A dynamic environment to evaluate prompt injection attacks and
-  defenses for {LLM} agents,'' 2024, neurIPS 2024 (Scopus-confirmed); the
-  Datasets and Benchmarks Track sub-label is not independently confirmed.
+  defenses for {LLM} agents,'' 2024, neurIPS 2024, Scopus-confirmed; D\&B track
+  sub-label unconfirmed.
 
 \bibitem{mmtoolsandbox26}
 Ma, Feng, Metz, Lu, Verma, and Dehghan, ``{MM-ToolSandBox}: A unified framework

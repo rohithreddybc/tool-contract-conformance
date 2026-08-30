@@ -96,6 +96,18 @@ The eight gap-sweep works above (table rows 1, 2, 7, 8, 9 x2, 10, 11) are cited 
 | medagentbench25 | MedAgentBench: A Realistic Virtual EHR Environment to Benchmark Medical LLM Agents | Jiang, Black, Geng, Park, Zou, Ng, Chen | 2025-01-24 (v1); v2 2025-02-12 | arXiv cs.LG preprint; **peer-reviewed as** "MedAgentBench: A Virtual EHR Environment to Benchmark Medical LLM Agents," NEJM AI, Vol. 2, Issue 9, published 2025-08-14 | AX (direct PDF read, Table 3 quoted), WS (NEJM AI bibliographic details; full text paywalled, 403 on direct fetch) | https://arxiv.org/abs/2501.14654 ; DOI 10.1056/AIdbp2500144 |
 | taubenchcom_leaderboard | taubench.com — live τ²-bench / τ³-bench leaderboard | Sierra | accessed 2026-08-22 | Not a citable paper — a live, continuously-updated public leaderboard linked directly from the audited repo's README at the pinned commit | direct fetch | https://taubench.com |
 
+## Panel-response citations (added 2026-08-29, verified via WebSearch against arXiv/publisher pages, not yet run through the Scopus workflow)
+
+Added to close REV-8 of the pre-submission panel response: qualify the "no published audit" universal and concede a Reset Leak precedent. All five confirmed against a publisher or hosting page (ACL Anthology, NeurIPS proceedings, ACM DOI, IEEE/ICST page) rather than arXiv listing alone, but the formal Scopus confirmation pass has not been run — do before the bibliography is frozen.
+
+| Key | Title | Authors | Year | Venue | Source | URL/DOI |
+|---|---|---|---|---|---|---|
+| kapoor24matter | AI Agents That Matter | Kapoor, Vaithilingam, et al. | 2024 | TMLR; already cited as an optional background source in this file's gap-sweep table (row "— (background, not a hit)") | AX, WS | arXiv:2407.01502 |
+| betterbench24 | BetterBench: Assessing AI Benchmarks, Uncovering Issues, and Establishing Best Practices | Reuel, Hardy, Smith, Lamparth, Hardy, Kochenderfer | 2024 | NeurIPS 2024 Datasets and Benchmarks Track (Spotlight) — confirmed via `proceedings.neurips.cc` paper page | AX, WS | arXiv:2411.12990 |
+| utboost25 | UTBoost: Rigorous Evaluation of Coding Agents on SWE-Bench | Yu, Zhu, He, Kang | 2025 | ACL 2025 (2025.acl-long.189) — confirmed via ACL Anthology | AX, WS | arXiv:2506.09289 |
+| gyori15 | Reliable Testing: Detecting State-Polluting Tests to Prevent Test Dependency (PolDet) | Gyori, Shi, Hariri, Marinov | 2015 | ISSTA 2015 — confirmed via ACM DOI page | WS | DOI 10.1145/2771783.2771793 |
+| idflakies19 | iDFlakies: A Framework for Detecting and Partially Classifying Flaky Tests | Lam, Oei, Shi, Marinov, Xie | 2019 | ICST 2019 (not ISSTA, as sometimes miscited) — confirmed via IEEE/ICST publication listing | WS | N/A |
+
 ## AgentDojo and MM-ToolSandbox papers (added 2026-08-23, verified via Consensus 2026-08-21)
 
 Two more audited-artifact papers, keyed to match `paper/main.md`'s [agentdojo24] and [mmtoolsandbox26] citations (currently marked `(*)` there, not yet logged here before this pass).
