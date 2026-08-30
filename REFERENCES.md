@@ -129,6 +129,15 @@ Two more audited-artifact papers, keyed to match `paper/main.md`'s [agentdojo24]
 | agentdojo24 | AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents | Debenedetti, Zhang, Balunović, Beurer-Kellner, Fischer, Tramèr | 2024 | **CONFIRMED via Scopus (2026-08-23):** "Advances in Neural Information Processing Systems", vol. 37, 2024, conference paper, exact title/author match, 63 citations. Scopus does not tag NeurIPS sub-tracks, so the specific "Datasets and Benchmarks Track" claim is not independently distinguished from the main proceedings — the parent venue (NeurIPS 2024) is confirmed, the track label is not | CO, SC | arXiv:2406.13352, DOI 10.48550/arxiv.2406.13352 |
 | mmtoolsandbox26 | MM-ToolSandBox: A Unified Framework for Evaluating Visual Tool-Calling Agents | Ma, Feng, Metz, Lu, Verma, Dehghan | 2026 | arXiv, preprint — no Comments/Journal-ref acceptance claim on the abstract page; matches the audited `apple/ml-mmtoolsandbox` repo; not yet Scopus/publisher-confirmed | CO | arXiv:2607.11818, DOI 10.48550/arxiv.2607.11818 |
 
+## Evaluator-layer and aggregate-score citations (added 2026-08-30)
+
+Two related-work citations added to strengthen, respectively, §II's evaluator-layer-fragility discussion beside Tool-Veritas and §IV's aggregate-vs-per-dimension framing of score-at-risk. Both verified directly against their arXiv abstract pages (AX, fetched 2026-08-30: title, full author list, submission/version dates, primary category, Comments field, and DOI all read off the page directly) and cross-checked via the Consensus connector, which lists each as an arXiv-only record (no journal/venue field), corroborating preprint status independent of the abstract-page check.
+
+| Key | Title | Authors | Year | Venue | Source | URL/DOI |
+|---|---|---|---|---|---|---|
+| judgesense26 | JudgeSense: A Benchmark for Prompt Sensitivity in LLM-as-a-Judge Systems | Bellibatlu, Raff, Zhang | 2026-04-26 (v2 2026-05-07) | arXiv cs.CL, preprint — no venue; Comments field lists code/dataset links only, no acceptance claim; Consensus lists it as an ArXiv-only record, 6 citations, no journal field | AX, CO | arXiv:2604.23478, DOI 10.48550/arXiv.2604.23478 |
+| rised26 | RISED: A Pre-Deployment Evaluation Framework for High-Stakes AI Decision-Support Systems, with Application to Healthcare | Bellibatlu, Singh, Jajoo, Lakhanpal, Israni | 2026-05-13 (v2 2026-05-30) | arXiv, preprint — Comments field states "To be submitted to Expert Systems with Applications (Elsevier)," i.e. not yet submitted anywhere; Consensus lists it as an ArXiv-only record, 0 citations, no journal field | AX, CO | arXiv:2605.12895, DOI 10.48550/arXiv.2605.12895 |
+
 ## Consensus usage note
 
 Consensus searches run earlier on 2026-08-21 (Day 1 gate) returned 20 results each; the entries above are the subset judged relevant. Consensus indexes Semantic Scholar, PubMed, Scopus and arXiv, so that sweep was not blind to Scopus-indexed work, but it was never a substitute for the venue-confirmation pass.

@@ -80,8 +80,7 @@ echeck.sty
 ounter.sty)))
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty)
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
-tex.def)
-No file main.aux.
+tex.def) (main.aux)
 -- Lines per column: 56 (exact).
 
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
@@ -94,14 +93,6 @@ ase.sty
 fg)) (main.out) (main.out)
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
-
-LaTeX Warning: Citation `liveclawbench26' on page 1 undefined on input line 165
-.
-
-
-LaTeX Warning: Citation `medagentbench25' on page 1 undefined on input line 167
-.
-
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd)
 Underfull \hbox (badness 1533) in paragraph at lines 167--168
 []\OT1/ptm/m/n/10 The loss can be to-tal. Med-Agent-Bench [[]] eval-u-ates
@@ -118,180 +109,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 167--168
 Overfull \hbox (5.82996pt too wide) in paragraph at lines 167--168
 \OT1/ptm/m/n/10 (\OT1/pcr/m/n/10 src/server/tasks/medagentbench/__init__.py\OT1
 /ptm/m/n/10 ,
-
-LaTeX Warning: Citation `benchguard26' on page 1 undefined on input line 181.
-
-
-LaTeX Warning: Citation `aba26' on page 1 undefined on input line 181.
-
-
-LaTeX Warning: Citation `toolveritas26' on page 1 undefined on input line 181.
-
-
-LaTeX Warning: Citation `safeaudit26' on page 1 undefined on input line 181.
-
-
-LaTeX Warning: Citation `wangstrong96' on page 1 undefined on input line 183.
-
-
-LaTeX Warning: Citation `bunemantan01' on page 1 undefined on input line 183.
-
 (C:\Users\rohit\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd)
 Underfull \hbox (badness 2409) in paragraph at lines 188--189
 []\OT1/ptm/b/n/10 Score-at-risk de-pen-dency anal-y-sis\OT1/ptm/m/n/10 : a stat
 ic, per-
 [1{C:/Users/rohit/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/ro
 hit/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
-
-LaTeX Warning: Reference `tab:disposals' on page 2 undefined on input line 218.
-
-
-
-LaTeX Warning: Citation `benchguard26' on page 2 undefined on input line 230.
-
-
-LaTeX Warning: Citation `aba26' on page 2 undefined on input line 230.
-
-
-LaTeX Warning: Citation `safeaudit26' on page 2 undefined on input line 230.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 230--230
 []|\OT1/ptm/m/n/7 BenchGuard [[]], Au-to-mated
 
-LaTeX Warning: Citation `toolveritas26' on page 2 undefined on input line 231.
-
-
-LaTeX Warning: Citation `toolgate26' on page 2 undefined on input line 232.
-
-
-LaTeX Warning: Citation `abc26' on page 2 undefined on input line 232.
-
-
-LaTeX Warning: Citation `contract2tool26' on page 2 undefined on input line 232
-.
-
-
-LaTeX Warning: Citation `contractbench26' on page 2 undefined on input line 232
-.
-
-
-LaTeX Warning: Citation `toolfuzz25' on page 2 undefined on input line 233.
-
-
-LaTeX Warning: Citation `contractguard26' on page 2 undefined on input line 234
-.
-
-
-LaTeX Warning: Citation `faulttaxonomy26' on page 2 undefined on input line 235
-.
-
-
-LaTeX Warning: Citation `abcchecklist25' on page 2 undefined on input line 236.
-
-
-
-LaTeX Warning: Citation `taubench24' on page 2 undefined on input line 236.
-
-
-LaTeX Warning: Citation `tau2bench25' on page 2 undefined on input line 236.
-
-
-LaTeX Warning: Citation `constructvalidity25' on page 2 undefined on input line
- 237.
-
-
-LaTeX Warning: Citation `jcontractor05' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `jass01' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `contract26' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `icepick26' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `agora25' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `frames25' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `cogent23' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `dlcontract23' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `segura18' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `segura16' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `chen18' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `restler19' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `godefroid20' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `kapoor24matter' on page 2 undefined on input line 242.
-
-
-
-LaTeX Warning: Citation `betterbench24' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `utboost25' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `gyori15' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `idflakies19' on page 2 undefined on input line 242.
-
-
-LaTeX Warning: Citation `medagentbench25' on page 2 undefined on input line 244
-.
-
-
-LaTeX Warning: Citation `tau2bench25' on page 2 undefined on input line 248.
-
-[2]
-
-LaTeX Warning: Citation `liveclawbench26' on page 3 undefined on input line 250
-.
-
-
-LaTeX Warning: Reference `tab:taxonomy' on page 3 undefined on input line 261.
-
-[3]
-
-LaTeX Warning: Reference `tab:taxonomy' on page 4 undefined on input line 294.
-
-
-LaTeX Warning: Reference `tab:scoreatrisk' on page 4 undefined on input line 31
-9.
-
-
-Underfull \hbox (badness 6641) in paragraph at lines 319--320
-[]\OT1/ptm/b/n/10 Every at-risk fig-ure car-ries a ba-sis tag, and
-
-Underfull \hbox (badness 7415) in paragraph at lines 319--320
-\OT1/ptm/b/n/10 the tags are never pooled. \OT1/ptm/m/n/10 tau2's air-line do-m
-ain
-
-Underfull \hbox (badness 5954) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 grades \OT1/pcr/m/n/10 cancel_reservation \OT1/ptm/m/n/10 by co
-m-par-ing a full
-
-Underfull \hbox (badness 6641) in paragraph at lines 319--320
-\OT1/ptm/m/n/10 database hash be-tween the gold and pre-dicted runs
+Underfull \hbox (badness 10000) in paragraph at lines 232--232
+\OT1/ptm/m/n/7 Con-tracts [[]], Con-tract2Tool
+[2] [3]
+Underfull \hbox (badness 3219) in paragraph at lines 319--320
+\OT1/ptm/b/n/10 tags are never pooled. \OT1/ptm/m/n/10 tau2's air-line do-main 
+grades
+
+Underfull \hbox (badness 3635) in paragraph at lines 319--320
+\OT1/pcr/m/n/10 cancel_reservation \OT1/ptm/m/n/10 by hash-ing the full databas
+e
+
+Underfull \hbox (badness 3735) in paragraph at lines 319--320
+\OT1/ptm/m/n/10 any field a de-fec-tive tool writes is, by con-struc-tion,
+
+Underfull \hbox (badness 4543) in paragraph at lines 319--320
+\OT1/ptm/m/n/10 the eval-u-a-tor's coarse-ness, not the de-fect's reach, so
+
+Underfull \hbox (badness 7291) in paragraph at lines 319--320
+\OT1/ptm/m/n/10 through per-task as-ser-tion func-tions in-stead, and the
+
+Underfull \hbox (badness 1917) in paragraph at lines 319--320
+\OT1/ptm/m/n/10 them on the spe-cific writ-ten at-tribute (\OT1/pcr/m/n/10 exac
+t_field\OT1/ptm/m/n/10 )
 
 Underfull \hbox (badness 10000) in paragraph at lines 319--320
 \OT1/ptm/m/n/10 and 15 more on the con-tain-ing col-lec-tion alone
@@ -299,6 +148,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 319--320
 Underfull \hbox (badness 10000) in paragraph at lines 319--320
 \OT1/ptm/m/n/10 file (\OT1/pcr/m/n/10 data/tau2/domains/telecom/tasks.json\OT1/
 ptm/m/n/10 ),
+
+Underfull \hbox (badness 3525) in paragraph at lines 319--320
+\OT1/ptm/m/n/10 car-ries both bases on dif-fer-ent tools; no project-wide
 
 Overfull \hbox (1.7029pt too wide) in paragraph at lines 328--328
 []|\OT1/ptm/m/n/7 Experiment
@@ -334,29 +186,26 @@ Underfull \hbox (badness 1418) in paragraph at lines 344--345
 \OT1/ptm/m/n/10 is bro-ken on ev-ery ar-gu-ment at falsy val-ues (\OT1/pcr/m/n/
 10 amount
 
-Underfull \vbox (badness 3471) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \hbox (badness 6641) in paragraph at lines 346--347
+[]\OT1/ptm/b/n/10 MM-ToolSandbox re-ports what it can com-pute
 
-LaTeX Warning: Reference `tab:scoreatrisk' on page 5 undefined on input line 34
-6.
-
-
-Underfull \hbox (badness 5985) in paragraph at lines 346--347
-\OT1/ptm/b/n/10 noth-ing it can-not. \OT1/ptm/m/n/10 Step 1 iden-ti-fies the \O
-T1/pcr/m/n/10 sort_by
-
-Underfull \hbox (badness 2126) in paragraph at lines 346--347
+Underfull \hbox (badness 10000) in paragraph at lines 346--347
 \OT1/ptm/m/n/10 field \OT1/pcr/m/n/10 venmo_social \OT1/ptm/m/n/10 drops (Find-
-ing 7). Steps 2 and
+ing 7). Steps 2
 
-Underfull \hbox (badness 2932) in paragraph at lines 346--347
-\OT1/ptm/m/n/10 3 do not run: the AppWorld-tier sce-nar-ios that ex-er-
+Underfull \hbox (badness 2970) in paragraph at lines 346--347
+\OT1/ptm/m/n/10 and 3 do not run: AppWorld-tier sce-nar-ios ex-er-cis-ing
 
-Underfull \hbox (badness 2020) in paragraph at lines 346--347
-\OT1/ptm/m/n/10 cise this tool are graded in-side the \OT1/pcr/m/n/10 appworld 
-\OT1/ptm/m/n/10 pack-
+Underfull \hbox (badness 4995) in paragraph at lines 346--347
+\OT1/ptm/m/n/10 this tool are graded in-side the \OT1/pcr/m/n/10 appworld \OT1/
+ptm/m/n/10 pack-age,
 
-Underfull \hbox (badness 2744) in paragraph at lines 346--347
-\OT1/ptm/m/n/10 age, which this project can-not clone. Ta-ble []'s row
+Underfull \hbox (badness 1803) in paragraph at lines 346--347
+\OT1/ptm/m/n/10 which this project can-not clone. Ta-ble []III[]'s row reads
+
+Underfull \hbox (badness 10000) in paragraph at lines 346--347
+\OT1/pcr/m/n/10 not_computable_appworld_unreachable\OT1/ptm/m/n/10 , not a
 [5]
 Underfull \hbox (badness 10000) in paragraph at lines 371--372
 []\OT1/ptm/m/n/10 The pre-registered plan fixes, be-fore any mu-tant
@@ -388,19 +237,15 @@ ever driv-ing the
 Underfull \hbox (badness 10000) in paragraph at lines 397--398
 \OT1/ptm/m/n/10 2 are \OT1/pcr/m/n/10 probe_gap \OT1/ptm/m/n/10 and \OT1/pcr/m/
 n/10 target_not_found\OT1/ptm/m/n/10 . The
-[6]
+[6] [7]
+Underfull \hbox (badness 10000) in paragraph at lines 426--426
+[]|\OT1/ptm/m/n/7 Surfaced
 
-LaTeX Warning: Citation `agora25' on page 7 undefined on input line 399.
-
-
-LaTeX Warning: Reference `tab:table3' on page 7 undefined on input line 416.
-
-
-LaTeX Warning: Reference `tab:table3' on page 7 undefined on input line 416.
-
-[7]
 Underfull \hbox (badness 10000) in paragraph at lines 428--428
 []|\OT1/ptm/m/n/7 MedAgentBench
+
+Underfull \hbox (badness 10000) in paragraph at lines 428--428
+[]|\OT1/ptm/m/n/7 POST branch,
 
 Underfull \hbox (badness 10000) in paragraph at lines 428--428
 []|\OT1/ptm/m/n/7 agent-visible
@@ -415,13 +260,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 429--429
 []|\OT1/ptm/m/n/7 tau2-bench @
 
 Underfull \hbox (badness 10000) in paragraph at lines 429--429
+[]|\OT1/pcr/m/n/7 refuel_data\OT1/ptm/m/n/7 ,
+
+Underfull \hbox (badness 10000) in paragraph at lines 429--429
+\OT1/pcr/m/n/7 telecom/tools.py:
+
+Underfull \hbox (badness 10000) in paragraph at lines 429--429
 []|\OT1/ptm/m/n/7 agent-visible
 
 Underfull \hbox (badness 10000) in paragraph at lines 430--430
 []|\OT1/ptm/m/n/7 tau2-bench @
 
 Underfull \hbox (badness 10000) in paragraph at lines 430--430
-[]|\OT1/pcr/m/n/7 cancel_reservation\OT1/ptm/m/n/7 ,
+[]|\OT1/pcr/m/n/7 cancel_
+
+Underfull \hbox (badness 10000) in paragraph at lines 430--430
+\OT1/pcr/m/n/7 reservation\OT1/ptm/m/n/7 ,
 
 Underfull \hbox (badness 10000) in paragraph at lines 430--430
 \OT1/pcr/m/n/7 airline/tools.py:
@@ -435,14 +289,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 430--430
 Underfull \hbox (badness 10000) in paragraph at lines 431--431
 []|\OT1/ptm/m/n/7 MedAgentBench
 
-Underfull \hbox (badness 5939) in paragraph at lines 431--431
-\OT1/ptm/m/n/7 (SHA-256-pinned; not in
+Underfull \hbox (badness 10000) in paragraph at lines 431--431
+[]|\OT1/ptm/m/n/7 write graders,
 
 Underfull \hbox (badness 10000) in paragraph at lines 431--431
+\OT1/pcr/m/n/7 refsol.py \OT1/ptm/m/n/7 (SHA-
+
+Underfull \hbox (badness 2941) in paragraph at lines 431--431
 []|\OT1/ptm/m/n/7 Ungrounded Or-a-cle
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--431
+Underfull \hbox (badness 4940) in paragraph at lines 431--431
 \OT1/ptm/m/n/7 (eval-u-a-tor prop-erty,
+
+Underfull \hbox (badness 10000) in paragraph at lines 431--432
+[]|\OT1/ptm/m/n/7 Gate string ``POST re-quest ac-cepted'' con-sumed by
+
+Underfull \hbox (badness 4084) in paragraph at lines 431--432
+\OT1/pcr/m/n/7 extract_posts\OT1/ptm/m/n/7 ; 60/300 cases graded un-con-di-tion
+-ally
 
 Underfull \hbox (badness 10000) in paragraph at lines 432--432
 []|\OT1/ptm/m/n/7 AgentDojo @
@@ -454,26 +318,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 432--432
 \OT1/pcr/m/n/7 transaction\OT1/ptm/m/n/7 ,
 
 Underfull \hbox (badness 10000) in paragraph at lines 432--432
-\OT1/pcr/m/n/7 banking_client.py:
-
-Underfull \hbox (badness 1917) in paragraph at lines 432--432
-[]|\OT1/ptm/m/n/7 Ignored Ar-gu-ment +
+\OT1/pcr/m/n/7 banking_
 
 Underfull \hbox (badness 10000) in paragraph at lines 432--432
 []|\OT1/ptm/m/n/7 agent-visible
-
-Underfull \hbox (badness 1546) in paragraph at lines 432--433
-[]|\OT1/pcr/m/n/7 recurring: bool | None \OT1/ptm/m/n/7 be-hind a truthi-ness g
-uard: set-table
 
 Underfull \hbox (badness 10000) in paragraph at lines 433--433
 []|\OT1/ptm/m/n/7 AgentDojo @
 
 Underfull \hbox (badness 10000) in paragraph at lines 433--433
-[]|\OT1/pcr/m/n/7 reserve_car_rental\OT1/ptm/m/n/7 ,
+[]|\OT1/pcr/m/n/7 reserve_car_
 
 Underfull \hbox (badness 10000) in paragraph at lines 433--433
-\OT1/pcr/m/n/7 travel_booking_
+\OT1/pcr/m/n/7 rental\OT1/ptm/m/n/7 , \OT1/pcr/m/n/7 travel_
+
+Underfull \hbox (badness 10000) in paragraph at lines 433--433
+\OT1/pcr/m/n/7 booking_
 
 Underfull \hbox (badness 10000) in paragraph at lines 433--433
 []|\OT1/ptm/m/n/7 agent-visible
@@ -484,7 +344,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 434--434
 Underfull \hbox (badness 10000) in paragraph at lines 434--434
 \OT1/ptm/m/n/7 ToolSandbox
 
-Underfull \hbox (badness 10000) in paragraph at lines 434--434
+Underfull \hbox (badness 3460) in paragraph at lines 434--434
 []|\OT1/pcr/m/n/7 venmo_social\OT1/ptm/m/n/7 , \OT1/pcr/m/n/7 mini
 
 Underfull \hbox (badness 10000) in paragraph at lines 434--434
@@ -502,27 +362,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 435--435
 Underfull \hbox (badness 10000) in paragraph at lines 435--435
 []|\OT1/ptm/m/n/7 agent-visible
 
-LaTeX Warning: Reference `tab:table3' on page 8 undefined on input line 439.
-
-
-LaTeX Warning: Citation `medagentbench25' on page 8 undefined on input line 471
-.
-
-
-LaTeX Warning: Citation `tau2bench25' on page 8 undefined on input line 471.
-
-
-LaTeX Warning: Citation `agentdojo24' on page 8 undefined on input line 471.
-
-
-LaTeX Warning: Citation `mmtoolsandbox26' on page 8 undefined on input line 471
-.
-
+Underfull \hbox (badness 10000) in paragraph at lines 435--435
+[]|\OT1/ptm/m/n/7 static
 
 Underfull \hbox (badness 3029) in paragraph at lines 488--489
 []\OT1/ptm/b/n/10 The sub-pro-cess bound-ary ab-sorbs ex-cep-tions the
-[8] [9]
-No file main.bbl.
+[8]
+Underfull \hbox (badness 2080) in paragraph at lines 496--497
+[]\OT1/ptm/b/n/10 Repository his-tory can-not sup-port ev-ery or-der-ing
+[9] (main.bbl
+Underfull \hbox (badness 1824) in paragraph at lines 63--65
+\OT1/ptm/m/n/8 Contract-grounded and ver-i-fied tool ex-e-cu-tion for LLMs,'' 2
+026,
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -535,35 +387,24 @@ Before submitting the final camera ready copy, remember to:
  process uses the appropriate paper size.
 
 
-Overfull \vbox (2.16492pt too high) has occurred while \output is active
-[10] (main.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
- )
-(see the transcript file for additional information)
-pdfTeX warning (dest): name{section*.1} has been referenced but does not exist,
- replaced by a fixed one
-
-<C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-mi7.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmr7.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/public
-/amsfonts/cm/cmsy10.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmsy7.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/rohit/AppData/Local/Programs/
-MiKTeX/fonts/type1/urw/courier/ucrb8a.pfb><C:/Users/rohit/AppData/Local/Program
-s/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/rohit/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/rohit/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/rohit/AppData/Local/Prog
-rams/MiKTeX/fonts/type1/urw/times/utmr8a.pfb>
-Output written on main.pdf (10 pages, 187531 bytes).
+Overfull \vbox (0.7559pt too high) has occurred while \output is active
+Overfull \vbox (5.94902pt too high) has occurred while \output is active
+[10] (main.aux) )
+(see the transcript file for additional information)<C:/Users/rohit/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/rohit/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/r
+ohit/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/
+Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.p
+fb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmsy10.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
+sfonts/cm/cmsy7.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmsy9.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fonts
+/type1/urw/courier/ucrb8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/fon
+ts/type1/urw/courier/ucrr8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/f
+onts/type1/urw/times/utmb8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/f
+onts/type1/urw/times/utmbi8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/
+fonts/type1/urw/times/utmr8a.pfb><C:/Users/rohit/AppData/Local/Programs/MiKTeX/
+fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (10 pages, 242304 bytes).
 Transcript written on main.log.
 pdflatex: major issue: So far, you have not checked for MiKTeX updates.
