@@ -1,70 +1,92 @@
-# State — 2026-08-29, after round 3 revisions
+# State — 2026-08-31, after the round-6 verification pass
 
 ## The paper
 
-Complete. **10 pages**, IEEE two-column, references counted, no appendix. Compiles
-clean: zero errors, zero undefined references, 32 of 32 citations resolving.
-416 tests pass. Numbers audit: one failure, `[N12]`, a disclosure log dated
-2026-09-10 that cannot exist yet.
+Complete and submission-shaped. **10 pages**, IEEE two-column, references counted, no
+appendix. Compiles clean: zero errors, zero undefined references. **424 tests pass.**
+**Numbers audit: zero FAIL** (three UNVERIFIABLE rows remain by design — the §IV, §VII
+and §VIII numeric-claim status rows, which the audit reports rather than adjudicates).
 
-Round-3 full panel returned Major Revision with eight required items. **All eight
-are closed.** A round-4 panel is running against the finished draft.
+All eight round-3 items are closed, and the round-4, -5 and -6 panel items on top of
+them. This pass verified those closures from a clean read rather than taking the state
+document's word for it, and corrected two things it found.
 
-## What the eight items produced
+## What this pass changed
 
-| # | Item | Outcome |
-|---|---|---|
-| R1 | Dual-annotation study, promised but never run | Run. A blind agent authored contracts for six tools. **Blind stratum agrees 98/98.** One finding flips, root-caused to a missing `probe_values` annotation, not a disagreement about advertised semantics. One tool contaminated and excluded — see below |
-| R2 | §VIII arithmetic failed by subtraction | Full chain visible: 12 ledger rows → 8 instances → 7 cells → 4 headline-eligible, all three compressions stated |
-| R3 | 14 pages against a 10-page limit | **10 pages.** Mechanism relocated to the artifact with in-line pointers; §V and §VI compressed from ~1400 words to 557 |
-| R4 | `report/render.py` did not exist | Written. Table III generated, `--verify` round-trips |
-| R5 | v1 open-world result absent from the paper | Disclosed: 281/465 scored, 33 live, ≥0.325, invalidated by a stale cache |
-| R6 | Abstract overreached §IV's own decomposition | Leads with the claim true of all 300 cases: no grader reads the record back |
-| R7 | Closed-world misses undecomposed | **29 of 33 are probe unreachability; only 2 are clause gaps.** The paper had been understating itself |
-| R8 | Sentences the ledger falsified | Four corrected; precision denominator scoped to mutation-arm flags |
+**The freeze hashes the paper cited were not commits.** `checker-freeze-v1` and
+`checker-freeze-v2` are annotated tags, so `8f9b2ff` and `b2a39e1` are tag *object*
+hashes; `git cat-file -t` on either returns `tag`, not `commit`. A reviewer running
+`git rev-parse checker-freeze-v2` — the natural check for the pre-registration ordering
+claim in §VII — lands on `54b74d4` and finds no agreement with the paper. The manuscript,
+`PROVENANCE.md` and this file now cite the commits (`9dacc79`, `54b74d4`), and
+`PROVENANCE.md` records the correction instead of quietly rewording it.
 
-## Three findings worth carrying forward
+**The AI-use disclosure was uncommitted and cost a page.** A back-matter statement had
+been drafted into `paper/latex/main.tex` but never committed, and it pushed the paper to
+11 pages (one reference spilling onto page 11). §V also carried a separate run-in
+disclosure. The two are merged into one back-matter statement covering drafting, the
+checker and analysis code, both annotator sets, and the numeric analyses; the
+data-availability paragraph was trimmed to pay for it. Back at 10 pages, disclosure
+intact. `paper/main.md` now carries the same back matter, which it had been missing.
 
-**The paper was conceding more weakness than the evidence supports.** M-INVAR's
-0.000 recall reads as a taxonomy failure and is not — no probe ever reached a
-mutated invariant path. Only 2 of 33 misses are gaps the checker owns.
+## Verified this pass, unchanged
 
-**One missing artifact explains three separate weak results.** The pre-registered
-recorded-real-calls corpus (`detector_analysis_plan.md` §2, item 1) was never
-built; every production caller passes an empty list. It causes the tau2
-open-world zero denominator, the `reserve_car_rental` agreement flip, and 29 of
-33 closed-world misses. §IX names it as the highest-value future work.
+- `spec/validate.py` over all 48 contracts: all checks pass (the 144 skips are the
+  documented offline subset — checks 4, 5 and 8 need `repos/` and `--state-schema`)
+- `report/render.py --verify`: 4 benchmark rows match Table III on disk
+- `analysis/score_at_risk.py --verify`: 1,208 rows match
+- Table III sources MedAgentBench from `FINDINGS-VERIFIED.md`, not the ledger, and says
+  so in the row; the excluded-cells line under the table makes 8 classes → 4 headline
+  visible without subtraction
 
-**Our own annotation protocol cannot produce a blind annotation for one tool.**
-It requires reading `PREDICATE-GRAMMAR.md`, whose §5 is a complete worked example
-of `cancel_reservation` including its grounding correction. Disclosed, that tool
-excluded from the blind stratum, and reported as a defect in the protocol.
+## Two open items from the last state document were already closed
 
-## Open, and honest about it
+Do not reopen them.
 
-- **`[N12]`** — the disclosure log. Maintainer disclosure is scheduled for
-  2026-09-10; the artifact cannot exist before then. Fallback text for
-  non-response needs drafting before submission, not at the deadline.
-- **`invite_user_to_slack`'s `frame.other_users_unchanged`** violates on every
-  probe under annotator B's contract. Either a real unadvertised side effect or
-  an over-broad frame path. Neither confirmed nor dismissed.
-- **Two sub-questions** from the miss decomposition: whether closed-world mutants
-  were liveness-screened before entering the recall denominator, and whether the
-  six watchdog timeouts are exchangeable with misses for the printed bounds.
-  Both stated as open in §VII.
-- **Venue.** IEEE BigData Intelligent Data Mining (Sep 27) is the plan of record.
-  SE4AgenticAI (Oct 10, 8–10 pages) is the better topical fit — its reviewers know
-  the ConTract and IcePICK lineage this paper positions against. No workshop
-  allows more than 10 pages; that was checked and my earlier assumption was wrong.
+- **`[N12]`** is not a hole. `report/disclosure_log.md` is a committed stub whose
+  reporting rule was fixed *before* any response is known, and §VIII states that rule in
+  prose (substance if responded, neutral non-response otherwise, contested findings
+  marked). Nothing in the paper depends on what happens on 2026-09-10.
+- **`invite_user_to_slack`'s `frame.other_users_unchanged`** was adjudicated in
+  `report/rev5_adjudication.md`: **(b) over-broad frame path**, unsatisfiable by
+  construction because the path resolves over the pre/post union and so includes the one
+  index the tool is advertised to append. A grammar gap, not a benchmark defect.
+
+## Open
+
+- **`trajectory_hash` is not stable across runs, so it cannot serve as the identity
+  anchor the analysis plan intends.** `experiments/analysis_plan.md` §4 promises the hash
+  is "logged with every recorded run and printed in the artifact." It is logged. But
+  `adapters/_tau2_worker.py:363` hashes the canonical JSON of the recorded messages, and
+  those messages carry a per-message `timestamp` field, so re-running the *identical*
+  deterministic gold replay produces ten different hashes. Confirmed by running the suite
+  twice: every `trajectory_hash` in `report/ab_results.json` changed, while every
+  substantive field (exercised, flipped, verdict) stayed byte-identical. **Nothing in the
+  paper is wrong because of this** — no hash is printed in the manuscript, and the §VIII
+  result (0 exercised, 0 flipped) reproduces exactly. The fix (exclude volatile fields
+  from the hashed payload) touches `adapters/_tau2_worker.py` and would rewrite
+  `report/ab_results.json`, so it wants a human decision rather than an autonomous edit.
+- **Running `pytest` dirties tracked artifacts.** `tests/test_ab_run.py` regenerates
+  `report/ab_results.json` and `report/ab_summary.md`, so the working tree is dirty after
+  any test run and that churn can be staged by accident. Run `git checkout report/ab_*`
+  after testing, or scope the test to a temp directory.
+- **Venue.** IEEE BigData Intelligent Data Mining (Sep 27) remains the plan of record.
+  SE4AgenticAI (Oct 10, 8–10 pages) is the better topical fit — its reviewers know the
+  ConTract and IcePICK lineage this paper positions against. No workshop allows more than
+  10 pages. **This is the one decision outstanding that a human has to make.**
+- **Two sub-questions** from the miss decomposition (whether closed-world mutants were
+  liveness-screened before entering the recall denominator, and whether the six watchdog
+  timeouts are exchangeable with misses for the printed bounds) remain stated as open in
+  §VII, deliberately.
 
 ## Constraints that still bind
 
-- Checker frozen at `checker-freeze-v2` (b2a39e1). Changing `core/`, `dynamic/`,
-  `adapters/contract_check.py` or `spec/validate.py` is refreeze cycle two.
-- `paper/tables/` is generated only.
+- Checker frozen at `checker-freeze-v2`, commit `54b74d4` (tag object `b2a39e1` — cite
+  the commit). Changing `core/`, `dynamic/`, `adapters/contract_check.py` or
+  `spec/validate.py` is refreeze cycle two.
+- `paper/tables/` is generated only, by `report/render.py`.
 - Never cut §IX's ten limitations or §II's eight disposals.
 - Every score-at-risk figure keeps its basis tag; never pool across bases.
 - The MedAgentBench hedges are armor: "the numbers are not wrong", "measures
   emitted-request well-formedness", "no grader reads the record back".
-- Run `PYTHONUTF8=1 python experiments/numbers_audit.py` before every commit to
-  `paper/`.
+- Run `PYTHONUTF8=1 python experiments/numbers_audit.py` before every commit to `paper/`.
