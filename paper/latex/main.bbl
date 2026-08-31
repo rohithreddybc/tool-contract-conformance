@@ -200,10 +200,10 @@ Lam, Oei, Shi, Marinov, and Xie, ``{iDFlakies}: A framework for detecting and
 R.~R. Bellibatlu, E.~Raff, and W.~Zhang, ``{JudgeSense}: A benchmark for prompt
   sensitivity in {LLM}-as-a-judge systems,'' 2026, preprint.
 
-\bibitem{rised26}
-R.~R. Bellibatlu, M.~Singh, Y.~Jajoo, S.~Lakhanpal, and A.~Israni, ``{RISED}: A
-  pre-deployment evaluation framework for high-stakes {AI} decision-support
-  systems, with application to healthcare,'' 2026, preprint.
+\bibitem{jiaharman11}
+Jia and Harman, ``An analysis and survey of the development of mutation
+  testing,'' \emph{IEEE Transactions on Software Engineering}, vol.~37, no.~5,
+  pp. 649--678, 2011.
 
 \bibitem{agentdojo24}
 Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
