@@ -15,3 +15,6 @@ paper/latex/main.out
 paper/latex/main.blg
 paper/latex/main.pdf
 paper/*.zip
+
+# Assistant working instructions — local only, not part of the artifact
+CLAUDE.md
