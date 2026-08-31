@@ -12,6 +12,8 @@ No history was rewritten to manufacture a better-looking sequence. Backdating co
 
 **One rewrite did occur, and it is disclosed here rather than left to be discovered.** Before the repository was made public, `git filter-repo` removed a single file — the assistant working-instructions file, which carried private information about the author and no part of the method — from every commit, and reworded eight sentences of design rationale in four internal planning documents. Commit contents are otherwise byte-identical, the ordering of every commit is unchanged, and no dated claim moved. Because rewriting renames commits, the hashes cited in the paper are the post-rewrite ones; the pre-rewrite names were `5f088cb` (import), `57b019d` and `5824376` (the two freeze tags), `ec5dbf4` (agent-experiment pre-registration) and `eaf1bdd` (the agreement run). The three pre-registered documents — `experiments/detector_analysis_plan.md`, `experiments/analysis_plan.md` and `experiments/annotation_protocol.md` — were deliberately left untouched by the rewrite, since editing a pre-registration after the fact is precisely what pre-registration exists to prevent.
 
+**Tag objects are not commits, and the paper cites the commits.** `checker-freeze-v1` and `checker-freeze-v2` are annotated tags, so each carries an object hash of its own, distinct from the commit it points at. The hashes cited in the paper and in this file are the commits: `9dacc79` for the first freeze and `54b74d4` for the second, reproducible with `git rev-parse checker-freeze-v1^{commit}`. Drafts before 2026-08-31 cited the tag object hashes (`8f9b2ff`, `b2a39e1`) while labelling them commits. That was wrong -- neither hash names a commit -- and it is corrected rather than quietly reworded, because a provenance claim a reviewer cannot resolve is worse than one that is merely awkward.
+
 ## What is still verifiable, and why
 
 The ordering claims that carry methodological weight are about what happens **after** the artifacts were committed, and those remain checkable:
@@ -25,7 +27,7 @@ The ordering claims that carry methodological weight are about what happens **af
 
 The distinction matters. Pre-registration protects against choosing an analysis after seeing the data. The data here are mutant scores and verdict flips, and **none of them exist yet**. The window that would have been closed by a late plan is still open; the window that a squashed import closed is the weaker claim about authoring order, and the paper drops it.
 
-## `checker-freeze-v1` — tagged 2026-08-26 at `8f9b2ff`
+## `checker-freeze-v1` — tagged 2026-08-26 at `9dacc79`
 
 The freeze happened, before any mutant was generated or scored. The precondition was verified rather than asserted: no mutant corpus, no mutant score and no scoring result exists at or before that commit. `mutation/` held operators, site enumeration, scoring and equivalence code exercised only against the toy reference domain, which is what the build spec permitted in that milestone.
 
