@@ -51,7 +51,7 @@ check_invariants with a companion sequence, which is out of scope here per CLAUD
 not worked around.
 
 HARD CONSTRAINT: this script imports and calls core/, dynamic/, adapters/contract_check.py, and
-spec/validate.py, but modifies none of them (checker-freeze-v2, 5824376). mutation/ and
+spec/validate.py, but modifies none of them (checker-freeze-v2, b2a39e1). mutation/ and
 experiments/ are outside the freeze and untouched here too -- this is a NEW, read-only-of-those
 script. Does not modify report/mutation_scores.json or report/mutation_summary.md, or repos/.
 

@@ -59,7 +59,7 @@ excluded from the blind stratum, and reported as a defect in the protocol.
 
 ## Constraints that still bind
 
-- Checker frozen at `checker-freeze-v2` (5824376). Changing `core/`, `dynamic/`,
+- Checker frozen at `checker-freeze-v2` (b2a39e1). Changing `core/`, `dynamic/`,
   `adapters/contract_check.py` or `spec/validate.py` is refreeze cycle two.
 - `paper/tables/` is generated only.
 - Never cut §IX's ten limitations or §II's eight disposals.

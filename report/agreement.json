@@ -1,6 +1,6 @@
 {
   "provenance": {
-    "git_commit": "eaf1bdd5de17bd4a093139b8ee11aee06ccadd48",
+    "git_commit": "dee71702417e7ff9466a84efff651bcbfe1d5a47",
     "generated_at": "2026-08-29T17:17:17Z",
     "python": "3.11.7",
     "script": "experiments/agreement.py",

@@ -4,11 +4,13 @@ The paper makes ordering claims that a reviewer is invited to check against git 
 
 ## The repository was initialized after most of the work existed
 
-`git init` ran on **2026-08-21**, and commit `5f088cb` imported the entire project as a single tree: the prior-work gate, the findings ledger, the contract spec, the checker, the adapters, the analysis modules, the mutation machinery, and both pre-registration artifacts. Everything before that date was developed without version control.
+`git init` ran on **2026-08-21**, and commit `fc776b6` imported the entire project as a single tree: the prior-work gate, the findings ledger, the contract spec, the checker, the adapters, the analysis modules, the mutation machinery, and both pre-registration artifacts. Everything before that date was developed without version control.
 
-**A squashed import cannot demonstrate that the pre-registration preceded the analysis.** `detector_analysis_plan.md` §8 promises that "a reviewer can verify the ordering from git history rather than taking our word for it," and for everything inside `5f088cb` that promise is not kept. This was raised by a methodology reviewer, it is correct, and it is recorded here rather than quietly left for someone else to notice.
+**A squashed import cannot demonstrate that the pre-registration preceded the analysis.** `detector_analysis_plan.md` §8 promises that "a reviewer can verify the ordering from git history rather than taking our word for it," and for everything inside `fc776b6` that promise is not kept. This was raised by a methodology reviewer, it is correct, and it is recorded here rather than quietly left for someone else to notice.
 
 No history was rewritten to manufacture a better-looking sequence. Backdating commits would be trivial and would make every other ordering claim in the paper worthless.
+
+**One rewrite did occur, and it is disclosed here rather than left to be discovered.** Before the repository was made public, `git filter-repo` removed a single file — the assistant working-instructions file, which carried private information about the author and no part of the method — from every commit, and reworded eight sentences of design rationale in four internal planning documents. Commit contents are otherwise byte-identical, the ordering of every commit is unchanged, and no dated claim moved. Because rewriting renames commits, the hashes cited in the paper are the post-rewrite ones; the pre-rewrite names were `5f088cb` (import), `57b019d` and `5824376` (the two freeze tags), `ec5dbf4` (agent-experiment pre-registration) and `eaf1bdd` (the agreement run). The three pre-registered documents — `experiments/detector_analysis_plan.md`, `experiments/analysis_plan.md` and `experiments/annotation_protocol.md` — were deliberately left untouched by the rewrite, since editing a pre-registration after the fact is precisely what pre-registration exists to prevent.
 
 ## What is still verifiable, and why
 
@@ -16,14 +18,14 @@ The ordering claims that carry methodological weight are about what happens **af
 
 | Claim | Verifiable? | How |
 |---|---|---|
-| The detector analysis plan was committed before any mutant was **scored** | **Yes** | No mutant corpus, score, or result exists in `5f088cb` or in any commit up to `checker-freeze-v1`. The mutation code was built and exercised on the toy domain only; `CLAUDE.md` forbade real-corpus generation in that milestone |
+| The detector analysis plan was committed before any mutant was **scored** | **Yes** | No mutant corpus, score, or result exists in `fc776b6` or in any commit up to `checker-freeze-v1`. The mutation code was built and exercised on the toy domain only; the build spec for that milestone forbade real-corpus generation |
 | The agent-experiment analysis plan was committed before any trajectory was **recorded** | **Yes**, prospectively | No recorded trajectory exists in the repository. The plan lands before the first recording, in its own commit |
 | The task-selection rule was fixed before selection | **Yes**, prospectively | Same commit as above |
 | The plans were *authored* before the checker was written | **No** | Squashed. The paper must not claim this |
 
 The distinction matters. Pre-registration protects against choosing an analysis after seeing the data. The data here are mutant scores and verdict flips, and **none of them exist yet**. The window that would have been closed by a late plan is still open; the window that a squashed import closed is the weaker claim about authoring order, and the paper drops it.
 
-## `checker-freeze-v1` — tagged 2026-08-26 at `57b019d`
+## `checker-freeze-v1` — tagged 2026-08-26 at `8f9b2ff`
 
 The freeze happened, before any mutant was generated or scored. The precondition was verified rather than asserted: no mutant corpus, no mutant score and no scoring result exists at or before that commit. `mutation/` held operators, site enumeration, scoring and equivalence code exercised only against the toy reference domain, which is what the build spec permitted in that milestone.
 

@@ -135,7 +135,7 @@ def _resolves_in_our_git(short_hash: str) -> bool:
     them as unknown, which is a false alarm that trains you to ignore the check.
 
     It is also the check that matters most. A draft once cited 35c2dbf and 94adf1e for
-    the two freeze tags; the real hashes are 57b019d and 5824376. A wrong hash on a
+    the two freeze tags; the real hashes are 8f9b2ff and b2a39e1. A wrong hash on a
     pre-registration claim is falsifiable by a reviewer in one command, and nothing else
     in the audit would have caught it.
     """
