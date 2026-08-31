@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the paper below."
+title: "Executable Tool-Contract Conformance Testing for Agentic Benchmarks"
+abstract: >-
+  Replication artifact for an executable-contract audit of four tool-using
+  agent benchmarks. Contains the contract specification language and its
+  validator, the static and dynamic conformance checkers, per-benchmark
+  adapters, the mutation-validation harness, the pre-registered analysis
+  plans, and every generated report table.
+type: software
+license: MIT
+authors:
+  - family-names: Bellibatlu
+    given-names: Rohith Reddy
+  - family-names: Zhang
+    given-names: Wenbin
+keywords:
+  - agentic benchmarks
+  - tool contracts
+  - conformance testing
+  - benchmark validity
+  - mutation testing

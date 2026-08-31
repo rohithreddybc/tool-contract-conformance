@@ -1,0 +1,19 @@
+{
+  "title": "Executable Tool-Contract Conformance Testing for Agentic Benchmarks (replication artifact)",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    {"name": "Bellibatlu, Rohith Reddy"},
+    {"name": "Zhang, Wenbin"}
+  ],
+  "description": "Replication artifact for an executable-contract audit of four tool-using agent benchmarks (tau2-bench, AgentDojo, MM-ToolSandbox, MedAgentBench). Includes the contract specification language and validator, static and dynamic conformance checkers, benchmark adapters, the two-arm mutation-validation harness, the pre-registered analysis plans committed before scoring, and every generated report table. Audited benchmark clones are not redistributed; they are pinned by upstream commit.",
+  "keywords": [
+    "agentic benchmarks",
+    "tool contracts",
+    "conformance testing",
+    "benchmark validity",
+    "mutation testing",
+    "LLM agents"
+  ],
+  "access_right": "open"
+}
