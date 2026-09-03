@@ -95,13 +95,9 @@ in `report/disclosure_log.md` under a reporting rule fixed before any response w
 
 ## Citing this work
 
-Cite the concept DOI, which always resolves to the most recent version:
-
-```
-10.5281/zenodo.22182792
-```
-
-`CITATION.cff` carries the machine-readable metadata.
+A citation will be added here once the preprint is posted. Please cite the paper rather than
+this repository. The Zenodo deposit archives the artifact and is referenced from the paper's
+data availability statement; it is not the citation for the work.
 
 ## License
 
