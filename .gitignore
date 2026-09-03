@@ -18,3 +18,13 @@ paper/*.zip
 
 # Assistant working instructions — local only, not part of the artifact
 CLAUDE.md
+
+# Reference papers supplied by co-authors. Third-party copyright, never redistributed.
+paper/reference/
+
+# Private co-author meeting notes. Never published.
+MEETING-*.md
+
+# Local slide decks, not part of the artifact.
+paper/*.pptx
+paper/~$*
