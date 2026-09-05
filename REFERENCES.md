@@ -145,3 +145,94 @@ Consensus searches run earlier on 2026-08-21 (Day 1 gate) returned 20 results ea
 **Later the same day**, during the venue-confirmation and gap-sweep pass, the Consensus connector (`mcp__3e9661f8-0c32-46d8-9a53-dcee9d411a4b__search`) returned "The user's connection to this connector was invalidated" on every call, including on retry. This is a user-side reconnection issue, not a query problem. Both jobs fell back to the next step in the standing rule's search order (Scopus, then publisher pages / direct fetch) as instructed; the gap sweep additionally used WebSearch/WebFetch since Consensus's broad-recall academic search has no direct substitute among the other tools available.
 
 **2026-08-21, reconnected.** The Consensus connector came back later the same day. The deferred gap-sweep queries were rerun through it — the same six angles, no year/domain/study-type filters, 20 results per query, all six batched in two groups of three. Results are folded into the Gap sweep table above (rows 7–11 and the second background row, marked **CO**); rows 1–6 and the first background row remain the earlier WebSearch-sourced findings (marked **WS**). No metadata (venue/year/DOI) conflicts arose between the Consensus rerun and any already-cited entry in this file — the rerun's hits on already-known papers (ToolGate, Agent Behavioral Contracts) matched the existing rows' titles and DOIs exactly; it surfaced only citation counts as new, non-conflicting information. The closest hit to the core claim across the full six-angle sweep, this pass or the last, is LiveClawBench (row 7): it names state-transition/side-effect loss in benchmark tool mocks as a real problem but addresses it by building better mocks prospectively, not by auditing already-published tool implementations retrospectively — which is the gap this project fills. Angle 6 (a named "phantom effect" / "no-op side effect" defect class) again returned nothing on point; the nearest is a security paper's "effect forgery" (row 11), a different field's word for a different concern. No hit from this rerun forces a narrowing of the core claim.
+
+## Task-completion / side-effect-verification literature (added 2026-09-03, co-author review response)
+
+Full analysis in `report/lit-tool-completion-verification.md`, produced in response to a co-author review comment: a
+reviewer will ask whether other ways to verify that a tool task actually completed already exist (e.g., checking whether a
+file genuinely changed on disk rather than trusting a returned success signal). Six Consensus queries (state-based agent
+grading; tool-call side-effect verification vs. self-report; postcondition/runtime verification of API side effects;
+differential testing and mock/stub fidelity; grader/harness-validity auditing; property-based testing of stateful
+systems), plus one follow-up query on the classic web/desktop/mobile agent benchmarks by name. Verdict: this literature is
+real and substantial, but every mechanism found grades an *agent* (or a benchmark's *grading script*) against the
+benchmark's own tool/environment layer taken as ground truth; none re-executes that tool layer against its own declared
+contract, which is this project's claim. Scopus was not attempted (browser-only per standing rule); ten queries are listed
+in the report file for the main session to run before the bibliography is frozen.
+
+| Key | Title | Authors | Year | Venue | Source | URL/DOI |
+|---|---|---|---|---|---|---|
+| webarena24 | WebArena: A Realistic Web Environment for Building Autonomous Agents | Zhou, Xu, Zhu, Zhou, Lo, Sridhar, Cheng, Ou, Bisk, Fried, Alon, Neubig | 2024 | **ICLR 2024** — confirmed via `proceedings.iclr.cc` conference-paper PDF (not yet Scopus-confirmed; see queries list) | AX, WS, PB | arXiv:2307.13854 |
+| appworld24 | AppWorld: A Controllable World of Apps and People for Benchmarking Interactive Coding Agents | Trivedi, Khot, Hartmann, Manku, Dong, Li, Gupta, Sabharwal, Balasubramanian | 2024 | **ACL 2024** — confirmed, arXiv Comments field reads "ACL'24 Camera Ready" (not yet Scopus-confirmed) | AX, CO | arXiv:2407.18901 |
+| osworld24 | OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments | Xie, Zhang, Chen, Li, Zhao, Cao, Hua, Cheng, Shin, Lei, Liu, Xu, Zhou, Savarese, Xiong, Zhong, Yu | 2024 | **NeurIPS 2024 Datasets and Benchmarks Track** — confirmed via `proceedings.neurips.cc` conference-paper PDF (not yet Scopus-confirmed) | AX, WS, PB | arXiv:2404.07972 |
+| androidworld25 | AndroidWorld: A Dynamic Benchmarking Environment for Autonomous Agents | Rawles, Clinckemaillie, Chang, Waltz, Lau, Fair, Li, Bishop, Li, Campbell-Ajala, Toyama, Berry, Tyamagundlu, Lillicrap, Riva | 2025 | **ICLR 2025** — confirmed via `proceedings.iclr.cc` abstract page (not yet Scopus-confirmed) | AX, WS, PB | arXiv:2405.14573 |
+| agentdiff26 | Agent-Diff: Benchmarking LLM Agents on Enterprise API Tasks via Code Execution with State-Diff-Based Evaluation | Pysklo, Zhuravel, Watson | 2026 | arXiv, **preprint only** — Comments field reads "Under review for KDD 2026"; a Consensus record showing a KDD proceedings volume/DOI is therefore premature and not treated as confirmed | AX, CO | arXiv:2602.11224 |
+| falsesuccess26 | From Confident Closing to Silent Failure: Characterizing False Success in LLM Agents | Advani | 2026 | arXiv, Comments field reads "Accepted to FAGEN@ICML2026" — an **ICML 2026 workshop**, not the main conference; not yet Scopus/publisher-confirmed | AX, CO | arXiv:2606.09863 |
+| evidencebounds26 | Can Agent Benchmarks Support Their Scores? Evidence-Supported Bounds for Interactive-Agent Evaluation | Gao, Zhou | 2026 | arXiv, preprint — no Comments/Journal-ref acceptance claim on the abstract page | AX, CO | arXiv:2605.10448 |
+| ajbench26 | AJ-Bench: Benchmarking Agent-as-a-Judge for Environment-Aware Evaluation | Shi, Wang, Zhao, Chen, Feng, Hao, Su, Gu, Su, Cai, He | 2026 | **ACL 2026 Findings** — confirmed, arXiv Comments field reads "Accepted to ACL 2026 Findings" (not yet Scopus-confirmed) | AX, CO | arXiv:2604.18240 |
+| real25 | REAL: Benchmarking Autonomous Agents on Deterministic Simulations of Real Websites | Garg et al. | 2025 | arXiv, preprint — venue not yet confirmed | CO | arXiv:2504.11543 |
+| tiwari24rick | Mimicking Production Behavior With Generated Mocks | Tiwari, ... | 2024 (journal); tool demo at ICST 2023 | IEEE TSE, DOI 10.1109/tse.2024.3458448 (journal version); ICST 2023 tool paper "RICK: Generating Mocks from Production Data," DOI 10.1109/icst57152.2023.00051 — both Consensus-listed with full venue metadata; not independently Scopus-confirmed this pass | CO | DOI 10.1109/tse.2024.3458448 |
+
+`zhu25mockassertions` (Understanding and Characterizing Mock Assertions in Unit Tests, ACM PACMSE 2025, DOI 10.1145/3715741)
+was already logged as a background row in the Gap-sweep table above; this pass promotes it out of "background, not a hit"
+into the report's comparison table, since the co-author's question makes it directly relevant rather than incidental —
+its empirical finding (return-value assertions cannot observe certain side effects, so mock assertions exist to fill the
+gap) is cited as independent SE-literature support for the premise that a returned status is an incomplete completion
+oracle, not as a competing method.
+
+## Verification and gap-closing pass (added 2026-09-05)
+
+Hardens the 2026-09-03 task-completion literature check above for citation. Full narrative, corrections, and the drop-in
+related-work subsection are in `report/lit-tool-completion-verification.md`'s "Verification and gap-closing pass,
+2026-09-05" section; this entry logs only the venue-confirmation status changes and the new citation keys.
+
+**Corrections to existing entries:**
+
+- `agentdiff26` — the characterization (state-diff contract, containerized enterprise-API replicas) is confirmed correct
+  by direct abstract re-fetch. The venue caution must get **stronger**, not weaker: the paper's own GitHub repository
+  (`github.com/agent-diff-bench/agent-diff`) now self-cites a full KDD '26 proceedings entry, but this is uncorroborated
+  by any independent source. dblp lists the work as an "informal publication" (arXiv only), no ACM DL entry was found,
+  and the arXiv abstract page itself (v3, 2026-04-28) still reads "Pre-Print. Under review for KDD 2026." KDD 2026
+  (Jeju Island, August 9-13) has already concluded relative to today's date, and the paper's continued absence from
+  dblp's proceedings listing is meaningful negative evidence, though not conclusive (ACM DL indexing can lag a
+  conference by some weeks). Continue citing as preprint, under review; re-check dblp and ACM DL immediately before the
+  bibliography freezes, not just Scopus. Do **not** adopt the GitHub repository's self-citation — a project that treats
+  agents' own success self-reports as unverified evidence should not treat a benchmark author's own repository
+  self-citation as verified venue confirmation either.
+- `falsesuccess26` — venue now independently confirmed beyond the arXiv Comments self-report: FAGEN ("Failure Modes in
+  Agentic AI") has its own workshop site (`fagen-workshop.github.io`) and OpenReview venue group
+  (`openreview.net/group?id=ICML.cc/2026/Workshop/FAGEN`), both confirming a non-archival ICML 2026 workshop held
+  2026-07-10 in Seoul. Also: the existing report's drafted related-work paragraph states the false-success rate as
+  "45-76% of failures depending on the domain," which silently mixes a tau2-bench figure (45-48%, single-control
+  domains) with an unrelated AppWorld figure (75.8%) as though they were one range; this should not be repeated in any
+  paper text. The finished subsection prose below cites no percentage from this paper, by design.
+- `evidencebounds26` — the worked example (outcome check verifies "Save" was clicked, not that the record changed) and
+  the "audits the checker, not the tool" characterization are both confirmed verbatim against the abstract. No Comments
+  or Journal-ref field exists on the abstract page; "no venue claim" stands exactly as previously logged.
+
+**New keys** (all preprint, no venue claim on the arXiv abstract page as of this pass; Scopus/publisher confirmation not
+yet run):
+
+| Key | Title | Authors | Year | Venue | Source | URL/DOI |
+|---|---|---|---|---|---|---|
+| buildingtotest26 | Building to the Test: Coding Agents Deliver What You Check, Not What You Requested | Ma, Kereopa-Yorke, Schultz | 2026-06-26 | arXiv cs.SE, preprint — no Comments/Journal-ref acceptance claim | AX, CO | arXiv:2606.28430 |
+| evalengineering26 | Towards Evaluation Engineering: An Empirical Study of ML Evaluation Harnesses in the Wild | Zhao, Wang, Bangash, Adams, Hassan | 2026-05-22 | arXiv cs.SE, preprint — no Comments/Journal-ref acceptance claim | AX, CO | arXiv:2605.24213 |
+| mirage26 | MIRAGE: Online LLM Simulation for Microservice Dependency Testing | Zhang | 2026-04-06 (v4 2026-06-26) | arXiv cs.SE, preprint — no Comments/Journal-ref acceptance claim | AX, CO | arXiv:2604.04806 |
+| agentpropbench26 | Auditing Automated Evaluation, Error Propagation, and Runtime Mitigation in Tool-Using Language Agents | Gurram | 2026-04-17 (v2 2026-08-10) | arXiv cs.AI, preprint — no Journal-ref; Comments field lists page/figure/table counts and a code link only, no acceptance claim | AX, CO | arXiv:2604.16706 |
+| correctnessillusion26 | The Correctness Illusion in LLM-Generated GPU Kernels | Sarkar | 2026-06-18 (rev. 2026-07-21) | arXiv cs.SE, preprint — Comments field promises companion papers "next week," no acceptance claim | AX, CO | arXiv:2606.20128 |
+
+Not logged with its own row (mentioned only in the report's prose): **ClawsBench** (arXiv:2604.05172) names "silent
+contract modification" as one of eight recurring unsafe-agent-behavior patterns; this is an agent-side safety-boundary
+violation, not a benchmark tool's own precondition/postcondition contract, and is a terminology near-miss only, in the
+same family as Tool-Veritas's "implementation-specification mismatch" and ContractGuard's "effect forgery," both
+already disposed of above. Its own Consensus venue tag carries the same KDD-proceedings-DOI-is-really-the-arXiv-DOI
+artifact documented for `agentdiff26` above and should be treated with the same skepticism if cited.
+
+Six Consensus search angles were run to close the first pass's stated gaps: postcondition/runtime verification of side
+effects; simulator/sandbox fidelity for agent environments; harness/grader correctness bugs in ML and agent benchmark
+evaluation; differential/metamorphic testing of tool or API implementations; mock/stub fidelity; and validity of
+execution-based evaluation. The first and fourth of these returned only literature already known to this project. ACM
+DL's search endpoint returned HTTP 403 to direct fetch and could not be queried for a general sweep; dblp and a direct
+ACM DL fetch were used only for the targeted `agentdiff26` venue check in Part 1 of the report. Scopus remains unreached
+this pass; all ten Scopus queries listed in the original 2026-09-03 entry above, plus a new one for `agentdiff26`
+(`TITLE("Agent-Diff") AND TITLE("state-diff")`, to check specifically for a dblp/ACM DL proceedings entry, not just a
+KDD volume/DOI) must still be run before the bibliography is frozen.

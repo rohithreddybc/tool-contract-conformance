@@ -23,30 +23,30 @@
 
 \bibitem{liveclawbench26}
 Long, Du, Xu \emph{et~al.}, ``{LiveClawBench}: Benchmarking {LLM} agents on
-  complex, real-world assistant tasks,'' 2026, preprint.
+  complex, real-world assistant tasks,'' 2026.
 
 \bibitem{benchguard26}
-Tu, Wang, Lu, Huang, Qu, and Mostafavi, ``{BenchGuard}: Who guards the
-  benchmarks? automated auditing of {LLM} agent benchmarks,'' 2026, accepted,
-  Conference on Language Modeling (COLM) 2026.
+Tu, Wang \emph{et~al.}, ``{BenchGuard}: Who guards the benchmarks? automated
+  auditing of {LLM} agent benchmarks,'' 2026, accepted, Conference on Language
+  Modeling (COLM) 2026.
 
 \bibitem{aba26}
-Wang, Bianchi, Zhu, Nie, Kwon, Dhingra, and Zou, ``Automated benchmark auditing
-  for {AI} agents and large language models,'' 2026, preprint.
+Wang, Bianchi \emph{et~al.}, ``Automated benchmark auditing for {AI} agents and
+  large language models,'' 2026.
 
 \bibitem{toolveritas26}
 Bhat, Vaghasiya, Mohsin, and Aali, ``Benchmarking the benchmarks: A validity
-  audit of tool-calling evaluation,'' 2026, preprint.
+  audit of tool-calling evaluation,'' 2026.
 
 \bibitem{safeaudit26}
 Chen, Yan, Zhang, and Zhang, ``Who tests the testers? systematic enumeration
-  and coverage audit of {LLM} agent tool call safety,'' 2026, preprint.
+  and coverage audit of {LLM} agent tool call safety,'' 2026.
 
 \bibitem{medagentbench25}
-Jiang, Black, Geng, Park, Zou, Ng, and Chen, ``{MedAgentBench}: A virtual {EHR}
-  environment to benchmark medical {LLM} agents,'' \emph{NEJM AI}, vol.~2,
-  no.~9, 2025, preprint version (arXiv:2501.14654) read directly; Table 3 cited
-  from that version.
+Jiang, Black \emph{et~al.}, ``{MedAgentBench}: A virtual {EHR} environment to
+  benchmark medical {LLM} agents,'' \emph{NEJM AI}, vol.~2, no.~9, 2025,
+  preprint version (arXiv:2501.14654) read directly; Table 3 cited from that
+  version.
 
 \bibitem{wangstrong96}
 Wang and Strong, ``Beyond accuracy: What data quality means to data
@@ -59,34 +59,64 @@ Buneman, Khanna, and Tan, ``Why and where: A characterization of data
   ser. Lecture Notes in Computer Science, vol. 1973.\hskip 1em plus 0.5em minus
   0.4em\relax Springer, 2001.
 
-\bibitem{toolgate26}
-Liu, Peng, Cao, Wang, Deng, Chen, Yin, and Zhang, ``{ToolGate}:
-  Contract-grounded and verified tool execution for {LLMs},'' 2026, preprint.
+\bibitem{webarena24}
+Zhou, Xu, Zhu \emph{et~al.}, ``{WebArena}: A realistic web environment for
+  building autonomous agents,'' 2024, iCLR 2024; publisher-confirmed, Scopus
+  pending.
 
-\bibitem{abc26}
-Bhardwaj, ``Agent behavioral contracts: Formal specification and runtime
-  enforcement for reliable autonomous {AI} agents,'' Zenodo, 2026, preprint,
-  not peer-reviewed.
+\bibitem{appworld24}
+Trivedi, Khot, Hartmann \emph{et~al.}, ``{AppWorld}: A controllable world of
+  apps and people for benchmarking interactive coding agents,'' 2024, aCL 2024
+  (Camera Ready); Scopus pending.
 
-\bibitem{contract2tool26}
-Babu and Iyer, ``{Contract2Tool}: Learning preconditions and effects for
-  reliable tool-augmented {LLM} agents,'' 2026, preprint.
+\bibitem{osworld24}
+Xie, Zhang, Chen \emph{et~al.}, ``{OSWorld}: Benchmarking multimodal agents for
+  open-ended tasks in real computer environments,'' 2024, neurIPS 2024 D\&B
+  Track; publisher-confirmed, Scopus pending.
 
-\bibitem{contractbench26}
-Wang, He, Wang, Xing, De, and Chen, ``{ContractBench}: Can {LLM} agents
-  preserve observation contracts?'' 2026, preprint.
+\bibitem{androidworld25}
+Rawles, Clinckemaillie, Chang \emph{et~al.}, ``{AndroidWorld}: A dynamic
+  benchmarking environment for autonomous agents,'' 2025, iCLR 2025;
+  publisher-confirmed, Scopus pending.
+
+\bibitem{tau2bench25}
+Barres, Dong \emph{et~al.}, ``$\tau^2$-bench: Evaluating conversational agents
+  in a dual-control environment,'' 2025.
+
+\bibitem{agentdojo24}
+Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
+  ``{AgentDojo}: A dynamic environment to evaluate prompt injection attacks and
+  defenses for {LLM} agents,'' 2024, neurIPS 2024, Scopus-confirmed; D\&B track
+  sub-label unconfirmed.
+
+\bibitem{agentdiff26}
+Pysklo, Zhuravel, and Watson, ``{Agent-Diff}: Benchmarking {LLM} agents on
+  enterprise {API} tasks via code execution with state-diff-based evaluation,''
+  2026, preprint, under review for KDD 2026; not corroborated by dblp or ACM
+  DL.
+
+\bibitem{evidencebounds26}
+Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
+  bounds for interactive-agent evaluation,'' 2026, preprint; no venue claim on
+  the abstract page.
+
+\bibitem{falsesuccess26}
+Advani, ``From confident closing to silent failure: Characterizing false
+  success in {LLM} agents,'' 2026, accepted, FAGEN workshop at ICML 2026
+  (non-archival); independently confirmed.
+
+\bibitem{constructvalidity25}
+Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
+  validity in large language model benchmarks,'' 2025, self-listed as NeurIPS
+  2025 Datasets and Benchmarks Track; not independently confirmed.
+
+\bibitem{judgesense26}
+R.~R. Bellibatlu, E.~Raff, and W.~Zhang, ``{JudgeSense}: A benchmark for prompt
+  sensitivity in {LLM}-as-a-judge systems,'' 2026.
 
 \bibitem{toolfuzz25}
 Milev, Balunovi\'{c}, Baader, and Vechev, ``{ToolFuzz} -- automated agent tool
-  testing,'' 2025, preprint.
-
-\bibitem{contractguard26}
-Iyer and Babu, ``The gate is only as honest as its contracts: {ContractGuard}
-  for the contract layer of risk-aware causal gating,'' 2026, preprint.
-
-\bibitem{faulttaxonomy26}
-Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
-  taxonomy of types, symptoms, and root causes,'' 2026, preprint.
+  testing,'' 2025.
 
 \bibitem{abcchecklist25}
 Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
@@ -97,15 +127,6 @@ Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
 Yao, Shinn, Razavi, and Narasimhan, ``$\tau$-bench: A benchmark for
   tool-agent-user interaction in real-world domains,'' 2024, preprint; distinct
   artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,II).
-
-\bibitem{tau2bench25}
-Barres, Dong, Ray, Si, and Narasimhan, ``$\tau^2$-bench: Evaluating
-  conversational agents in a dual-control environment,'' 2025, preprint.
-
-\bibitem{constructvalidity25}
-Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
-  validity in large language model benchmarks,'' 2025, self-listed as NeurIPS
-  2025 Datasets and Benchmarks Track; not independently confirmed.
 
 \bibitem{jcontractor05}
 Karaorman and Abercrombie, ``j{C}ontractor: Introducing design-by-contract to
@@ -145,10 +166,10 @@ Ghosal, Jonsson, and R\"{u}mmer, ``An active learning approach to synthesizing
   14323.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2023.
 
 \bibitem{dlcontract23}
-Ahmed, Cruz, Imtiaz, Khairunnesa, and Rajan, ``Design by contract for deep
-  learning {APIs},'' in \emph{Proceedings of the 31st ACM Joint European
-  Software Engineering Conference and Symposium on the Foundations of Software
-  Engineering (ESEC/FSE)}, 2023.
+Ahmed, Cruz \emph{et~al.}, ``Design by contract for deep learning {APIs},'' in
+  \emph{Proceedings of the 31st ACM Joint European Software Engineering
+  Conference and Symposium on the Foundations of Software Engineering
+  (ESEC/FSE)}, 2023.
 
 \bibitem{segura18}
 Segura, Parejo, Troya, and Ruiz-Cort\'{e}s, ``Metamorphic testing of {RESTful}
@@ -161,9 +182,9 @@ Segura, Fraser, Sanchez, and Ruiz-Cort\'{e}s, ``A survey on metamorphic
   2016.
 
 \bibitem{chen18}
-Chen, Kuo, Liu, Tse, and Zhou, ``Metamorphic testing: A review of challenges
-  and opportunities,'' \emph{ACM Computing Surveys}, vol.~51, no.~1, p. art.\
-  4, 2019.
+Chen, Kuo \emph{et~al.}, ``Metamorphic testing: A review of challenges and
+  opportunities,'' \emph{ACM Computing Surveys}, vol.~51, no.~1, p. art.\ 4,
+  2019.
 
 \bibitem{restler19}
 Atlidakis, Godefroid, and Polishchuk, ``{RESTler}: Stateful {REST} {API}
@@ -175,14 +196,39 @@ Godefroid, Lehmann, and Polishchuk, ``Differential regression testing for
   {REST} {APIs},'' in \emph{Proceedings of the 29th ACM SIGSOFT International
   Symposium on Software Testing and Analysis (ISSTA)}, 2020.
 
+\bibitem{toolgate26}
+Liu, Peng \emph{et~al.}, ``{ToolGate}: Contract-grounded and verified tool
+  execution for {LLMs},'' 2026.
+
+\bibitem{abc26}
+Bhardwaj, ``Agent behavioral contracts: Formal specification and runtime
+  enforcement for reliable autonomous {AI} agents,'' Zenodo, 2026, preprint,
+  not peer-reviewed.
+
+\bibitem{contract2tool26}
+Babu and Iyer, ``{Contract2Tool}: Learning preconditions and effects for
+  reliable tool-augmented {LLM} agents,'' 2026.
+
+\bibitem{contractbench26}
+Wang, He \emph{et~al.}, ``{ContractBench}: Can {LLM} agents preserve
+  observation contracts?'' 2026.
+
+\bibitem{contractguard26}
+Iyer and Babu, ``The gate is only as honest as its contracts: {ContractGuard}
+  for the contract layer of risk-aware causal gating,'' 2026.
+
+\bibitem{faulttaxonomy26}
+Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
+  taxonomy of types, symptoms, and root causes,'' 2026.
+
 \bibitem{kapoor24matter}
 Kapoor, Vaithilingam \emph{et~al.}, ``{AI} agents that matter,''
   \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
 
 \bibitem{betterbench24}
-Reuel, Hardy, Smith, Lamparth, Hardy, and Kochenderfer, ``{BetterBench}:
-  Assessing {AI} benchmarks, uncovering issues, and establishing best
-  practices,'' in \emph{NeurIPS Datasets and Benchmarks Track}, 2024.
+Reuel, Hardy \emph{et~al.}, ``{BetterBench}: Assessing {AI} benchmarks,
+  uncovering issues, and establishing best practices,'' in \emph{NeurIPS
+  Datasets and Benchmarks Track}, 2024.
 
 \bibitem{utboost25}
 Yu, Zhu, He, and Kang, ``{UTBoost}: Rigorous evaluation of coding agents on
@@ -193,26 +239,21 @@ Gyori, Shi, Hariri, and Marinov, ``Reliable testing: Detecting state-polluting
   tests to prevent test dependency,'' in \emph{Proceedings of ISSTA}, 2015.
 
 \bibitem{idflakies19}
-Lam, Oei, Shi, Marinov, and Xie, ``{iDFlakies}: A framework for detecting and
-  partially classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
+Lam, Oei \emph{et~al.}, ``{iDFlakies}: A framework for detecting and partially
+  classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
 
-\bibitem{judgesense26}
-R.~R. Bellibatlu, E.~Raff, and W.~Zhang, ``{JudgeSense}: A benchmark for prompt
-  sensitivity in {LLM}-as-a-judge systems,'' 2026, preprint.
+\bibitem{rised26}
+R.~R. Bellibatlu, M.~Singh \emph{et~al.}, ``{RISED}: A pre-deployment
+  evaluation framework for high-stakes {AI} decision-support systems, with
+  application to healthcare,'' 2026.
+
+\bibitem{mmtoolsandbox26}
+Ma, Feng \emph{et~al.}, ``{MM-ToolSandBox}: A unified framework for evaluating
+  visual tool-calling agents,'' 2026.
 
 \bibitem{jiaharman11}
 Jia and Harman, ``An analysis and survey of the development of mutation
   testing,'' \emph{IEEE Transactions on Software Engineering}, vol.~37, no.~5,
   pp. 649--678, 2011.
-
-\bibitem{agentdojo24}
-Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
-  ``{AgentDojo}: A dynamic environment to evaluate prompt injection attacks and
-  defenses for {LLM} agents,'' 2024, neurIPS 2024, Scopus-confirmed; D\&B track
-  sub-label unconfirmed.
-
-\bibitem{mmtoolsandbox26}
-Ma, Feng, Metz, Lu, Verma, and Dehghan, ``{MM-ToolSandBox}: A unified framework
-  for evaluating visual tool-calling agents,'' 2026, preprint.
 
 \end{thebibliography}
