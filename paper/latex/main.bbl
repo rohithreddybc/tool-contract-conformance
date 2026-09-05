@@ -25,12 +25,6 @@
 Long, Du, Xu \emph{et~al.}, ``{LiveClawBench}: Benchmarking {LLM} agents on
   complex, real-world assistant tasks,'' 2026, preprint.
 
-\bibitem{medagentbench25}
-Jiang, Black, Geng, Park, Zou, Ng, and Chen, ``{MedAgentBench}: A virtual {EHR}
-  environment to benchmark medical {LLM} agents,'' \emph{NEJM AI}, vol.~2,
-  no.~9, 2025, preprint version (arXiv:2501.14654) read directly; Table 3 cited
-  from that version.
-
 \bibitem{benchguard26}
 Tu, Wang, Lu, Huang, Qu, and Mostafavi, ``{BenchGuard}: Who guards the
   benchmarks? automated auditing of {LLM} agent benchmarks,'' 2026, accepted,
@@ -47,6 +41,12 @@ Bhat, Vaghasiya, Mohsin, and Aali, ``Benchmarking the benchmarks: A validity
 \bibitem{safeaudit26}
 Chen, Yan, Zhang, and Zhang, ``Who tests the testers? systematic enumeration
   and coverage audit of {LLM} agent tool call safety,'' 2026, preprint.
+
+\bibitem{medagentbench25}
+Jiang, Black, Geng, Park, Zou, Ng, and Chen, ``{MedAgentBench}: A virtual {EHR}
+  environment to benchmark medical {LLM} agents,'' \emph{NEJM AI}, vol.~2,
+  no.~9, 2025, preprint version (arXiv:2501.14654) read directly; Table 3 cited
+  from that version.
 
 \bibitem{wangstrong96}
 Wang and Strong, ``Beyond accuracy: What data quality means to data
