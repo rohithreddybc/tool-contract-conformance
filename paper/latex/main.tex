@@ -241,7 +241,7 @@ A reviewer might reasonably ask why a tool-layer audit is needed alongside liter
 
 \paragraph{Why every prior audit missed it} The tool defect and the grader design at the center of this study's central chain (\S\,\ref{sec:experiments}) are mutually consistent: the grader's gate condition is the tool's own fabricated success string, so the tool reports a write that did not happen and the grader accepts it as evidence. BenchGuard's EVAL-MISMATCH and Tool-Veritas's reward-basis mismatch plausibly cover the grader-side class, yet neither found this instance: single-layer audits are blind to cross-layer consistency defects by construction. We distinguish Ungrounded Oracle (\S\,\ref{sec:prelim}) from Tool-Veritas's reward-basis mismatch: theirs concerns whether the verdict matches the outcome, ours the provenance of the evidence. JudgeSense reports comparable evaluator-layer fragility under prompt rewording \cite{judgesense26}.
 
-Table~\ref{tab:disposals} names the six closest collisions inside this layer boundary, led by the two preprints above.
+Table~\ref{tab:disposals} names the six closest collisions inside this layer boundary, led by the two preprints above: five of the six leave the tool's own implementation unexamined and trusted; the sixth is a temporal non-overlap, unrelated in kind.
 
 \begin{table*}[t]
 \caption{Closest prior work and the distinction, by collision and disposition.}
@@ -249,20 +249,18 @@ Table~\ref{tab:disposals} names the six closest collisions inside this layer bou
 \centering
 \scriptsize
 \setlength{\tabcolsep}{2pt}
-\begin{tabular}{@{}p{0.15\textwidth}p{0.28\textwidth}p{0.50\textwidth}@{}}
+\begin{tabular}{@{}p{0.19\textwidth}p{0.28\textwidth}p{0.46\textwidth}@{}}
 \toprule
 Work(s) & Claim or apparent collision & Disposal \\
 \midrule
-Agent-Diff \cite{agentdiff26} & ``State-diff contract,'' one layer up: success = expected state delta & Grades the \textit{agent} via replica-API state diff, trusting that API's own implementation; we diff contract against implementation to grade the \textit{tool} itself \\
+Agent-Diff \cite{agentdiff26} & ``State-diff contract,'' one layer up: success = expected state delta & Grades the \textit{agent} via replica-API state diff, trusting that API's own implementation; we diff contract vs.\ implementation to grade the \textit{tool} itself \\
 Gao and Zhou \cite{evidencebounds26} & Closest completion-verification framing, applied to the grading script & Audits whether an outcome check is backed by stored evidence; never opens the tool implementation that produced the state \\
 Tool-Veritas \cite{toolveritas26} & Same artifact family (tau2-bench Retail); coins ``implementation-specification mismatch'' & Audits verdict vs.\ outcome; we audit whether the read state was ever correctly written, so a gate on a defective tool's output inherits its defect \\
 ToolFuzz \cite{toolfuzz25} & Nearest engineering neighbor: tests LangChain tools against their own docs & Oracle: agent response vs.\ docs (docs trusted); our object is a simulated tool's state transition, and docs are what we do not trust \\
-BenchGuard \cite{benchguard26}, Automated Benchmark Audit \cite{aba26}, SafeAudit \cite{safeaudit26} & Audit task artifacts (14 subcats.), an instruction/environment/evaluation schema, and safety-suite coverage & 0/27 category overlap\textsuperscript{a}; nearest miss (INST-CONTRADICT) compares instruction vs.\ gold program, both task metadata, not the tool body \\
-Agentic Benchmark Checklist \cite{abcchecklist25} & Reports $\tau$-bench \cite{taubench24} counts empty responses as success, in a Jan.\ 2024--Mar.\ 2025 window & tau2-bench \cite{tau2bench25} (audited here) released June 2025, after that window, with a different grading design; code unchanged since the repository's first commit\textsuperscript{b} \\
+BenchGuard \cite{benchguard26}, Automated Benchmark Audit \cite{aba26}, SafeAudit \cite{safeaudit26} & Audit task artifacts (14 subcats.), an instruction/environment/evaluation schema, and safety-suite coverage & Zero overlap in 27 categories (\texttt{GATE.md} \S\,2); nearest miss (INST-CONTRADICT) compares instruction vs.\ gold program, both task metadata, not the tool body \\
+Agentic Benchmark Checklist \cite{abcchecklist25} & Reports $\tau$-bench \cite{taubench24} counts empty responses as success, in a Jan.\ 2024--Mar.\ 2025 window & tau2-bench \cite{tau2bench25} (audited here) released June 2025, after that window, with a different grading design; code unchanged since first commit (\texttt{git log -S}, \texttt{EXTERNAL-VERIFICATION.md} Task 1) \\
 \bottomrule
 \end{tabular}
-
-\footnotesize\textsuperscript{a}\texttt{GATE.md} \S\,2. \textsuperscript{b}\texttt{git log -S}, confirmed against \texttt{EXTERNAL-VERIFICATION.md} Task 1.
 \end{table*}
 
 \subsection{\textbf{Contract Inference, API Oracles, and the Testing Lineage}}
@@ -439,17 +437,15 @@ The checker is frozen at \texttt{checker-freeze-v2} (commit \texttt{54b74d4}); e
 \# & Bench. @ commit & Tool : line & Class & Tier & Surfaced by & Quoted evidence and disposition \\
 \midrule
 1 & MedAgentBench @ \texttt{9926011} & POST branch, \texttt{\_\_init\_\_.\brk py:85-91} & Phantom Effect & agent-visible (\texttt{prompt\_\brk template}, \texttt{tool\_return}) & manual & ``\ldots executed successfully'' fabricated; payload never re-read. \\
-2 & tau2-bench @ \texttt{c3398666} & \texttt{refuel\_data}, \texttt{telecom\brk /tools.py:\brk 607-657} & Unenforced Precondition & agent-visible (\texttt{docstring}) & manual & ``must be Active'' check commented out; sibling \texttt{gb\_\brk amount} check intact\textsuperscript{a}. \\
-3 & tau2-bench @ \texttt{c3398666} & \texttt{cancel\_\brk reservation}, \texttt{airline\brk /tools.py:\brk 315, 363-368} & Partial Effect & \textbf{maintainer-annotated: not headline-eligible} & manual & ``Seats release not implemented\ldots!!!'' (367); TODO (689). Seats never restored; per-episode reset\textsuperscript{b}. \\
+2 & tau2-bench @ \texttt{c3398666} & \texttt{refuel\_data}, \texttt{telecom\brk /tools.py:\brk 607-657} & Unenforced Precondition & agent-visible (\texttt{docstring}) & manual & ``must be Active'' check commented out (selective disable); sibling \texttt{gb\_\brk amount} check intact. \\
+3 & tau2-bench @ \texttt{c3398666} & \texttt{cancel\_\brk reservation}, \texttt{airline\brk /tools.py:\brk 315, 363-368} & Partial Effect & \textbf{maintainer-annotated: not headline-eligible} & manual & ``Seats release not implemented\ldots!!!'' (367); TODO (689). Seats never restored; per-episode reset (Reset Leak withdrawn). \\
 4 & MedAgentBench @ \texttt{9926011} & write graders, \texttt{refsol.py} (SHA-256-pinned; not in repo) & Ungrounded Oracle (evaluator property, \S\,\ref{sec:prelim}) & grader source & manual & ``POST request accepted'' gates \texttt{extract\_\brk posts}; graded from transcript regardless (breakdown: Table~\ref{tab:scoreatrisk}). \\
-5 & AgentDojo @ \texttt{089ed46} & \texttt{update\_\brk scheduled\_\brk transaction}, \texttt{banking\_\brk client.py:\brk 115-151} & Ignored Argument + Phantom Effect & agent-visible (\texttt{docstring}) & manual & \texttt{recurring} guarded by truthiness (\texttt{True} only); returns ``\ldots updated'' unconditionally\textsuperscript{c}. \\
-6 & AgentDojo @ \texttt{089ed46} & \texttt{reserve\_\brk car\_\brk rental}, \texttt{travel\_\brk booking\_\brk client.py:\brk 382-400} & Ignored Argument & agent-visible (\texttt{docstring}) & manual & \texttt{end\_time} dropped from state, kept in success string\textsuperscript{d}. No task exercises this tool. \\
+5 & AgentDojo @ \texttt{089ed46} & \texttt{update\_\brk scheduled\_\brk transaction}, \texttt{banking\_\brk client.py:\brk 115-151} & Ignored Argument + Phantom Effect & agent-visible (\texttt{docstring}) & manual & \texttt{recurring} guarded by truthiness (\texttt{True} only); returns ``\ldots updated'' unconditionally (sibling \texttt{update\_\brk user\_\brk info}: same guard, 4 fields, not a 9th instance). \\
+6 & AgentDojo @ \texttt{089ed46} & \texttt{reserve\_\brk car\_\brk rental}, \texttt{travel\_\brk booking\_\brk client.py:\brk 382-400} & Ignored Argument & agent-visible (\texttt{docstring}) & manual & \texttt{end\_time} dropped from state, kept in success string (aggravating signal, \S\,\ref{sec:prelim}). No task exercises this tool. \\
 7 & MM-ToolSandbox @ \texttt{1e8e932} & \texttt{venmo\_\brk social}, \texttt{mini\brk /venmo.py:\brk 464-470} & Ignored Argument & agent-visible (\texttt{docstring}) & manual & \texttt{sort\_by} documented twice, never forwarded (listing branch); correct pattern appears 250 lines above in the same file. \\
 8 & AgentDojo @ \texttt{089ed46} & \texttt{invite\_\brk user\_to\_\brk slack}, \texttt{slack.py:\brk 93-103} & Ignored Argument & agent-visible (\texttt{docstring}) & static check & ``should be sent'' to \texttt{user\_\brk email}; body never reads it. \\
 \bottomrule
 \end{tabular}
-
-\footnotesize\textsuperscript{a}Selective disable, not an absent check. \textsuperscript{b}Reset confirmed per-episode; Reset Leak label withdrawn. \textsuperscript{c}Sibling \texttt{update\_user\_info} repeats the guard on four fields without the phantom signal: same class, not a ninth instance. \textsuperscript{d}The aggravating signal of \S\,\ref{sec:prelim}; no shipped task's ground truth exercises this tool, so it is excluded from any score-impact claim.
 
 A third tau2-bench candidate stays below the reporting threshold: \texttt{suspend\_line}'s \texttt{arg.reason} VIOLATES at the inferred tier. A required \texttt{reason} is logged and never persisted, but whether the docstring advertises persistence rather than a log entry is contested; not counted among the eight confirmed instances, though it is the eighth cell in Table~\ref{tab:table3}'s ledger total.
 \end{table*}
@@ -471,12 +467,10 @@ tau2 airline : \texttt{cancel\_\brk reservation} & Partial Effect & \texttt{whol
 tau2 telecom : \texttt{refuel\_data} & Unenforced Precondition & \texttt{exact\_field} (1120) + \texttt{collection\_\brk only} (15) & 1135 / 2285 & 1120 & state\_\brk grounded \\
 AgentDojo banking : \texttt{update\_\brk scheduled\_\brk transaction} & Ignored Argument & \texttt{exact\_field} & 1 / 16 & 4 & state\_\brk grounded \\
 AgentDojo travel : \texttt{reserve\_\brk car\_\brk rental} & Ignored Argument & \texttt{exact\_field} & 1 / 20 & 0 & mixed \\
-MedAgentBench : post-write & Phantom Effect & transcript\textsuperscript{a} & undefined & n/a & 60 / 90 / 150 / 0\textsuperscript{b} \\
-MM-ToolSandbox : \texttt{venmo\_\brk social} & Ignored Argument & n/c & \texttt{not\_\brk computable\_\brk appworld\_\brk unreachable} & n/c & n/c \\
+MedAgentBench : post-write & Phantom Effect & transcript (not state) & undefined & n/a & 60 transcript / 90 mixed / 150 no-oracle / 0 state (of 300) \\
+MM-ToolSandbox : \texttt{venmo\_\brk social} & Ignored Argument & not computable & \texttt{not\_\brk computable\_\brk appworld\_\brk unreachable} & not computable & not computable \\
 \bottomrule
 \end{tabular}
-
-\footnotesize\textsuperscript{a}Not a state basis. \textsuperscript{b}Of 300 write-tagged cases: transcript / mixed / no-oracle / state. n/c = not computable (AppWorld-tier scenarios unreachable offline).
 \end{table*}
 
 Oracle grounding is a first-class output, not a footnote: a naive field-intersection returns the wrong answer for MedAgentBench, since the grader-checked field and the field the tool should have written share a name, so a names-only rule would call nearly every one of the 300 cases at risk. Classification is instead computed per grader function: of 300 write-tagged cases, 60 are graded unconditionally from the transcript, 90 gate on live state but still grade the write from the transcript, 150 have no write oracle, and zero are graded by reading the write back from FHIR state. Score-at-risk is undefined for the 60 and indeterminate for the 90, never zero: ``oracle not state-grounded.''
