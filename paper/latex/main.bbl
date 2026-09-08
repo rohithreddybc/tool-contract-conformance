@@ -260,4 +260,9 @@ Jia and Harman, ``An analysis and survey of the development of mutation
   testing,'' \emph{IEEE Transactions on Software Engineering}, vol.~37, no.~5,
   pp. 649--678, 2011.
 
+\bibitem{instabilityfloor26}
+Bellibatlu, Singh, Parashar, and Joshi, ``Counterfactual fairness audits of
+  multi-step clinical {LLM} agents require a measured per-action instability
+  floor,'' 2026, preprint.
+
 \end{thebibliography}
