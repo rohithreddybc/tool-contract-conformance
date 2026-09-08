@@ -115,8 +115,8 @@ Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
   2025 Datasets and Benchmarks Track; not independently confirmed.
 
 \bibitem{judgesense26}
-R.~R. Bellibatlu, E.~Raff, and W.~Zhang, ``{JudgeSense}: A benchmark for prompt
-  sensitivity in {LLM}-as-a-judge systems,'' 2026.
+Bellibatlu, Raff, and Zhang, ``{JudgeSense}: A benchmark for prompt sensitivity
+  in {LLM}-as-a-judge systems,'' 2026.
 
 \bibitem{toolfuzz25}
 Milev, Balunovi\'{c}, Baader, and Vechev, ``{ToolFuzz} -- automated agent tool
@@ -259,10 +259,5 @@ Ma, Feng \emph{et~al.}, ``{MM-ToolSandBox}: A unified framework for evaluating
 Jia and Harman, ``An analysis and survey of the development of mutation
   testing,'' \emph{IEEE Transactions on Software Engineering}, vol.~37, no.~5,
   pp. 649--678, 2011.
-
-\bibitem{instabilityfloor26}
-Bellibatlu, Singh, Parashar, and Joshi, ``Counterfactual fairness audits of
-  multi-step clinical {LLM} agents require a measured per-action instability
-  floor,'' 2026, preprint.
 
 \end{thebibliography}
