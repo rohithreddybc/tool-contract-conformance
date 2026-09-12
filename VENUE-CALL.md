@@ -1,5 +1,14 @@
 # Venue call, 2026-09-11
 
+> **Superseded 2026-09-11. The recommendation below was not taken.** The author
+> decided to stay with the IEEE BigData 2026 Intelligent Data Mining special
+> session, deadline 2026-09-27. The analysis is kept because its reading of how
+> a data-mining reviewer receives the recall and escape-rate numbers is the
+> reason the paper now argues its data-provenance framing in the abstract,
+> introduction and conclusion rather than only in related work. Treat every
+> "recommendation" and "verdict" below as the state of the argument on the day
+> it was written, not as the plan.
+
 Decision memo. No manuscript edits were made. Everything below about a venue was read on its own page today; where a page could not be read, that is said.
 
 ## Recommendation: submit to SE4AgenticAI (option B), deadline 2026-10-10
@@ -37,7 +46,7 @@ Outside BigData, two are worth naming and rejecting for now:
 - **AST 2027** (ICSE co-located; 2026-10-30; 10+2 pages, IEEE template, IEEE and ACM DLs; theme "Testing in the Age of AI: Governance, Compliance, and Oversight"; double-blind). The best topical fit of anything found: it is a testing conference and this is a conformance-testing paper. It is also where a mutation-testing expert reads recall 0.020 to 0.359 with the most scrutiny, and double-blind would require stripping the author-named artifact, the DOI, and `FINDINGS-VERIFIED.md` references. A stronger line that may not happen, for an author whose three methodological rejections argue for banking one acceptance first.
 - **FORGE 2027** (ACM, ICSE co-located; 2026-10-30; 10+2 pages). Better standing than either A or B, but its scope is foundation models for software engineering, and none of the four audited benchmarks is an SE benchmark. Partial fit; not this paper.
 
-arXiv-first then a stronger venue next cycle: not recommended. The disclosure clock started 2026-09-10 and the paper's value is highest while the pinned commits are current and the maintainer responses are fresh. Post the preprint the same week as the B submission, as the architecture already commits to, rather than instead of it.
+arXiv-first then a stronger venue next cycle: not recommended. The disclosure clock has not started (as of 2026-09-11 nothing is filed; see `report/disclosure_log.md`) and the paper's value is highest while the pinned commits are current and the maintainer responses are fresh. Post the preprint the same week as the B submission, as the architecture already commits to, rather than instead of it.
 
 The corpus-completion work and any maintainer responses are the seed of a follow-on paper for AST 2028 or ISSTA (2027-01-11 deadline is too soon). That is the route to the stronger line, with an acceptance already on record.
 
