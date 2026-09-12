@@ -439,26 +439,28 @@ University."
 
 ## Abstract (plain text, LaTeX stripped, for arXiv's abstract box)
 
-1,173 characters — well under arXiv's 1,920-character limit.
+1522 characters, against arXiv's 1,920-character limit. Regenerated from
+paper/latex/main.tex; re-run the generator if the abstract changes again.
 
 ```
-Tool-using agents are entering settings where a wrong action has a real cost, and the benchmarks
-certifying them execute each tool call in simulation and grade what the call reports having
-done, assuming the tool did what its interface advertises. The audits we survey inspect tasks,
-gold solutions, and graders, never that assumption; a defect behind it is present on every
-rerun. We treat each tool's advertised surfaces as an executable contract, check the
-implementation against it, and trace which task verdicts read state a defective tool should have
-written. Across 34 mutating tools in four benchmarks we confirm eight defect instances at pinned
-commits, one headline-eligible class in each. Against injected defects the checker raised no
-false positive in 25 flags; its recall is low, and 29 of 33 misses trace to the probe corpus, not
-the taxonomy. The clearest case is a clinical benchmark whose interface tells the agent each
-write executed, under a no-write design its paper documents and its interface does not, and
-whose grader takes that message as evidence: its action success rate records whether a request
-was well formed, not whether any record changed.
+Tool-using agents are entering settings where a wrong action carries real cost, and the
+benchmarks certifying them execute each call in simulation and grade what the call reports,
+assuming the tool did what its interface advertises. The audits we survey inspect tasks, gold
+solutions, and graders, never that assumption. A benchmark score is a published data product,
+and a defect beneath it is present on every rerun, so the exposure it creates travels with the
+number into every reuse. We treat each tool's advertised surfaces as an executable contract,
+check the implementation against it, and trace which task verdicts read state a defective tool
+should have written. Across 34 mutating tools in four benchmarks we confirm eight defect
+instances at pinned commits, one headline-eligible class in each, meaning one visible to the
+agent. Against injected defects the checker raised no false positive in 25 flags pooled from toy
+and real sites; its recall is low, and 29 of 33 misses trace to the probe corpus that drives the
+tools, not the taxonomy. The clearest case is a clinical benchmark whose interface tells the
+agent each write executed, under a no-write design its paper documents and its interface does
+not. Its grader takes that message as evidence, so its action success rate records whether a
+request was well formed, not whether any record changed. Two repairs follow: disclose a
+simplification on the surface the agent reads, and ground a write grader in state rather than in
+the tool's own success string.
 ```
-
-No LaTeX markup appears in the abstract as written in `main.tex` (no `\textbf`, `\emph`, math, or
-citation commands), so nothing needed stripping beyond copying the text out.
 
 ## Categories
 
