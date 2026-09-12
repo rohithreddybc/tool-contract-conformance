@@ -105,7 +105,7 @@ AgentFairBench makes the same move for fairness measurement: it observes that fa
 
 | Work(s) | Claim or apparent collision | Disposal |
 |---|---|---|
-| BenchGuard [benchguard26], Automated Benchmark Audit [aba26], SafeAudit [safeaudit26] | Audit task artifacts (14 subcats.), an instruction/environment/evaluation schema, and safety-suite coverage, respectively | 0/27 category overlap.[^g] Nearest miss, BenchGuard's INST-CONTRADICT, compares instruction vs. gold program, both task metadata, not the tool body |
+| BenchGuard [benchguard26], Automated Benchmark Audit [aba26], SafeAudit [safeaudit26] | Audit task artifacts (14 subcats.), an instruction/environment/evaluation schema, and safety-suite coverage, respectively | 0/17 category overlap.[^g] Nearest miss, BenchGuard's INST-CONTRADICT, compares instruction vs. gold program, both task metadata, not the tool body |
 | Tool-Veritas [toolveritas26] | Audits verdict-vs-outcome (incl. tau2-bench Retail); coins "implementation-specification mismatch" | Audits whether verdict matches outcome; we audit whether the read state was ever correctly written.[^h] |
 | ToolGate [toolgate26], Agent Behavioral Contracts [abc26], Contract2Tool [contract2tool26], ContractBench [contractbench26] | Contract vocabulary at the agent runtime: preconditions/postconditions, runtime enforcement, tool selection, observation-contract preservation | All four trust the contract and test the agent; we invert it, testing the contract against the implementation that advertises it |
 | ToolFuzz [toolfuzz25] | Nearest engineering neighbor: tests LangChain tools against their own documentation | Oracle: agent response vs. docs (trusted); our object is a simulated tool's state transition, and docs are what we distrust |
@@ -181,12 +181,17 @@ Every at-risk figure carries a basis tag, and the tags are never pooled, a disci
 |---|---|---|---|---|---|
 | tau2 airline : `cancel_reservation` | Partial Effect | whole_state_hash | 50 / 50 | 7 | state_grounded |
 | tau2 telecom : `refuel_data` | Unenforced Precondition | exact_field (1120) + collection_only (15) | 1135 / 2285 | 1120 | state_grounded |
-| AgentDojo banking : `update_scheduled_transaction` | Ignored Argument | exact_field | 1 / 16 | 4 | state_grounded |
-| AgentDojo travel : `reserve_car_rental` | Ignored Argument | exact_field | 1 / 20 | 0 | mixed |
+| AgentDojo banking : `update_scheduled_transaction` | Ignored Argument | exact_field[^j] | 1 / 16 | 4 | state_grounded |
+| AgentDojo travel : `reserve_car_rental` | Ignored Argument | exact_field[^j] | 1 / 20 | 0 | mixed |
 | MedAgentBench : post-write | Phantom Effect | transcript[^e] | undefined | n/a | 60 / 90 / 150 / 0[^f] |
 | MM-ToolSandbox : `venmo_social` | Ignored Argument | n/c | `not_computable_appworld_unreachable` | n/c | n/c |
 
 [^e]: Not a state basis.
+[^j]: Both AgentDojo rows are reached by field name, not by a task calling the defective tool. No shipped
+    travel task calls `reserve_car_rental`, and the one banking task whose oracle reads `.recurring` writes it
+    with a different tool. `FINDINGS-VERIFIED.md` excludes the travel defect from score-impact claims on that
+    ground. Both rows bound what the trace rule selects, not what the defect reaches; the rule is
+    pre-registered and is not re-specified after seeing which rows it returns.
 [^f]: Of 300 write-tagged cases: transcript / mixed / no-oracle / state. n/c = not computable (AppWorld-tier scenarios unreachable offline).
 
 The bound runs in one direction only: at-risk is an over-approximation of misgrading via the state-dependency mechanism, and it holds only where the oracle is state-grounded. "Score-at-risk" borrows the shape of value-at-risk without its probability content: this is a static reachability over-approximation with no probability distribution attached, and the term should not be read as carrying one. It says a task's verdict could have been computed wrong because its evaluator reads a field the defective tool controls; it does not say the verdict was wrong, and it says nothing about failure modes outside that mechanism. §VII checks whether the bound is vacuous on a drawn sample and finds that, on the trajectories it recorded, it is not exercised.
