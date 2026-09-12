@@ -410,6 +410,42 @@ the docstring-vs-forwarded-kwargs pattern across the other `mini/` tools if it's
 
 # PART 2 — arXiv submission package
 
+## Venue facts, read off the conference site on 2026-09-12
+
+Verified against the pages themselves rather than recalled. The main call and the special
+session do not share a deadline, which is the fact most likely to cause a bad surprise.
+
+| Item | Value | Source |
+|---|---|---|
+| Full paper deadline | **Sept 27, 2026, 11:59 pm PST** | IDM special session page |
+| Main-track deadline (does not apply to us) | Aug 21, 2026, already passed | main call for papers |
+| Notification | Nov 1, 2026 | IDM special session page |
+| Camera-ready and pre-registration | Nov 14, 2026, 11:59 pm PST | IDM special session page |
+| Conference | Dec 14-17, 2026, Phoenix AZ | IDM special session page |
+| Page limit | "Papers must not exceed 10 pages, including references." No appendices. | main call for papers |
+| Format | IEEE Computer Society Proceedings Manuscript Formatting Guidelines, two-column | main call for papers |
+| Review policy | **Single-blind.** Author names and affiliations stay in the PDF. | main call for papers |
+| Submission portal | `https://wi-lab.com/cyberchair/2026/bigdata26/index.php` | main call for papers |
+| Session organizer | Asst. Prof. Dr. Uraz Yavanoglu, Gazi University | IDM special session page |
+
+Pages: <https://bigdataieee.org/BigData2026/calls/special-data-mining/> and
+<https://bigdataieee.org/BigData2026/calls/papers/>.
+
+**Required statements: none.** The call names no ethics, data-availability, AI-use or funding
+statement as mandatory. Our AI-use paragraph and coordinated-disclosure paragraph are therefore
+voluntary, and keeping them is a choice rather than a compliance step. This resolves the comment
+in `paper/latex/main.tex` asking whoever submits to recheck the portal's required fields.
+
+**Single-blind matters for one open item.** Author names ship in the PDF, so the placeholder
+affiliation in the author block is a blocker rather than a cosmetic gap.
+
+**On topic fit, stated plainly.** The session's topic list runs from graph mining and clustering
+through LLMs, autonomous systems and knowledge discovery. It names nothing about benchmark
+quality, evaluation methodology or reproducibility, and it does not name data quality either.
+The paper's anchors into that list are LLMs and autonomous systems. This is the same gap
+`REVIEW-RESPONSE.md` recorded when the data-quality framing was added, and it is the structural
+reason two reviewers on the September panel flagged venue fit.
+
 ## Title
 
 ```
