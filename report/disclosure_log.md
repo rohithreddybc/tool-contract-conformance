@@ -39,12 +39,20 @@ below is stale:
 Re-run this check before camera-ready; a fix landing in the interval is a result worth reporting,
 not an inconvenience.
 
+**MM-ToolSandbox declines external reports.** Checked 2026-09-12: issues and discussions are
+both disabled on `apple-aiml-research/ml-mmtoolsandbox`, and its `SECURITY.md` states that "We do
+not accept external vulnerability reports for this project" because "the code [needs] to remain
+unchanged for reproducibility". It refers readers to the paper's authors, and arXiv:2607.11818
+publishes no address. A pull request would contradict that policy rather than help, so none was
+opened. Finding 7 is therefore undisclosed because the maintainers have closed every channel,
+which is a different thing from an unsent disclosure and is recorded as such.
+
 | Benchmark | Maintainer team / contact channel | Findings to disclose | Filed (date, issue URL) | Response status | Response substance | Contested? |
 |---|---|---|---|---|---|---|
 | MedAgentBench | GitHub issue tracker, project maintainers | 1, 4 | 2026-09-12, https://github.com/stanfordmlgroup/MedAgentBench/issues/10 | pending | -- | -- |
 | tau2-bench | GitHub issue tracker, Sierra Research | 2, 3 (`suspend_line` candidate reported separately, unadjudicated) | 2026-09-12, https://github.com/sierra-research/tau2-bench/issues/541 | pending | -- | -- |
 | AgentDojo | GitHub issue tracker, project maintainers | 5, 6, 8 | 2026-09-12, https://github.com/ethz-spylab/agentdojo/issues/194 | pending | -- | -- |
-| MM-ToolSandbox | Issues disabled on `apple-aiml-research/ml-mmtoolsandbox`; pull request or the authors via arXiv 2607.11818 | 7 | not yet filed | pending | -- | -- |
+| MM-ToolSandbox | No channel open: issues and discussions disabled, and `SECURITY.md` declines external reports | 7 | not filed, no channel exists | pending | -- | -- |
 
 `pending` is a placeholder response status, not a finding of non-response; it is replaced by `responded` or
 `non-responding` for each row no earlier than the disclosure date and no later than submission.
