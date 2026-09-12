@@ -273,7 +273,7 @@ Two classes recur across the other three benchmarks: an interface tells the agen
 
 All four benchmarks are cited at the audited commits [medagentbench25], [tau2bench25], [agentdojo24], [mmtoolsandbox26]; instance-level evidence is in the findings ledger, reproducible from clean clones via the artifact's shipped commands.
 
-**Coordinated disclosure.** We disclose all findings to the four maintainer teams on 2026-09-10, seventeen days before submission, with per-finding reproduction commands and proposed repairs. Under §III's principle, a repair to either side of a divergence resolves a finding, and a documentation fix counts exactly as a code fix does. Any response received by submission is reported here with its substance. For a team that has not responded by then, the fact and date of non-response is reported neutrally, with no inference drawn from silence. A finding a maintainer contests is marked contested in the camera-ready copy, with the maintainer's reasoning stated: [N12: report/disclosure_log.md].
+**Coordinated disclosure.** We disclose all findings to the four maintainer teams before submission, with per-finding reproduction commands and proposed repairs. Under §III's principle, a repair to either side of a divergence resolves a finding, and a documentation fix counts exactly as a code fix does. Any response received by submission is reported here with its substance. For a team that has not responded by then, the fact and date of non-response is reported neutrally, with no inference drawn from silence. A finding a maintainer contests is marked contested in the camera-ready copy, with the maintainer's reasoning stated: [N12: report/disclosure_log.md].
 
 ---
 
