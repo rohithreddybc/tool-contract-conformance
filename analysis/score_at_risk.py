@@ -593,6 +593,19 @@ def build_tau2_rows() -> list[dict]:
 
 
 def _medagentbench_index() -> dict:
+    if not MEDAGENTBENCH_REFSOL.exists():
+        raise SystemExit(
+            "refsol.py is not in this artifact.\n"
+            "MedAgentBench distributes it through a request link rather than in its\n"
+            "repository, so we pin its hash instead of redistributing it. To reproduce the\n"
+            "MedAgentBench arm:\n"
+            "  1. Download refsol.py from the Box link at README.md:45 of\n"
+            "     https://github.com/stanfordmlgroup/MedAgentBench\n"
+            "  2. Save it as %s\n"
+            "  3. Verify it against repro/env/refsol.py.sha256\n"
+            "Every other arm runs without it. See repro/env/README.md."
+            % MEDAGENTBENCH_REFSOL
+        )
     return _module_function_index(str(MEDAGENTBENCH_REFSOL))
 
 
