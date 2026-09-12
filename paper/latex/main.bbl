@@ -253,11 +253,6 @@ Gyori, Shi, Hariri, and Marinov, ``Reliable testing: Detecting state-polluting
 Lam, Oei \emph{et~al.}, ``{iDFlakies}: A framework for detecting and partially
   classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
 
-\bibitem{rised26}
-Bellibatlu, Singh, Jajoo, Lakhanpal, and Israni, ``{RISED}: A pre-deployment
-  evaluation framework for high-stakes {AI} decision-support systems, with
-  application to healthcare,'' 2026, preprint.
-
 \bibitem{mmtoolsandbox26}
 Ma, Feng \emph{et~al.}, ``{MM-ToolSandBox}: A unified framework for evaluating
   visual tool-calling agents,'' 2026.
