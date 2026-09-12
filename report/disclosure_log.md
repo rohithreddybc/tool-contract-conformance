@@ -15,9 +15,9 @@ repaired).
 
 ## Disclosure
 
-All findings below go to the four maintainer teams before the 2026-09-27 submission, each with a per-finding
+Three of the four were filed on 2026-09-12 and their issue URLs are in the table below. MM-ToolSandbox is not filed: `apple-aiml-research/ml-mmtoolsandbox` has issues and discussions disabled, so it needs a pull request or an email to the authors of arXiv:2607.11818. All findings go to the four maintainer teams before the 2026-09-27 submission, each with a per-finding
 reproduction command and a proposed repair (`report/findings.jsonl`, `FINDINGS-VERIFIED.md`). Issue text is drafted
-in `SUBMISSION-PACKAGE.md`. **Nothing has been filed yet**: as of 2026-09-11 no issue exists on any of the four
+in `SUBMISSION-PACKAGE.md`. **As of 2026-09-11 nothing had been filed**: as of 2026-09-11 no issue exists on any of the four
 repositories, every row below reads pending, and no issue URL is recorded. An earlier version of this file stated
 that disclosure had been sent on 2026-09-10. That was not correct and is corrected here. Each row gains its filing
 date and issue URL when the issue is actually opened.
@@ -41,9 +41,9 @@ not an inconvenience.
 
 | Benchmark | Maintainer team / contact channel | Findings to disclose | Filed (date, issue URL) | Response status | Response substance | Contested? |
 |---|---|---|---|---|---|---|
-| MedAgentBench | GitHub issue tracker, project maintainers | 1, 4 | not yet filed | pending | -- | -- |
-| tau2-bench | GitHub issue tracker, Sierra Research | 2, 3 (`suspend_line` candidate reported separately, unadjudicated) | not yet filed | pending | -- | -- |
-| AgentDojo | GitHub issue tracker, project maintainers | 5, 6, 8 | not yet filed | pending | -- | -- |
+| MedAgentBench | GitHub issue tracker, project maintainers | 1, 4 | 2026-09-12, https://github.com/stanfordmlgroup/MedAgentBench/issues/10 | pending | -- | -- |
+| tau2-bench | GitHub issue tracker, Sierra Research | 2, 3 (`suspend_line` candidate reported separately, unadjudicated) | 2026-09-12, https://github.com/sierra-research/tau2-bench/issues/541 | pending | -- | -- |
+| AgentDojo | GitHub issue tracker, project maintainers | 5, 6, 8 | 2026-09-12, https://github.com/ethz-spylab/agentdojo/issues/194 | pending | -- | -- |
 | MM-ToolSandbox | Issues disabled on `apple-aiml-research/ml-mmtoolsandbox`; pull request or the authors via arXiv 2607.11818 | 7 | not yet filed | pending | -- | -- |
 
 `pending` is a placeholder response status, not a finding of non-response; it is replaced by `responded` or
