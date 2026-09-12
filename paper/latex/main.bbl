@@ -28,7 +28,7 @@ Long, Du, Xu \emph{et~al.}, ``{LiveClawBench}: Benchmarking {LLM} agents on
 \bibitem{benchguard26}
 Tu, Wang \emph{et~al.}, ``{BenchGuard}: Who guards the benchmarks? automated
   auditing of {LLM} agent benchmarks,'' 2026, accepted, Conference on Language
-  Modeling (COLM) 2026.
+  Modeling ({COLM}) 2026.
 
 \bibitem{aba26}
 Wang, Bianchi \emph{et~al.}, ``Automated benchmark auditing for {AI} agents and
@@ -70,12 +70,12 @@ Zhou, Xu, Zhu \emph{et~al.}, ``{WebArena}: A realistic web environment for
 
 \bibitem{appworld24}
 Trivedi, Khot, Hartmann \emph{et~al.}, ``{AppWorld}: A controllable world of
-  apps and people for benchmarking interactive coding agents,'' 2024, aCL 2024
-  (Camera Ready); Scopus pending.
+  apps and people for benchmarking interactive coding agents,'' 2024, {ACL}
+  2024 (Camera Ready); Scopus pending.
 
 \bibitem{osworld24}
 Xie, Zhang, Chen \emph{et~al.}, ``{OSWorld}: Benchmarking multimodal agents for
-  open-ended tasks in real computer environments,'' 2024, neurIPS 2024 D\&B
+  open-ended tasks in real computer environments,'' 2024, {NeurIPS} 2024 D\&B
   Track; publisher-confirmed, Scopus pending.
 
 \bibitem{androidworld25}
@@ -90,8 +90,8 @@ Barres, Dong \emph{et~al.}, ``$\tau^2$-bench: Evaluating conversational agents
 \bibitem{agentdojo24}
 Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
   ``{AgentDojo}: A dynamic environment to evaluate prompt injection attacks and
-  defenses for {LLM} agents,'' 2024, neurIPS 2024, Scopus-confirmed; D\&B track
-  sub-label unconfirmed.
+  defenses for {LLM} agents,'' 2024, {NeurIPS} 2024, Scopus-confirmed; D\&B
+  track sub-label unconfirmed.
 
 \bibitem{agentfairbench26}
 Morla, Bellibatlu, Singh, and Kapoor, ``{AgentFairBench}: Do {LLM} agents
@@ -100,10 +100,10 @@ Morla, Bellibatlu, Singh, and Kapoor, ``{AgentFairBench}: Do {LLM} agents
 \bibitem{agentdiff26}
 Pysklo, Zhuravel, and Watson, ``{Agent-Diff}: Benchmarking {LLM} agents on
   enterprise {API} tasks via code execution with state-diff-based evaluation,''
-  2026, non-archival poster, ACL 2026 workshop "Evaluating Evaluations"
-  (EvalEval), confirmed via OpenReview (forum IIyIrKwKFV); not the KDD 2026
-  proceedings entry self-cited on GitHub, which dblp and ACM DL still do not
-  corroborate.
+  2026, non-archival poster, {ACL} 2026 workshop "Evaluating Evaluations"
+  (EvalEval), confirmed via {OpenReview} (forum IIyIrKwKFV); not the {KDD} 2026
+  proceedings entry self-cited on GitHub, which dblp and {ACM} {DL} still do
+  not corroborate.
 
 \bibitem{evidencebounds26}
 Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
@@ -112,12 +112,12 @@ Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
 
 \bibitem{falsesuccess26}
 Advani, ``From confident closing to silent failure: Characterizing false
-  success in {LLM} agents,'' 2026, accepted, FAGEN workshop at ICML 2026
+  success in {LLM} agents,'' 2026, accepted, {FAGEN} workshop at {ICML} 2026
   (non-archival); independently confirmed.
 
 \bibitem{constructvalidity25}
 Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
-  validity in large language model benchmarks,'' 2025, self-listed as NeurIPS
+  validity in large language model benchmarks,'' 2025, self-listed as {NeurIPS}
   2025 Datasets and Benchmarks Track; not independently confirmed.
 
 \bibitem{judgesense26}
@@ -141,7 +141,7 @@ Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
 \bibitem{taubench24}
 Yao, Shinn, Razavi, and Narasimhan, ``$\tau$-bench: A benchmark for
   tool-agent-user interaction in real-world domains,'' 2024, preprint; distinct
-  artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,II).
+  artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,{II}).
 
 \bibitem{jcontractor05}
 Karaorman and Abercrombie, ``j{C}ontractor: Introducing design-by-contract to
