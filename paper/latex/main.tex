@@ -185,25 +185,19 @@ One shipped benchmark exhibits the divergence directly. MedAgentBench \cite{meda
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[
-  band/.style={draw, rounded corners=2pt, minimum width=6.6cm, minimum height=1cm, align=center, font=\scriptsize, text width=6.2cm},
-  lbl/.style={font=\scriptsize, align=left, text width=2.5cm},
+  band/.style={draw, rounded corners=2pt, minimum width=7.4cm, minimum height=1.15cm, align=left, font=\footnotesize, text width=7.0cm},
+  lbl/.style={font=\footnotesize, align=left, text width=2.4cm},
   arr/.style={-{Latex[length=2mm]}, thick},
 ]
-\node[band, fill=blue!6]   (iface) at (3.6,4.9) {\textbf{Interface:} what the agent reads, \texttt{docstring}, \texttt{schema}, \texttt{prompt}, \texttt{return}};
-\node[band, fill=gray!12]  (impl)  at (3.6,3.3) {\textbf{Implementation:} what the call does, \texttt{tool(args)}, \texttt{pre}~$\rightarrow$~\texttt{post}};
-\node[band, fill=orange!8] (evalb) at (3.6,1.7) {\textbf{Evaluator:} what the score reads, state / transcript $\rightarrow$ \texttt{verdict}};
-\draw[arr, red!60!black] (iface.south) -- (impl.north)
-  node[midway, right, font=\tiny, text width=2.1cm] {\textit{this work}: advertised $\rightarrow$ implemented};
-\draw[arr, red!60!black] (impl.south) -- (evalb.north)
-  node[midway, right, font=\tiny, text width=2.1cm] {\textit{this work}: implemented $\rightarrow$ scored};
-\draw[-{Latex[length=1.8mm]}, dashed, blue!45!black]
-  ($(impl.south)+(-2.6,0)$) to[bend right=18]
-  node[left, font=\tiny, text width=2.3cm]{state-based graders: read as ground truth}
-  ($(evalb.north)+(-2.6,0)$);
-\node[lbl] at (-1.55,4.9) {\textit{Benchmark audits}: inspect bands 1 \& 3 only};
+\node[band, fill=blue!6]   (iface) at (3.6,4.9) {\textbf{Interface} (what the agent reads)\\ \texttt{"POST request accepted and executed successfully"}};
+\node[band, fill=gray!12]  (impl)  at (3.6,3.2) {\textbf{Implementation} (what the call does)\\ payload parsed into a local, never read; no write anywhere in the repository};
+\node[band, fill=orange!8] (evalb) at (3.6,1.5) {\textbf{Evaluator} (what the score reads)\\ gates on that same string; no write case reads stored state};
+\draw[arr, red!60!black] (iface.south) -- (impl.north);
+\draw[arr, red!60!black] (impl.south) -- (evalb.north);
+\node[lbl] at (-1.7,4.9) {\textit{Benchmark audits} read bands 1 and 3 only};
 \end{tikzpicture}%
 }
-\caption{The tool contract links what is advertised, implemented, and scored. Benchmark audits (\S\,\ref{sec:relwork}) inspect bands 1 and 3; graders read band 2's output, as state or as transcript, as ground truth; neither tests band 2 against band 1, so a check confined to one band finds nothing inconsistent. Worked instance (MedAgentBench): the interface reports the write executed, the implementation performs none, and the evaluator gates on that message rather than on stored state.}
+\caption{The tool contract sits between the two bands benchmark audits read (\S\,\ref{sec:relwork}), and graders read band 2's output as ground truth. MedAgentBench's write path, instantiated: the interface reports a write, the implementation performs none, and the grader accepts the report.}
 \label{fig:concept}
 \end{figure}
 
@@ -246,7 +240,7 @@ The checker's role in these findings is confirmation and score-tracing rather th
 \section{Related Work}
 \label{sec:relwork}
 
-Locating that cross-layer blindness precisely means placing this audit against three bodies of work: how agent benchmarks grade tool-using tasks today, a separate literature that already verifies task completion against recorded state rather than a returned status, and the contract-checking lineage this paper's technique borrows with a different target.
+Three literatures border this audit, and each takes the tool layer on trust: the benchmarks that grade by the state a call leaves, the work that verifies completion against that state, and the contract-checking lineage whose technique we borrow for a different target.
 
 \subsection{\textbf{How Agent Benchmarks Grade Tool-Using Tasks}}
 
@@ -400,7 +394,7 @@ Every at-risk figure carries a basis tag and is never pooled across bases; \S\,\
 
 \subsection{Experimental Setup}
 
-We audit four shipped agent benchmarks at pinned commits: MedAgentBench \cite{medagentbench25} (clinical EHR); tau2-bench \cite{tau2bench25} (customer service, airline and telecom domains); AgentDojo \cite{agentdojo24} (security-focused tool use); and MM-ToolSandbox \cite{mmtoolsandbox26} (multi-modal tool use). Table~\ref{tab:perbench} reports per-benchmark totals: every benchmark contributes at least one headline-eligible defect class, and three of the four also carry additional findings that do not clear the headline bar; instance-level evidence is in the findings ledger. The four benchmarks cannot share an interpreter: tau2-bench requires Python 3.12 or later, MM-ToolSandbox requires 3.11 or 3.12, and the checker itself runs on 3.11.7. Each adapter therefore drives its benchmark in that benchmark's own environment across a subprocess boundary, which is why exceptions absorbed at that boundary bound the recall figures reported below.
+We audit four shipped agent benchmarks at pinned commits: MedAgentBench \cite{medagentbench25} (clinical EHR); tau2-bench \cite{tau2bench25} (customer service, airline and telecom domains); AgentDojo \cite{agentdojo24} (security-focused tool use); and MM-ToolSandbox \cite{mmtoolsandbox26} (multi-modal tool use). Table~\ref{tab:perbench} reports per-benchmark totals: every benchmark contributes at least one headline-eligible defect class, and three of the four also carry additional findings that do not clear the headline bar; instance-level evidence is in the findings ledger. Because the four benchmarks cannot share one Python interpreter, each adapter drives its benchmark across a subprocess boundary, and exceptions absorbed at that boundary bound every recall figure below.
 
 % Generated by report/render.py: DO NOT HAND-EDIT (CLAUDE.md: paper/tables/ is
 % generated only). Re-run: python report/render.py. Caption's second sentence added
@@ -530,7 +524,7 @@ Table~\ref{tab:recall} reports recall by operator, each named for the class it i
 
 \paragraph{Evaluation impact: a null, not a gap} Two tau2-bench findings carry mechanically verified one-hunk patches: cancelling a reservation leaves \texttt{seats\_after} at 0 unpatched and restores it to 3 patched; refuelling a suspended line succeeds unpatched and raises \texttt{ValueError} patched. Ten trajectories were replayed from each finding's own gold reference solution, five per finding (seed 1, zero discarded). Agent trajectories were unavailable offline (no model credentials), so gold references were substituted instead, a disclosed deviation from the pre-registered plan (\texttt{experiments/analysis\_plan.md} \S\S\,4--5). This substitution strengthens, not weakens, the determinism claim, since no model selects the trajectory either. All ten land in a single outcome cell (at risk, not exercised), and zero trajectories trip either trigger predicate, so zero verdicts flip. For F3 (airline \texttt{cancel\_reservation}), no flip was possible by construction: gold-run and agent-run state execute the identical, still-defective tool. For F2 (telecom \texttt{refuel\_data}), a flip was possible in principle and did not occur, because no gold trajectory calls the tool on an inactive line, and all 1,120 telecom tasks whose gold actions call it issue the same one. Per the pre-registered interpretation, this is a finding about conditional validity, not a null result: the score is correct today because no gold trajectory takes the broken path, and nothing in the benchmark prevents an agent from doing so. What that does and does not license is taken up under Threats. Full experiment detail is in the artifact.
 
-\paragraph{Sensitivity analysis: contract-authoring agreement} Contract authoring is measured, not trusted, but narrower than independent replication: both annotator sets are agent sessions on the same model family, and only B authored blind, since A already knew which tools carried confirmed findings. This is evidence of stability in sentence-to-predicate translation under one-way blindness, not independent human judgment. The two sets are compared against a shared, pre-committed probe corpus across six tools, over comparable clause pairs on successful calls only. This scoping rule lands in the same commit as the result (\texttt{dee7170}) rather than in the protocol itself (\texttt{fc776b6}), disclosed here as applied post hoc. It drops \texttt{refuel\_data} to n=2 of 9 probes and \texttt{reserve\_car\_rental} to n=2 of 11 on most pairs. The blind stratum agrees on 98 of 98 probe comparisons across 16 clause pairs and four of five blind tools; the fifth, \texttt{venmo\_social}, contributes zero comparable pairs, a segmentation artifact that also cost it Finding 7's own anchor \texttt{arg.sort\_by}. Four tools needed hand-built witness probes, disclosed before any outcome was inspected, and the sixth, \texttt{cancel\_reservation}, forms a separate contaminated stratum (Annotator B had read a worked example beforehand), never pooled with the blind result. One finding flips within the blind stratum: \texttt{reserve\_car\_rental}'s \texttt{arg.end\_time} is VIOLATES under A and UNTESTABLE under B, a missing ISO-string annotation in B's contract rather than a semantic disagreement (mechanism in the artifact).
+\paragraph{Sensitivity analysis: contract-authoring agreement} Two annotator sets wrote contracts for the same six tools against one pre-committed probe corpus. Both are agent sessions on one model family and only B wrote blind, so what this measures is whether a sentence turns into the same predicate twice, not whether two people would agree. This is evidence of stability in sentence-to-predicate translation under one-way blindness, not independent human judgment. The two sets are compared against a shared, pre-committed probe corpus across six tools, over comparable clause pairs on successful calls only. This scoping rule lands in the same commit as the result (\texttt{dee7170}) rather than in the protocol itself (\texttt{fc776b6}), disclosed here as applied post hoc. It drops \texttt{refuel\_data} to n=2 of 9 probes and \texttt{reserve\_car\_rental} to n=2 of 11 on most pairs. The blind stratum agrees on 98 of 98 probe comparisons across 16 clause pairs and four of five blind tools; the fifth, \texttt{venmo\_social}, contributes zero comparable pairs, a segmentation artifact that also cost it Finding 7's own anchor \texttt{arg.sort\_by}. Four tools needed hand-built witness probes, disclosed before any outcome was inspected, and the sixth, \texttt{cancel\_reservation}, forms a separate contaminated stratum (Annotator B had read a worked example beforehand), never pooled with the blind result. One finding flips within the blind stratum: \texttt{reserve\_car\_rental}'s \texttt{arg.end\_time} is VIOLATES under A and UNTESTABLE under B, a missing ISO-string annotation in B's contract rather than a semantic disagreement (mechanism in the artifact).
 
 \subsection{Threats to Validity}
 
