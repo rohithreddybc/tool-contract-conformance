@@ -96,8 +96,10 @@ Morla, Bellibatlu, Singh, and Kapoor, ``{AgentFairBench}: Do {LLM} agents
 \bibitem{agentdiff26}
 Pysklo, Zhuravel, and Watson, ``{Agent-Diff}: Benchmarking {LLM} agents on
   enterprise {API} tasks via code execution with state-diff-based evaluation,''
-  2026, preprint, under review for KDD 2026; not corroborated by dblp or ACM
-  DL.
+  2026, non-archival poster, ACL 2026 workshop "Evaluating Evaluations"
+  (EvalEval), confirmed via OpenReview (forum IIyIrKwKFV); not the KDD 2026
+  proceedings entry self-cited on GitHub, which dblp and ACM DL still do not
+  corroborate.
 
 \bibitem{evidencebounds26}
 Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
