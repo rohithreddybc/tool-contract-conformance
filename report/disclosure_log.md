@@ -22,6 +22,23 @@ repositories, every row below reads pending, and no issue URL is recorded. An ea
 that disclosure had been sent on 2026-09-10. That was not correct and is corrected here. Each row gains its filing
 date and issue URL when the issue is actually opened.
 
+**Still present upstream as of 2026-09-12.** Each finding was re-checked against the current
+default branch through the GitHub API, not against the local clones, three weeks after the
+commits the paper pins. All four are live, so none has been fixed in the interval and no finding
+below is stale:
+
+- MedAgentBench, `src/server/tasks/medagentbench/__init__.py` line 91: the POST branch still
+  injects "POST request accepted and executed successfully".
+- tau2-bench, `src/tau2/domains/telecom/tools.py` line 630: the Active-line precondition is still
+  commented out while the docstring still advertises it.
+- AgentDojo, `tools/banking_client.py` line 144: `update_scheduled_transaction` still guards
+  `recurring` on truthiness, so it cannot be set to false.
+- MM-ToolSandbox, `mmtoolsandbox/tools/mini/venmo.py`: the list branch still forwards
+  `page_index` and `page_limit` and still never forwards `sort_by`.
+
+Re-run this check before camera-ready; a fix landing in the interval is a result worth reporting,
+not an inconvenience.
+
 | Benchmark | Maintainer team / contact channel | Findings to disclose | Filed (date, issue URL) | Response status | Response substance | Contested? |
 |---|---|---|---|---|---|---|
 | MedAgentBench | GitHub issue tracker, project maintainers | 1, 4 | not yet filed | pending | -- | -- |
