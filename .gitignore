@@ -28,3 +28,6 @@ MEETING-*.md
 # Local slide decks, not part of the artifact.
 paper/*.pptx
 paper/~$*
+
+# arXiv source build output. Regenerate with: python paper/make_arxiv_source.py
+paper/arxiv/
