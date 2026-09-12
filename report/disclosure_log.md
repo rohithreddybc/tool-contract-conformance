@@ -27,7 +27,7 @@ date and issue URL when the issue is actually opened.
 | MedAgentBench | GitHub issue tracker, project maintainers | 1, 4 | not yet filed | pending | -- | -- |
 | tau2-bench | GitHub issue tracker, Sierra Research | 2, 3 (`suspend_line` candidate reported separately, unadjudicated) | not yet filed | pending | -- | -- |
 | AgentDojo | GitHub issue tracker, project maintainers | 5, 6, 8 | not yet filed | pending | -- | -- |
-| MM-ToolSandbox | GitHub issue tracker, project maintainers | 7 | not yet filed | pending | -- | -- |
+| MM-ToolSandbox | Issues disabled on `apple-aiml-research/ml-mmtoolsandbox`; pull request or the authors via arXiv 2607.11818 | 7 | not yet filed | pending | -- | -- |
 
 `pending` is a placeholder response status, not a finding of non-response; it is replaced by `responded` or
 `non-responding` for each row no earlier than the disclosure date and no later than submission.

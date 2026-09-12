@@ -342,7 +342,14 @@ just from reading the tool bodies against their own docstrings, nothing more ela
 
 ---
 
-## Issue 4 of 4 — `github.com/apple/ml-tool-sandbox`
+## Issue 4 of 4 — MM-ToolSandbox
+
+> **This one cannot be filed as a GitHub issue.** Checked 2026-09-12: `apple/ml-tool-sandbox`
+> is a 404. The real repository is `apple/ml-mmtoolsandbox`, which redirects to
+> `apple-aiml-research/ml-mmtoolsandbox`, and that repository has issues and discussions
+> both disabled. Forking is allowed, so a pull request against `main` is the remaining
+> in-repo channel; otherwise reach the authors through arXiv 2607.11818. The body below
+> works as a pull-request description or an email with no change beyond the greeting.
 
 **Title:** `venmo_social`'s `sort_by` parameter is documented twice but never forwarded to the
 comment-list call
@@ -383,10 +390,10 @@ docstring and the pattern already used elsewhere in the file.
 
 Reproduce:
 
-    git clone https://github.com/apple/ml-tool-sandbox
-    git -C ml-tool-sandbox checkout 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
-    sed -n '464,470p' ml-tool-sandbox/mmtoolsandbox/tools/mini/venmo.py
-    grep -n "sort_by" ml-tool-sandbox/mmtoolsandbox/tools/mini/venmo.py
+    git clone https://github.com/apple/ml-mmtoolsandbox
+    git -C ml-mmtoolsandbox checkout 1e8e9324abcb741cc6a9718f9e7c1b80e85a1363
+    sed -n '464,470p' ml-mmtoolsandbox/mmtoolsandbox/tools/mini/venmo.py
+    grep -n "sort_by" ml-mmtoolsandbox/mmtoolsandbox/tools/mini/venmo.py
 
 One scope note, in the interest of not overclaiming: we understand the downstream AppWorld
 integration wraps some of these tools, and we were not able to check whether `sort_by` survives
@@ -402,7 +409,7 @@ expect to submit around 2026-09-27. A response before then gets reported with it
 response gets recorded neutrally, with nothing inferred from silence; anything you dispute we'll
 mark contested and include your reasoning.
 
-Thanks for open-sourcing ml-tool-sandbox — happy to send over the small script we used to walk
+Thanks for open-sourcing ml-mmtoolsandbox — happy to send over the small script we used to walk
 the docstring-vs-forwarded-kwargs pattern across the other `mini/` tools if it's useful to you.
 ```
 
