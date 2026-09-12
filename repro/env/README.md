@@ -44,3 +44,11 @@ the file means publishing a new version rather than deleting anything.
 
 MedAgentBench is by Jiang, Black, Geng, Park, Zou, Ng and Chen, arXiv:2501.14654, published in
 NEJM AI vol. 2 iss. 9. Copyright remains with its authors under the MIT licence linked above.
+
+## Status
+
+The copy was removed on 2026-09-12 (option 1 above). What ships is the SHA-256 in
+`refsol.py.sha256` and the retrieval instruction: obtain `refsol.py` from the Box link at
+`README.md:45` of the MedAgentBench repository and verify it against that hash before use.
+Upstream asks the same of every user, so reproduction costs one manual download and the
+maintainers keep the gate they chose.
