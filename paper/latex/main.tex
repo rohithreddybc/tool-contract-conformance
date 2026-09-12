@@ -526,9 +526,9 @@ Table~\ref{tab:recall} reports recall by operator, each named for the class it i
 
 \subsection{Threats to Validity}
 
-\textbf{Taxonomy coverage.} Six classes are not the space of possible defects: on the toy domain the checker misses a Wilson lower bound of 0.956 of behaviourally live mutants (\S\,\ref{sec:experiments}), most of them through clauses the taxonomy never wrote.
+\textbf{Taxonomy coverage.} Six classes are not the space of possible defects. The toy-domain mutation arm measures how much escapes them, and \S\,\ref{sec:experiments} reports that bound together with the clause-level decomposition of what got past.
 
-\textbf{Real-benchmark escape rate.} The equivalent real-benchmark run produced no usable number: 465 mutations yielded zero behaviourally live mutants, so the denominator is zero (\S\,\ref{sec:experiments}). The cause is the probe corpus, which also explains 29 of the 33 real-tool misses.
+\textbf{Real-benchmark escape rate.} The equivalent real-benchmark run produced no usable escape rate at all, for the reason \S\,\ref{sec:experiments} gives with the counts: the probe corpus rather than the detector.
 
 \textbf{Sample size shortfall.} Four of six operators fall short of the pre-registered target because the corpus is structurally small, not because of a scoring choice (\S\,\ref{sec:experiments}). Achieved N is reported beside the target throughout, never absorbed into a rate.
 
