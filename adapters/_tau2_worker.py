@@ -360,11 +360,22 @@ def _message_from_dict(d: dict) -> Message:
     return cls.model_validate(d)
 
 
+_VOLATILE_MESSAGE_FIELDS = frozenset({"timestamp"})
+
+
 def _trajectory_hash(messages_json: list) -> str:
     """sha256 over the canonical JSON of a recorded trajectory's messages -- logged with every
     recording per experiments/analysis_plan.md sec 4 ("The trajectory hash is logged with every
     recorded run and printed in the artifact")."""
-    canon = json.dumps(messages_json, sort_keys=True, separators=(",", ":"), default=str)
+    # Wall-clock fields make a replay of the same trajectory hash differently, which defeats
+    # the point: the hash exists so a stranger can check that a rerun produced the same
+    # messages. Strip them before hashing.
+    stripped = [
+        {k: v for k, v in m.items() if k not in _VOLATILE_MESSAGE_FIELDS}
+        if isinstance(m, dict) else m
+        for m in messages_json
+    ]
+    canon = json.dumps(stripped, sort_keys=True, separators=(",", ":"), default=str)
     return hashlib.sha256(canon.encode("utf-8")).hexdigest()
 
 
