@@ -59,6 +59,10 @@ Buneman, Khanna, and Tan, ``Why and where: A characterization of data
   ser. Lecture Notes in Computer Science, vol. 1973.\hskip 1em plus 0.5em minus
   0.4em\relax Springer, 2001.
 
+\bibitem{simmhanplale05}
+Simmhan, Plale, and Gannon, ``A survey of data provenance in e-science,''
+  \emph{{ACM} {SIGMOD} Record}, vol.~34, no.~3, 2005.
+
 \bibitem{webarena24}
 Zhou, Xu, Zhu \emph{et~al.}, ``{WebArena}: A realistic web environment for
   building autonomous agents,'' 2024, iCLR 2024; publisher-confirmed, Scopus
@@ -119,6 +123,11 @@ Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
 \bibitem{judgesense26}
 Bellibatlu, Raff, and Zhang, ``{JudgeSense}: A benchmark for prompt sensitivity
   in {LLM}-as-a-judge systems,'' 2026.
+
+\bibitem{agentpropbench26}
+B.~Gurram, ``Auditing automated evaluation, error propagation, and runtime
+  mitigation in tool-using language agents,'' \emph{arXiv preprint
+  arXiv:2604.16706}, 2026, v2, 2026-08-10; preprint, no venue claimed.
 
 \bibitem{toolfuzz25}
 Milev, Balunovi\'{c}, Baader, and Vechev, ``{ToolFuzz} -- automated agent tool
@@ -219,17 +228,9 @@ Babu and Iyer, ``{Contract2Tool}: Learning preconditions and effects for
 Wang, He \emph{et~al.}, ``{ContractBench}: Can {LLM} agents preserve
   observation contracts?'' 2026.
 
-\bibitem{contractguard26}
-Iyer and Babu, ``The gate is only as honest as its contracts: {ContractGuard}
-  for the contract layer of risk-aware causal gating,'' 2026.
-
 \bibitem{faulttaxonomy26}
 Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
   taxonomy of types, symptoms, and root causes,'' 2026.
-
-\bibitem{kapoor24matter}
-Kapoor, Vaithilingam \emph{et~al.}, ``{AI} agents that matter,''
-  \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
 
 \bibitem{betterbench24}
 Reuel, Hardy \emph{et~al.}, ``{BetterBench}: Assessing {AI} benchmarks,
@@ -239,6 +240,10 @@ Reuel, Hardy \emph{et~al.}, ``{BetterBench}: Assessing {AI} benchmarks,
 \bibitem{utboost25}
 Yu, Zhu, He, and Kang, ``{UTBoost}: Rigorous evaluation of coding agents on
   {SWE}-bench,'' in \emph{Proceedings of ACL}, 2025.
+
+\bibitem{kapoor24matter}
+Kapoor, Vaithilingam \emph{et~al.}, ``{AI} agents that matter,''
+  \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
 
 \bibitem{gyori15}
 Gyori, Shi, Hariri, and Marinov, ``Reliable testing: Detecting state-polluting
