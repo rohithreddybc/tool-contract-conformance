@@ -1,0 +1,1 @@
+Two telecom/airline tool bodies don't enforce what their docstrings promise, plus a question about `suspend_line`'s `reason` argument

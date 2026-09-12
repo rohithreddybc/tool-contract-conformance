@@ -1,0 +1,1 @@
+POST tool response and the write-task grader both key off transcript text, not FHIR server state
