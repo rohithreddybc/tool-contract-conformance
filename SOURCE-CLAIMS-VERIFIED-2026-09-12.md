@@ -41,3 +41,19 @@ sentences are repaired: the passage now says the grounding tier decides rather t
 Earlier passes checked that the paper agreed with `FINDINGS-VERIFIED.md`. That is a different
 question from whether both agree with the code. The one claim that failed had been consistent with
 our own records for weeks and was wrong about tau2-bench's file the whole time.
+
+## External published figures, read against the source papers
+
+Added after the first pass, which had checked these only against our own notes.
+
+| Claim | Source read | Result |
+|---|---|---|
+| MedAgentBench quote on rule-based sanity checks | arXiv 2501.14654v2 PDF, §2.4.1 | Verbatim. "we manually write many rule-based sanity checks to verify the correctness of the payload of POST requests" |
+| 12 evaluated models, Action SR 0.00% to 71.33%, best Gemini-1.5 Pro | same PDF, Table 3 | All three exact. 12 rows; 0.00% at Gemma2 and Mistral v0.3; 71.33% at Gemini-1.5 Pro |
+| 69.67% overall SR for Claude 3.5 Sonnet v2, a weighted blend | same PDF, abstract and Table 3 | Exact, and the blend is 50/50: Query SR 85.33% and Action SR 54.00% average to 69.67% |
+| AGORA+ 80% precision | AGORA+ TOSEM reporting | Real but conditional. 68% learning from 50 requests, 80% from 10K. The paper now says "at 10K learning requests" |
+
+Worth recording: MedAgentBench's own prose says "The performance of 11 state-of-the-art LLMs
+on MedAgentBench is shown in Table 3" while that table lists 12 rows. Our claim of 12 is correct
+against the table, which is what we cite. The inconsistency is theirs, not ours, and we do not
+raise it in the paper because it is not the subject of any finding.
