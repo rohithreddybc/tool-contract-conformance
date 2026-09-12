@@ -23,7 +23,7 @@
 
 \bibitem{liveclawbench26}
 Long, Du, Xu \emph{et~al.}, ``{LiveClawBench}: Benchmarking {LLM} agents on
-  complex, real-world assistant tasks,'' 2026.
+  complex, real-world assistant tasks,'' 2026, arXiv:2604.13072.
 
 \bibitem{benchguard26}
 Tu, Wang \emph{et~al.}, ``{BenchGuard}: Who guards the benchmarks? automated
@@ -32,15 +32,15 @@ Tu, Wang \emph{et~al.}, ``{BenchGuard}: Who guards the benchmarks? automated
 
 \bibitem{aba26}
 Wang, Bianchi \emph{et~al.}, ``Automated benchmark auditing for {AI} agents and
-  large language models,'' 2026.
+  large language models,'' 2026, arXiv:2605.26079.
 
 \bibitem{toolveritas26}
 Bhat, Vaghasiya, Mohsin, and Aali, ``Benchmarking the benchmarks: A validity
-  audit of tool-calling evaluation,'' 2026.
+  audit of tool-calling evaluation,'' 2026, arXiv:2607.02577.
 
 \bibitem{safeaudit26}
 Chen, Yan, Zhang, and Zhang, ``Who tests the testers? systematic enumeration
-  and coverage audit of {LLM} agent tool call safety,'' 2026.
+  and coverage audit of {LLM} agent tool call safety,'' 2026, arXiv:2603.18245.
 
 \bibitem{medagentbench25}
 Jiang, Black \emph{et~al.}, ``{MedAgentBench}: A virtual {EHR} environment to
@@ -65,7 +65,7 @@ Simmhan, Plale, and Gannon, ``A survey of data provenance in e-science,''
 
 \bibitem{webarena24}
 Zhou, Xu, Zhu \emph{et~al.}, ``{WebArena}: A realistic web environment for
-  building autonomous agents,'' 2024, iCLR 2024; publisher-confirmed, Scopus
+  building autonomous agents,'' 2024, {ICLR} 2024; publisher-confirmed, Scopus
   pending.
 
 \bibitem{appworld24}
@@ -80,7 +80,7 @@ Xie, Zhang, Chen \emph{et~al.}, ``{OSWorld}: Benchmarking multimodal agents for
 
 \bibitem{androidworld25}
 Rawles, Clinckemaillie, Chang \emph{et~al.}, ``{AndroidWorld}: A dynamic
-  benchmarking environment for autonomous agents,'' 2025, iCLR 2025;
+  benchmarking environment for autonomous agents,'' 2025, {ICLR} 2025;
   publisher-confirmed, Scopus pending.
 
 \bibitem{tau2bench25}
