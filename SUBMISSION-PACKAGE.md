@@ -417,6 +417,18 @@ the docstring-vs-forwarded-kwargs pattern across the other `mini/` tools if it's
 
 # PART 2 — arXiv submission package
 
+## Reproduction commands, checked against the pinned source on 2026-09-12
+
+Every command in the four bodies was run, and every line range shows what the body says it
+shows. A disclosure that misquotes a maintainer's code is worse than no disclosure.
+
+| Target | Commit | Path and lines | What resolves there |
+|---|---|---|---|
+| MedAgentBench | `9926011` | `src/server/tasks/medagentbench/__init__.py:85-91` | POST branch parses the payload, never reads it again, injects "POST request accepted and executed successfully" |
+| tau2-bench | `c3398666` | `src/tau2/domains/telecom/tools.py:625-633` | docstring still advertises `ValueError` "if checks fail"; the Active-line check sits commented out at 629-630 while the `gb_amount` check survives |
+| AgentDojo | `089ed46` | `tools/banking_client.py:115-123`, `tools/travel_booking_client.py:382-387` | `update_scheduled_transaction` declares `recurring`; `reserve_car_rental` declares `end_time` |
+| MM-ToolSandbox | `1e8e932` | `mmtoolsandbox/tools/mini/venmo.py:464-470` | the list branch forwards `page_index` and `page_limit` and never forwards `sort_by` |
+
 ## Venue facts, read off the conference site on 2026-09-12
 
 Verified against the pages themselves rather than recalled. The main call and the special
