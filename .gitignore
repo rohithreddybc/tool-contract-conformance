@@ -31,3 +31,10 @@ paper/~$*
 
 # arXiv source build output. Regenerate with: python paper/make_arxiv_source.py
 paper/arxiv/
+
+# Generated review/Overleaf copies, rebuilt on demand from paper/latex/
+paper/overleaf/
+paper/paper20-overleaf.zip
+paper/main-for-overleaf-preview.pdf
+paper/latex/main-review.pdf
+paper/latex/main-submission.pdf
