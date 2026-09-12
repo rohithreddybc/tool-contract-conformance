@@ -108,12 +108,12 @@ AgentFairBench makes the same move for fairness measurement: it observes that fa
 | Work(s) | Claim or apparent collision | Disposal |
 |---|---|---|
 | BenchGuard [benchguard26], Automated Benchmark Audit [aba26], SafeAudit [safeaudit26] | Audit task artifacts (14 subcats.), an instruction/environment/evaluation schema, and safety-suite coverage, respectively | 0/27 category overlap.[^g] Nearest miss, BenchGuard's INST-CONTRADICT, compares instruction vs. gold program, both task metadata, not the tool body |
-| Tool-Veritas [toolveritas26] | Audits verdict-vs-outcome (incl. tau2-bench Retail); coins "implementation-specification mismatch" | Audits whether verdict matches outcome; we audit whether the read state was ever correctly written, so a gate on a defective tool's output inherits its defect.[^h] |
+| Tool-Veritas [toolveritas26] | Audits verdict-vs-outcome (incl. tau2-bench Retail); coins "implementation-specification mismatch" | Audits whether verdict matches outcome; we audit whether the read state was ever correctly written.[^h] |
 | ToolGate [toolgate26], Agent Behavioral Contracts [abc26], Contract2Tool [contract2tool26], ContractBench [contractbench26] | Contract vocabulary at the agent runtime: preconditions/postconditions, runtime enforcement, tool selection, observation-contract preservation | All four trust the contract and test the agent; we invert it, testing the contract against the implementation that advertises it |
-| ToolFuzz [toolfuzz25] | Nearest engineering neighbor: tests LangChain tools against their own documentation | Oracle: agent response vs. docs (docs trusted); our object is a simulated tool's state transition, and docs are what we do not trust |
+| ToolFuzz [toolfuzz25] | Nearest engineering neighbor: tests LangChain tools against their own documentation | Oracle: agent response vs. docs (trusted); our object is a simulated tool's state transition, and docs are what we distrust |
 | ContractGuard [contractguard26] | "Forging a tool's effects" | Adversarial-security concern (defeating a permission gate); unrelated to the benign implementation divergence studied here |
 | 34-fault agentic-AI taxonomy [faulttaxonomy26] | "Tool Invocation" category glossed as API-contract violations, mined from issue trackers | Contract assumed correct, agent violates it; we study the inverse: the tool violates its own contract, and the victim is the measurement, not the task |
-| Agentic Benchmark Checklist [abcchecklist25] | Reports τ-bench [taubench24] counts empty responses as successful (grading-rubric defect), Jan. 2024-Mar. 2025 window | tau2-bench [tau2bench25] (audited here) released June 2025, after that window, with a different grading design; code unchanged since the repository's first commit.[^i] |
+| Agentic Benchmark Checklist [abcchecklist25] | Reports τ-bench [taubench24] counts empty responses as successful (grading-rubric defect), Jan. 2024-Mar. 2025 window | tau2-bench [tau2bench25] released June 2025, after that window, with a different grading design; code unchanged since the repository's first commit.[^i] |
 | Construct-validity review [constructvalidity25] | 445 LLM benchmarks, 29 expert reviewers, pervasive construct-mapping failures | Outside that judgment-call genre: a tool either honors its declared contract on a call or not, checked by an executable rule against state snapshots |
 
 [^g]: `GATE.md` §2, in the artifact.
@@ -259,18 +259,13 @@ Across four shipped benchmarks, the ledger's twelve VIOLATES clause rows collaps
 | # | Benchmark @ commit | Tool : line | Class | Tier | Surfaced by | Quoted evidence and disposition |
 |---|---|---|---|---|---|---|
 | 1 | MedAgentBench @ `9926011` | POST branch, `__init__.py:85-91` | Phantom Effect | agent-visible (`prompt_template`, `tool_return`) | manual | "...executed successfully" fabricated; payload never re-read. |
-| 2 | tau2-bench @ `c3398666` | `refuel_data`, `telecom/tools.py:607-657` | Unenforced Precondition | agent-visible (`docstring`) | manual | "must be Active" check commented out; sibling `gb_amount` check intact.[^a] |
-| 3 | tau2-bench @ `c3398666` | `cancel_reservation`, `airline/tools.py:315, 363-368` | Partial Effect | **maintainer-annotated: not headline-eligible** | manual | "Seats release not implemented...!!!" (367); TODO (689). Seats never restored; per-episode reset.[^b] |
-| 4 | MedAgentBench @ `9926011` | write graders, `refsol.py` (SHA-256-pinned; not in repo) | Ungrounded Oracle (evaluator property, §III) | grader source | manual | "POST request accepted" gates `extract_posts`; graded from transcript regardless (breakdown: Table II). |
-| 5 | AgentDojo @ `089ed46` | `update_scheduled_transaction`, `banking_client.py:115-151` | Ignored Argument + Phantom Effect | agent-visible (`docstring`) | manual | `recurring` guarded by truthiness (`True` only); returns "...updated" unconditionally.[^c] |
-| 6 | AgentDojo @ `089ed46` | `reserve_car_rental`, `travel_booking_client.py:382-400` | Ignored Argument | agent-visible (`docstring`) | manual | `end_time` dropped from state, kept in success string.[^d] No task exercises this tool. |
-| 7 | MM-ToolSandbox @ `1e8e932` | `venmo_social`, `mini/venmo.py:464-470` | Ignored Argument | agent-visible (`docstring`) | manual | `sort_by` documented twice, never forwarded (listing branch); correct pattern appears 250 lines above in the same file. |
+| 2 | tau2-bench @ `c3398666` | `refuel_data`, `telecom/tools.py:607-657` | Unenforced Precondition | agent-visible (`docstring`) | manual | "must be Active" check commented out (selective disable). |
+| 3 | tau2-bench @ `c3398666` | `cancel_reservation`, `airline/tools.py:315, 363-368` | Partial Effect | **maintainer-annotated: not headline-eligible** | manual | "Seats release not implemented...!!!" (367); TODO (689). Seats never restored; per-episode reset (Reset Leak withdrawn). |
+| 4 | MedAgentBench @ `9926011` | write graders, `refsol.py` (SHA-256-pinned; not in repo) | Ungrounded Oracle (evaluator property, §III) | grader source | manual | "POST request accepted" gates `extract_posts`, graded from transcript, not live state. |
+| 5 | AgentDojo @ `089ed46` | `update_scheduled_transaction`, `banking_client.py:115-151` | Ignored Argument + Phantom Effect | agent-visible (`docstring`) | manual | `recurring` guarded by truthiness (`True` only); returns "...updated" unconditionally. |
+| 6 | AgentDojo @ `089ed46` | `reserve_car_rental`, `travel_booking_client.py:382-400` | Ignored Argument | agent-visible (`docstring`) | manual | `end_time` dropped from state, kept in success string. No task exercises this tool. |
+| 7 | MM-ToolSandbox @ `1e8e932` | `venmo_social`, `mini/venmo.py:464-470` | Ignored Argument | agent-visible (`docstring`) | manual | `sort_by` documented twice, never forwarded (listing branch). |
 | 8 | AgentDojo @ `089ed46` | `invite_user_to_slack`, `slack.py:93-103` | Ignored Argument | agent-visible (`docstring`) | static check | "should be sent" to `user_email`; body never reads it. |
-
-[^a]: Selective disable, not an absent check.
-[^b]: Reset confirmed per-episode; Reset Leak label withdrawn.
-[^c]: Sibling `update_user_info` repeats the guard on four fields without the phantom signal: same class, not a ninth instance.
-[^d]: The aggravating signal of §III; no shipped task's ground truth exercises this tool, so it is excluded from any score-impact claim.
 
 A third tau2-bench candidate stays below the reporting threshold: `suspend_line`'s `arg.reason` VIOLATES in the ledger at the inferred tier. A required `reason` is logged and never persisted, but whether the docstring advertises persistence rather than a log entry is contested and unadjudicated; not counted among the eight confirmed instances, though it is the eighth cell in Table III's ledger total.
 
