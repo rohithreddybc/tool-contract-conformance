@@ -65,23 +65,21 @@ Simmhan, Plale, and Gannon, ``A survey of data provenance in e-science,''
 
 \bibitem{webarena24}
 Zhou, Xu, Zhu \emph{et~al.}, ``{WebArena}: A realistic web environment for
-  building autonomous agents,'' 2024, {ICLR} 2024; publisher-confirmed, Scopus
-  pending.
+  building autonomous agents,'' 2024, {ICLR} 2024.
 
 \bibitem{appworld24}
 Trivedi, Khot, Hartmann \emph{et~al.}, ``{AppWorld}: A controllable world of
   apps and people for benchmarking interactive coding agents,'' 2024, {ACL}
-  2024 (Camera Ready); Scopus pending.
+  2024 (Camera Ready).
 
 \bibitem{osworld24}
 Xie, Zhang, Chen \emph{et~al.}, ``{OSWorld}: Benchmarking multimodal agents for
   open-ended tasks in real computer environments,'' 2024, {NeurIPS} 2024 D\&B
-  Track; publisher-confirmed, Scopus pending.
+  Track.
 
 \bibitem{androidworld25}
 Rawles, Clinckemaillie, Chang \emph{et~al.}, ``{AndroidWorld}: A dynamic
-  benchmarking environment for autonomous agents,'' 2025, {ICLR} 2025;
-  publisher-confirmed, Scopus pending.
+  benchmarking environment for autonomous agents,'' 2025, {ICLR} 2025.
 
 \bibitem{tau2bench25}
 Barres, Dong \emph{et~al.}, ``$\tau^2$-bench: Evaluating conversational agents
@@ -117,8 +115,8 @@ Advani, ``From confident closing to silent failure: Characterizing false
 
 \bibitem{constructvalidity25}
 Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
-  validity in large language model benchmarks,'' 2025, self-listed as {NeurIPS}
-  2025 Datasets and Benchmarks Track; not independently confirmed.
+  validity in large language model benchmarks,'' 2025, {NeurIPS} 2025 Datasets
+  and Benchmarks Track; not independently confirmed.
 
 \bibitem{judgesense26}
 Bellibatlu, Raff, and Zhang, ``{JudgeSense}: A benchmark for prompt sensitivity
