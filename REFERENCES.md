@@ -263,3 +263,32 @@ correction away from an unconfirmed preprint-under-review framing toward a diffe
 non-archival venue; one (`falsesuccess26`) gained a second, independent confirmation of what was already recorded.
 `agentdiff26`'s self-cited KDD 2026 entry was explicitly not adopted, consistent with the standing instruction, since
 neither dblp nor ACM DL corroborates it.
+
+## Coverage sweep, 2026-09-13 (Consensus, Scopus-indexed)
+
+Run against the paper's own claims rather than its existing citation list. Consensus covers
+Semantic Scholar, PubMed, Scopus and arXiv. Queries: tool implementation defects in agent
+benchmark environments; fault injection to validate an evaluation harness; agent defect
+taxonomy with static detection.
+
+**One venue determination overturned.** `agentdiff26` was recorded as a non-archival EvalEval at
+ACL 2026 poster because its GitHub self-citation of a KDD entry was not corroborated by dblp or
+the ACM DL when checked. It is now returned as Proceedings of the 32nd ACM SIGKDD Conference on
+Knowledge Discovery and Data Mining, DOI 10.1145/3770855.3817555, by both Consensus and an
+independent web search. The ACM DL page 403s an unauthenticated fetch, so the DOI rests on two
+indexers. The bib entry is now `@inproceedings` with that DOI.
+
+**One work added.** `agentdefects26`, Ning et al., IEEE Transactions on Software Engineering
+2026, DOI 10.1109/tse.2026.3658554. Eight agent code defect types from 2,604 developer reports
+plus a static detector over code property graphs. Confirmed peer-reviewed by a Consensus query
+with preprints excluded. Closest uncited work to ours and now disposed in II-C: their defects sit
+in the agent application, ours in the environment the agent is scored against.
+
+**Searched and not cited, with the reason.** ToolBench-X (arXiv 2606.25819) injects specification
+drift and output drift into tool environments, but measures agent recovery rather than whether a
+tool honours its own contract. ToolMisuseBench (arXiv 2604.01508) and AgentCheck (arXiv
+2607.11098) both replay injected tool faults, again scoring the agent. Harness-Bench (arXiv
+2605.27922) and the unified evaluation framework (arXiv 2605.27898) show benchmark scores reflect
+harness choices, which is adjacent to our thesis but at the scaffold layer rather than the tool
+body. None changes a claim in the paper, and at ten pages each would displace a disposal that
+does.

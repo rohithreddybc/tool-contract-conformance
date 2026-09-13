@@ -227,6 +227,11 @@ Wang, He \emph{et~al.}, ``{ContractBench}: Can {LLM} agents preserve
 Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
   taxonomy of types, symptoms, and root causes,'' 2026.
 
+\bibitem{agentdefects26}
+Ning, Zhang \emph{et~al.}, ``Defining and detecting the defects of large
+  language model-based autonomous agents,'' \emph{{IEEE} Transactions on
+  Software Engineering}, 2026.
+
 \bibitem{betterbench24}
 Reuel, Hardy \emph{et~al.}, ``{BetterBench}: Assessing {AI} benchmarks,
   uncovering issues, and establishing best practices,'' in \emph{NeurIPS
