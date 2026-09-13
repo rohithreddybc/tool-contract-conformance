@@ -45,8 +45,7 @@ Chen, Yan, Zhang, and Zhang, ``Who tests the testers? systematic enumeration
 \bibitem{medagentbench25}
 Jiang, Black \emph{et~al.}, ``{MedAgentBench}: A virtual {EHR} environment to
   benchmark medical {LLM} agents,'' \emph{NEJM AI}, vol.~2, no.~9, 2025,
-  preprint version (arXiv:2501.14654) read directly; Table 3 cited from that
-  version.
+  arXiv:2501.14654.
 
 \bibitem{wangstrong96}
 Wang and Strong, ``Beyond accuracy: What data quality means to data
@@ -98,10 +97,7 @@ Morla, Bellibatlu, Singh, and Kapoor, ``{AgentFairBench}: Do {LLM} agents
 \bibitem{agentdiff26}
 Pysklo, Zhuravel, and Watson, ``{Agent-Diff}: Benchmarking {LLM} agents on
   enterprise {API} tasks via code execution with state-diff-based evaluation,''
-  2026, non-archival poster, {ACL} 2026 workshop "Evaluating Evaluations"
-  (EvalEval), confirmed via {OpenReview} (forum IIyIrKwKFV); not the {KDD} 2026
-  proceedings entry self-cited on GitHub, which dblp and {ACM} {DL} still do
-  not corroborate.
+  2026, non-archival poster, {ACL} 2026 {EvalEval} workshop.
 
 \bibitem{evidencebounds26}
 Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
