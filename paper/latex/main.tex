@@ -176,7 +176,7 @@ large language models, autonomous agents, data quality, benchmarking, data prove
 Agentic benchmarks help decide which language models ship, and the agents they power are moving into settings where a mistaken action carries a real cost: managing a patient record, executing a financial transaction, or committing a change to a production codebase. A benchmark scores an agent by executing its tool calls against a simulated environment and grading what those calls report having done, whether by reading the state they left behind or by reading the results they returned. Either way, the grade assumes that each call did what its interface said, and that assumption sits underneath every leaderboard position and model-selection decision built on such a benchmark's number.
 
 That assumption is fragile: LiveClawBench names, as its motivating problem, that agent-benchmark mocks are commonly ``reduced to endpoint-level stubs that remove sessions, artifacts, state transitions, and downstream side effects'' \cite{liveclawbench26}. The benchmark audits we survey examine task instructions, gold solutions, evaluation scripts, environment configurations, graders, and judges \cite{benchguard26}, \cite{aba26}, \cite{toolveritas26}, \cite{safeaudit26}. \zichong{The description of prior work is too categorical. Statements such as all stop one layer above the tool body, None of them tests, and no single-layer audit sees a defect imply a general limitation across the cited methods.} \response{All three are now scoped to the four audits we cite, and the figure caption names the two categories it means. What remains beyond that scoping is narrower and checkable: none of those taxonomies has a category for a success signal decoupled from state, 27 categories mapped in the gate file, which is a claim about their published schemas rather than about what they would have found.}
- Each of these stops one layer above the tool body and treats its implementation as ground truth, so a grader inspecting sandbox state inherits any defect in the tool that wrote it. None of these tests the interface-to-state-transition contract itself; \S\,\ref{sec:relwork} maps their categories. Figure~\ref{fig:concept} lays out that layering: audits read the outer two bands, and the contract between them goes untested. \zichong{The MedAgentBench example creates a problem for the introduction's distinction between disclosed simplifications and implementation defects. The original MedAgentBench paper explicitly describes executing only GET requests, checking POST payloads, and returning success responses without performing the corresponding writes. Therefore, the absence of writes is a documented evaluation choice. Presenting this behavior as the central example of an overlooked tool defect leaves the reader uncertain whether the paper is investigating implementation errors, limitations of deliberate simulation choices, or inconsistencies between advertised capabilities and evaluation scope.} \response{We went back to their paper before changing anything. Section 2.4 says they send only GET requests so the environment does not need re-initialising, and 2.4.3 says a POST gets a JSON-loadable sanity check and is then reported to the agent as successful. That is a documented choice with a stated reason, so under our own criterion the missing write is not a defect. The paragraph says that now. What remains is what the criterion does catch. The tool returns an unqualified success string, nothing the agent can see discloses the design, and the write-task grader admits evidence only when it matches that string. One other claim rested on the old framing and is gone, the one about five prior audits, which our own gate file never supported. And because agent visibility now carries the finding, the paper says plainly that the validator's visibility check never ran on it: no contract exists for MedAgentBench, so that classification is a hand reading at the pinned commit.}
+ Each of these stops one layer above the tool body and treats its implementation as ground truth, so a grader inspecting sandbox state inherits any defect in the tool that wrote it. None of these tests the interface-to-state-transition contract itself; \S\,\ref{sec:relwork} maps their categories. Figure~\ref{fig:concept} shows one such call: the audits we survey read what the agent is told and what the grader scores, and the contract between them goes untested. \zichong{The MedAgentBench example creates a problem for the introduction's distinction between disclosed simplifications and implementation defects. The original MedAgentBench paper explicitly describes executing only GET requests, checking POST payloads, and returning success responses without performing the corresponding writes. Therefore, the absence of writes is a documented evaluation choice. Presenting this behavior as the central example of an overlooked tool defect leaves the reader uncertain whether the paper is investigating implementation errors, limitations of deliberate simulation choices, or inconsistencies between advertised capabilities and evaluation scope.} \response{We went back to their paper before changing anything. Section 2.4 says they send only GET requests so the environment does not need re-initialising, and 2.4.3 says a POST gets a JSON-loadable sanity check and is then reported to the agent as successful. That is a documented choice with a stated reason, so under our own criterion the missing write is not a defect. The paragraph says that now. What remains is what the criterion does catch. The tool returns an unqualified success string, nothing the agent can see discloses the design, and the write-task grader admits evidence only when it matches that string. One other claim rested on the old framing and is gone, the one about five prior audits, which our own gate file never supported. And because agent visibility now carries the finding, the paper says plainly that the validator's visibility check never ran on it: no contract exists for MedAgentBench, so that classification is a hand reading at the pinned commit.}
 
 
 One shipped benchmark exhibits the divergence directly. MedAgentBench \cite{medagentbench25} evaluates language-model agents against a simulated electronic health record, and its paper documents a deliberate simplification: only GET requests reach the environment, and a POST instead receives a JSON-loadable sanity check after which the harness ``indicate[s] success of execution to the agent system'' (\S\,2.4, \S\,2.4.3 of that paper). Nothing the agent reads carries that disclosure. The prompt template states call syntax only, and the tool schemas are translated from FHIR, the clinical-records interchange standard. The branch handling every write parses the payload into a local variable and never reads it again (\texttt{src/server/tasks/medagentbench/\_\_init\_\_.py}, lines 85--91 at commit \texttt{9926011}). It injects into the agent's transcript the unqualified string ``POST request accepted and executed successfully.'' No code in the repository performs the write (\texttt{git grep send\_post\_request} returns nothing at the pinned commit; \texttt{FINDINGS-VERIFIED.md}). The defect this paper reports is therefore not the missing write, which the maintainers chose and documented, but the agent-visible claim that it happened. The benchmark's own write-task grader then relies on that claim as its evidence of record (Fig.~\ref{fig:concept}; \S\,\ref{sec:experiments}).
@@ -185,40 +185,44 @@ One shipped benchmark exhibits the divergence directly. MedAgentBench \cite{meda
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[
-  box/.style={draw, rounded corners=2pt, align=left, font=\footnotesize, inner sep=4pt},
-  arr/.style={-{Latex[length=2mm]}, thick},
-  tag/.style={font=\scriptsize\itshape, align=center},
+  font=\footnotesize,
+  seen/.style={draw=blue!40!black, line width=0.5pt, fill=blue!5, rounded corners=3pt,
+               align=left, inner sep=5pt},
+  hidden/.style={draw=black!45, line width=0.5pt, fill=black!5, rounded corners=3pt,
+                 align=left, inner sep=5pt},
+  scored/.style={draw=green!45!black, line width=0.5pt, fill=green!6, rounded corners=3pt,
+                 align=left, inner sep=5pt},
+  actor/.style={draw=black!55, line width=0.5pt, fill=white, rounded corners=3pt,
+                align=center, inner sep=5pt},
+  hd/.style={font=\scriptsize\bfseries},
+  live/.style={-{Latex[length=2.2mm]}, line width=0.7pt, draw=black!70},
+  dead/.style={-{Latex[length=2.2mm]}, line width=0.7pt, draw=red!65!black, dash pattern=on 2pt off 2pt},
+  note/.style={font=\scriptsize\itshape, align=center, text=black!65},
 ]
-% the agent's call
-\node[box, fill=black!4, text width=1.9cm] (agent) at (0,2.2)
-  {\textbf{Agent}\\ issues a write};
+\node[actor, text width=1.6cm] (agent) at (0,2.35) {\textbf{Agent}\\ issues a write};
 
-% what it is told
-\node[box, fill=blue!8, text width=4.5cm] (say) at (4.6,3.5)
-  {\textbf{What the agent is told}\\ \texttt{"POST request accepted}\\ \texttt{and executed successfully"}};
+\node[seen, text width=4.6cm] (say) at (4.9,3.6)
+  {{\scriptsize\bfseries WHAT THE AGENT IS TOLD}\\[1pt]
+   \texttt{\scriptsize "POST request accepted}\\ \texttt{\scriptsize and executed successfully"}};
 
-% what actually happens
-\node[box, fill=gray!14, text width=4.5cm] (do) at (4.6,1.6)
-  {\textbf{What the record does}\\ payload parsed into a local,\\ never read; no write occurs};
+\node[hidden, text width=4.6cm] (do) at (4.9,1.1)
+  {{\scriptsize\bfseries WHAT THE RECORD DOES}\\[1pt]
+   payload parsed into a local,\\ never read; no write occurs};
 
-% the grader
-\node[box, fill=orange!10, text width=2.2cm] (grade) at (9.6,3.5)
-  {\textbf{Grader}\\ reads the message};
-\node[box, fill=green!8, text width=2.2cm] (score) at (9.6,1.6)
-  {\textbf{Score}\\ counts a success};
+\node[seen, text width=2.3cm] (grade) at (9.9,3.6) {{\scriptsize\bfseries GRADER}\\[1pt] reads the message};
+\node[scored, text width=2.3cm] (score) at (9.9,1.1) {{\scriptsize\bfseries SCORE}\\[1pt] counts a success};
 
-\draw[arr] (agent.east) -- (say.west);
-\draw[arr] (agent.east) -- (do.west);
-\draw[arr] (say.east) -- (grade.west);
-\draw[arr] (grade.south) -- (score.north);
+\draw[live] (agent.east) -- (say.west);
+\draw[live] (agent.east) -- (do.west);
+\draw[live] (say.east) -- (grade.west);
+\draw[live] (grade.south) -- (score.north);
 
-% the break: the grader never consults the record
-\draw[arr, dashed, red!70!black] (do.east) -- (score.west);
-\node[red!70!black, font=\large\bfseries, fill=white, inner sep=1pt] at (7.75,1.6) {$\times$};
-\node[tag, red!70!black, text width=3.0cm] at (7.75,0.95) {the grader never reads it};
+\draw[dead] (do.east) -- (score.west);
+\node[draw=red!65!black, circle, inner sep=1.2pt, fill=white, line width=0.6pt,
+      font=\scriptsize\bfseries, text=red!65!black] at (8.35,1.1) {$\times$};
+\node[note, text=red!65!black, text width=3.6cm] at (8.0,0.4) {the grader never reads the state};
 
-\node[tag, text width=5.2cm] at (4.6,4.95) {audits read what is said and what is scored};
-\node[tag, text width=5.2cm, red!70!black] at (4.6,0.35) {this paper tests what actually happened};
+\node[note, text width=6cm] at (4.9,4.55) {the audits we survey read the blue boxes};
 \end{tikzpicture}%
 }
 \caption{One write in MedAgentBench, seen three ways at once. The agent is told the write executed, no record changes, and the grader scores the message rather than the state. The audits we survey read the outer two boxes (\S\,\ref{sec:relwork}); the contract between them is what this paper tests.}
@@ -366,16 +370,35 @@ Fig.~\ref{fig:pipeline} lays out the pipeline this section describes, in order, 
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[
-  stage/.style={draw, rounded corners=2pt, minimum height=1.6cm, minimum width=3.0cm, align=left, font=\tiny, text width=2.8cm, anchor=north},
+  font=\footnotesize,
+  stage/.style={draw=blue!40!black, line width=0.5pt, fill=blue!5, rounded corners=3pt,
+                align=left, inner sep=5pt, text width=2.75cm, minimum height=1.62cm,
+                anchor=north},
+  check/.style={draw=green!45!black, line width=0.5pt, fill=green!6, rounded corners=3pt,
+                align=left, inner sep=5pt, text width=3.6cm, anchor=north},
+  live/.style={-{Latex[length=2.2mm]}, line width=0.7pt, draw=black!70},
+  aside/.style={-{Latex[length=2mm]}, line width=0.6pt, draw=black!45, dash pattern=on 2pt off 2pt},
+  note/.style={font=\scriptsize\itshape, align=center, text=black!65},
 ]
-\node[stage, fill=blue!6]   (a) at (0,5.2)   {\textbf{\scriptsize A. Contract} \\[3pt] Authored from the tool's own advertised surfaces. Every clause cites the text it came from.};
-\node[stage, fill=gray!10]  (b) at (3.3,5.2) {\textbf{\scriptsize B. Checker} \\[3pt] Static scan proposes sites. Dynamic run snapshots state around each call and evaluates the clauses.};
-\node[stage, fill=orange!8] (c) at (6.6,5.2) {\textbf{\scriptsize C. Score-at-risk} \\[3pt] Defect to field, field to evaluator, evaluator to the tasks it scores.};
-\draw[-{Latex[length=2mm]}, thick] (a.east) -- (b.west);
-\draw[-{Latex[length=2mm]}, thick] (b.east) -- (c.west);
-\node[stage, fill=green!6, minimum height=1.2cm] (d) at (3.3,2.6)
-  {\textbf{\scriptsize Validation} \\[3pt] Injected defects give precision and recall. Replay gives verdict impact.};
-\draw[-{Latex[length=1.8mm]}, dashed] (d.north) -- (b.south);
+\node[stage] (a) at (0,3.4)
+  {{\scriptsize\bfseries A. CONTRACT}\\[2pt]
+   authored from the tool's own advertised surfaces; every clause cites the text it came from};
+\node[stage] (b) at (3.7,3.4)
+  {{\scriptsize\bfseries B. CHECKER}\\[2pt]
+   a static scan proposes sites; a dynamic run snapshots state around each call and evaluates the clauses};
+\node[stage] (c) at (7.4,3.4)
+  {{\scriptsize\bfseries C. SCORE-AT-RISK}\\[2pt]
+   defect to field, field to evaluator, evaluator to the tasks it scores};
+
+\draw[live] (a.east) -- (b.west);
+\draw[live] (b.east) -- (c.west);
+
+\node[check] (d) at (3.7,1.55)
+  {{\scriptsize\bfseries VALIDATION}\\[2pt]
+   injected defects give precision and recall; replay gives verdict impact};
+\draw[aside] (d.north) -- (b.south);
+
+\node[note, text width=7cm] at (3.7,4.25) {static and model-free, in the order the method section takes them};
 \end{tikzpicture}%
 }
 \caption{Method overview. Stages A--C are static and model-free, matching \S\,\ref{sec:method}'s three subsections in order; the validation side branch is where \S\,\ref{sec:experiments}'s numbers come from.}
