@@ -372,7 +372,7 @@ Fig.~\ref{fig:pipeline} lays out the pipeline this section describes, in order, 
 \begin{tikzpicture}[
   font=\footnotesize,
   stage/.style={draw=blue!40!black, line width=0.5pt, fill=blue!5, rounded corners=3pt,
-                align=left, inner sep=5pt, text width=2.75cm, minimum height=1.62cm,
+                align=left, inner sep=5pt, text width=2.75cm, minimum height=2.25cm,
                 anchor=north},
   check/.style={draw=green!45!black, line width=0.5pt, fill=green!6, rounded corners=3pt,
                 align=left, inner sep=5pt, text width=3.6cm, anchor=north},
@@ -393,12 +393,12 @@ Fig.~\ref{fig:pipeline} lays out the pipeline this section describes, in order, 
 \draw[live] (a.east) -- (b.west);
 \draw[live] (b.east) -- (c.west);
 
-\node[check] (d) at (3.7,1.55)
+\node[check] (d) at (3.7,0.85)
   {{\scriptsize\bfseries VALIDATION}\\[2pt]
    injected defects give precision and recall; replay gives verdict impact};
 \draw[aside] (d.north) -- (b.south);
 
-\node[note, text width=7cm] at (3.7,4.25) {static and model-free, in the order the method section takes them};
+\node[note, text width=7cm] at (3.7,4.15) {static and model-free, in the order the method section takes them};
 \end{tikzpicture}%
 }
 \caption{Method overview. Stages A--C are static and model-free, matching \S\,\ref{sec:method}'s three subsections in order; the validation side branch is where \S\,\ref{sec:experiments}'s numbers come from.}
