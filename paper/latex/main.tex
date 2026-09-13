@@ -77,13 +77,15 @@
 \newcommand{\brk}{\allowbreak\hspace{0pt}}
 
 % =====================================================================
-% Review mark-up. \reviewtrue prints Zichong's comments (verbatim, as sent
+% Review mark-up. This file is the single maintained source and ships with
+% \reviewtrue, so comments are always visible. Flip to \reviewfalse only to
+% build the submission PDF. \reviewtrue prints Zichong's comments (verbatim, as sent
 % on the Overleaf draft) and our replies; \reviewfalse compiles the
 % submission copy, in which both are invisible and the page count is
 % unaffected. Do not edit the text inside \zichong{}: it is his wording.
 % =====================================================================
 \newif\ifreview
-\reviewfalse
+\reviewtrue
 \newcommand{\zichong}[1]{\ifreview{\color{blue}{\small\bf\sf [Zichong: #1]}}\fi}
 \newcommand{\response}[1]{\ifreview{\color{teal}{\small\sf [Response: #1]}}\fi}
 
