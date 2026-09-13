@@ -62,6 +62,15 @@
 \usepackage{url}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc}
+% Figure palette (supplied with the reference layouts).
+\definecolor{TCblue}{HTML}{2B6CB0}
+\definecolor{TCred}{HTML}{C53030}
+\definecolor{TCgreen}{HTML}{2F855A}
+\definecolor{TCorange}{HTML}{C05621}
+\definecolor{TClightblue}{HTML}{EBF4FF}
+\definecolor{TClightred}{HTML}{FFF5F5}
+\definecolor{TClightgreen}{HTML}{F0FFF4}
+\definecolor{TClightorange}{HTML}{FFFAF0}
 % hyperref must be loaded last
 \usepackage[hidelinks]{hyperref}
 
@@ -184,62 +193,33 @@ One shipped benchmark exhibits the divergence directly. MedAgentBench \cite{meda
 \begin{figure}[t]
 \centering
 \resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[
-  font=\footnotesize,
-  panel/.style={rounded corners=3pt, align=left, inner sep=4pt, line width=0.6pt},
-  told/.style={panel, draw=blue!55!black, fill=blue!7},
-  does/.style={panel, draw=red!55!black, fill=red!5},
-  midbox/.style={panel, draw=blue!55!black, fill=blue!4, align=left},
-  okbox/.style={panel, draw=green!45!black, fill=green!7, align=left},
-  nobox/.style={panel, draw=red!55!black, fill=red!6, align=left},
-  actor/.style={panel, draw=black!55, fill=black!4, align=center},
-  inset/.style={rounded corners=2pt, draw=blue!30!black, fill=white, line width=0.4pt,
-                inner sep=3pt, font=\ttfamily\scriptsize, align=left},
-  flow/.style={-{Latex[length=2.2mm]}, line width=0.8pt, draw=blue!45!black},
-  dead/.style={-{Latex[length=2.2mm]}, line width=0.8pt, draw=red!65!black,
-               dash pattern=on 2.5pt off 2pt},
-  hd/.style={font=\scriptsize\bfseries},
-  sub/.style={font=\scriptsize\itshape, text=black!60},
-]
-\node[actor, text width=1.85cm] (agent) at (0,2.45) {\textbf{Agent}\\[1pt] issues a write};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\sffamily\scriptsize,>=Latex]
+\tikzset{box/.style={draw=black!55,rounded corners=1.5pt,align=center,inner sep=4pt,fill=white},
+         arrow/.style={->,line width=.65pt,draw=black!55}}
+\node[box,text width=1.5cm,minimum height=1.1cm] (agent) at (0.75,1.45) {Agent\\issues a write};
 
-\node[told, text width=5.0cm, minimum height=1.55cm, anchor=north west] (told) at (2.35,4.55) {};
-\node[anchor=north west, font=\scriptsize\bfseries, text=blue!55!black] at (2.5,4.45)
-  {What the agent is told};
-\node[inset, text width=4.35cm, anchor=north west] at (2.55,4.02)
-  {"POST request accepted\\ and executed successfully"};
+\node[box,draw=TCblue,fill=TClightblue,text width=3.9cm,minimum height=1.3cm,anchor=west] (msg) at (2.0,2.45)
+  {\textbf{What the agent is told}\\[1mm]\ttfamily\scriptsize "POST request accepted\\and executed successfully"};
+\node[box,draw=TCred,fill=TClightred,text width=3.9cm,minimum height=1.3cm,anchor=west] (state) at (2.0,0.45)
+  {\textbf{What the record does}\\[1mm]payload parsed into a local;\\never read again; no write occurs};
 
-\node[does, text width=5.0cm, anchor=north west] (does) at (2.35,1.85)
-  {{\color{red!55!black}\scriptsize\bfseries What the record does}\\[2pt]
-   $\bullet$~payload parsed into a local\\
-   $\bullet$~never read again\\
-   $\bullet$~no database write occurs};
+\node[box,draw=TCblue,fill=TClightblue,text width=1.5cm,minimum height=1.1cm] (grader) at (7.35,2.45)
+  {\textbf{Grader}\\reads message};
+\node[box,draw=TCgreen,fill=TClightgreen,text width=1.9cm,minimum height=1.1cm] (score) at (9.95,2.45)
+  {\textbf{Score: success}\\\itshape action success rate};
+\node[box,draw=TCred,fill=TClightred,text width=1.9cm,minimum height=1.1cm] (actual) at (9.95,0.45)
+  {\textbf{State}\\unchanged; no write};
 
-\node[midbox, text width=1.95cm, anchor=north west] (grader) at (7.95,4.15)
-  {{\scriptsize\bfseries Grader}\\[1pt] reads the message};
+\draw[arrow] (agent.east) -- (msg.west);
+\draw[arrow] (agent.east) -- (state.west);
+\draw[arrow] (msg.east) -- (grader.west);
+\draw[arrow] (grader.east) -- (score.west);
+\draw[arrow,draw=TCred,dashed] (state.east) -- (actual.west);
+\node[draw=TCred,circle,inner sep=1pt,text=TCred,font=\bfseries,fill=white] at (7.35,0.45) {$\times$};
+\node[text=TCred,font=\itshape\tiny,align=center,text width=2.4cm] at (7.35,-0.25) {grader never reads state};
 
-\node[okbox, text width=2.35cm, anchor=north west] (score) at (10.5,4.25)
-  {{\color{green!40!black}\large\bfseries\checkmark}~{\scriptsize\bfseries Score: success}\\[1pt]
-   \textit{action success rate}};
-
-\node[nobox, text width=2.35cm, anchor=north west] (state) at (10.5,1.55)
-  {{\scriptsize\bfseries State: unchanged}\\[1pt]
-   {\color{red!65!black}\large\bfseries$\times$}~no write};
-
-\draw[flow] (agent.east) -- ++(0.3,0) |- (told.west);
-\draw[flow, draw=red!55!black] (agent.east) -- ++(0.3,0) |- (does.west);
-\draw[flow] (told.east) -- (grader.west);
-\draw[flow] (grader.east) -- (score.west);
-
-\draw[dead] (does.east) -- (state.west);
-\node[draw=red!65!black, circle, inner sep=1.3pt, fill=white, line width=0.7pt,
-      font=\scriptsize\bfseries, text=red!65!black] (x) at (9.3,0.95) {$\times$};
-\node[sub, text=red!65!black, text width=2.6cm, align=center] at (9.3,0.3)
-  {grader never reads the state};
-
-\node[rounded corners=2pt, draw=red!50!black, fill=red!4, line width=0.5pt,
-      inner sep=3pt, text width=11.9cm, align=center, font=\scriptsize,
-      text=red!60!black, anchor=north west] at (0.5,-0.35)
+\node[fill=TClightred,text=TCred,rounded corners=1.5pt,inner xsep=5pt,inner ysep=3pt,
+      font=\bfseries\scriptsize,text width=9.6cm,align=center] at (5.4,-1.05)
   {Evaluation can award success even when no state-changing action occurred.};
 \end{tikzpicture}%
 }
@@ -382,49 +362,32 @@ Three consequences follow. First, the tier decides, not the intent. tau2-bench r
 \section{Method}
 \label{sec:method}
 
-Fig.~\ref{fig:pipeline} lays out the pipeline this section describes, in order, and each stage answers one challenge from \S\,\ref{sec:intro}. Stage 1 is a contract specification authored against no pre-existing formal contract; stage 2 is a static and dynamic conformance checker applying \S\,\ref{sec:prelim}'s benign-simplification criterion; and stage 3 is a score-at-risk dependency trace, tracing a confirmed defect to the verdicts it can reach. \S\,\ref{sec:experiments} reports what each stage found.
+Fig.~\ref{fig:pipeline} lays out the pipeline this section describes, in order, and each stage answers one challenge from \S\,\ref{sec:intro}. Stage 1 is a contract specification authored against no pre-existing formal contract; stage 2 is a static and dynamic conformance checker applying \S\,\ref{sec:prelim}'s benign-simplification criterion; and stage 4 is a score-at-risk dependency trace, tracing a confirmed defect to the verdicts it can reach. \S\,\ref{sec:experiments} reports what each stage found.
 
 \begin{figure}[t]
 \centering
 \resizebox{\columnwidth}{!}{%
-\begin{tikzpicture}[
-  font=\footnotesize,
-  st/.style={rounded corners=3pt, align=left, inner sep=4pt, line width=0.6pt,
-             text width=2.95cm, minimum height=2.05cm, anchor=north west},
-  blu/.style={st, draw=blue!55!black, fill=blue!6},
-  grn/.style={st, draw=green!45!black, fill=green!7},
-  amb/.style={st, draw=orange!70!black, fill=orange!8},
-  flow/.style={-{Latex[length=2.2mm]}, line width=0.8pt, draw=blue!45!black},
-  back/.style={-{Latex[length=2mm]}, line width=0.7pt, draw=black!55,
-               dash pattern=on 2.5pt off 2pt},
-  role/.style={font=\scriptsize\itshape, align=center},
-]
-\node[blu] (a) at (0,3.6)
-  {{\color{blue!55!black}\scriptsize\bfseries 1. CONTRACT}\\[2pt]
-   clauses extracted from the tool's own advertised surfaces: docstring, schema, prompt text, return string};
-\node[blu] (b) at (3.55,3.6)
-  {{\color{blue!55!black}\scriptsize\bfseries 2. CHECKER}\\[2pt]
-   a static scan proposes call sites; a dynamic run snapshots state around each call and evaluates the clauses};
-\node[amb] (c) at (7.10,3.6)
-  {{\color{orange!70!black}\scriptsize\bfseries 3. SCORE-AT-RISK}\\[2pt]
-   defect to field, field to evaluator, evaluator to the benchmark tasks it scores};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\sffamily\scriptsize,>=Latex]
+\tikzset{stage/.style={draw=black!55,rounded corners=1.5pt,align=left,inner sep=5pt,
+                      text width=3.45cm,minimum height=1.25cm},
+         arrow/.style={->,line width=.7pt,draw=black!55}}
+\node[stage,draw=TCblue,fill=TClightblue] (a) at (0,2.1)
+  {\textbf{1. CONTRACT}\\clauses from the tool's own advertised surfaces, each citing its source text};
+\node[stage,draw=TCblue,fill=TClightblue] (b) at (4.35,2.1)
+  {\textbf{2. CHECKER}\\static scan proposes call sites; dynamic run snapshots state and tests clauses};
+\node[stage,draw=TCgreen,fill=TClightgreen] (c) at (0,-0.15)
+  {\textbf{3. VALIDATION}\\injected defects $\rightarrow$ precision, recall; replay $\rightarrow$ verdict impact};
+\node[stage,draw=TCorange,fill=TClightorange] (d) at (4.35,-0.15)
+  {\textbf{4. SCORE-AT-RISK}\\defect $\rightarrow$ field $\rightarrow$ evaluator $\rightarrow$ the tasks it scores};
 
-\node[role, text=blue!45!black, text width=3cm] at (1.48,1.28) {static, model-free};
-\node[role, text=blue!45!black, text width=2.2cm] at (5.6,1.28) {static and dynamic};
-\node[role, text=orange!65!black, text width=3.1cm] at (8.58,1.28) {trace to benchmark impact};
-
-\draw[flow] (a.east) -- (b.west);
-\draw[flow] (b.east) -- (c.west);
-
-\node[grn, text width=4.2cm, minimum height=1.25cm] (d) at (3.55,0.55)
-  {{\color{green!40!black}\scriptsize\bfseries 4. VALIDATION}\\[2pt]
-   injected defects give precision and recall; replay gives verdict impact};
-\node[role, text=green!35!black, text width=3.4cm] at (5.65,-0.95) {tests the checker, not the benchmarks};
-
-\draw[back] ([xshift=6mm]d.north west) -- ([xshift=6mm]b.south west);
+\draw[arrow] (a.east) -- (b.west);
+\draw[arrow] (b.south) -- ++(0,-0.34) -| (c.north);
+\draw[arrow] (c.east) -- (d.west);
+\draw[->,line width=.7pt,draw=black!55,dashed] ([xshift=9mm]c.north) -- ++(0,0.42)
+  node[above,font=\tiny,text=black!60]{validation refines the checker} -| ([xshift=-9mm]b.south);
 \end{tikzpicture}%
 }
-\caption{Method overview. Stages 1 to 3 are static and model-free and match \S\,\ref{sec:method}'s three subsections in order. Validation is a branch rather than a step: it measures the checker, and \S\,\ref{sec:experiments} reports what it found.}
+\caption{Method overview. Stages 1, 2 and 4 are \S\,\ref{sec:method}'s three subsections in order, all static and model-free. Stage 3 measures the checker rather than the benchmarks and is reported in \S\,\ref{sec:experiments}; its results feed back into the checker.}
 \label{fig:pipeline}
 \end{figure}
 
