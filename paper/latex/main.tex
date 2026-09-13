@@ -185,23 +185,47 @@ One shipped benchmark exhibits the divergence directly. MedAgentBench \cite{meda
 \centering
 \resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[
-  band/.style={draw, rounded corners=2pt, minimum width=7.4cm, minimum height=1.15cm, align=left, font=\footnotesize, text width=7.0cm},
-  lbl/.style={font=\footnotesize, align=left, text width=2.4cm},
+  box/.style={draw, rounded corners=2pt, align=left, font=\footnotesize, inner sep=4pt},
   arr/.style={-{Latex[length=2mm]}, thick},
+  tag/.style={font=\scriptsize\itshape, align=center},
 ]
-\node[band, fill=blue!6]   (iface) at (3.6,4.9) {\textbf{Interface} (what the agent reads)\\ \texttt{"POST request accepted and executed successfully"}};
-\node[band, fill=gray!12]  (impl)  at (3.6,3.2) {\textbf{Implementation} (what the call does)\\ payload parsed into a local, never read; no write anywhere in the repository};
-\node[band, fill=orange!8] (evalb) at (3.6,1.5) {\textbf{Evaluator} (what the score reads)\\ gates on that same string; no write case reads stored state};
-\draw[arr, red!60!black] (iface.south) -- (impl.north);
-\draw[arr, red!60!black] (impl.south) -- (evalb.north);
-\node[lbl] at (-1.7,4.9) {\textit{Benchmark audits} read bands 1 and 3 only};
+% the agent's call
+\node[box, fill=black!4, text width=1.9cm] (agent) at (0,2.2)
+  {\textbf{Agent}\\ issues a write};
+
+% what it is told
+\node[box, fill=blue!8, text width=4.5cm] (say) at (4.6,3.5)
+  {\textbf{What the agent is told}\\ \texttt{"POST request accepted}\\ \texttt{and executed successfully"}};
+
+% what actually happens
+\node[box, fill=gray!14, text width=4.5cm] (do) at (4.6,1.6)
+  {\textbf{What the record does}\\ payload parsed into a local,\\ never read; no write occurs};
+
+% the grader
+\node[box, fill=orange!10, text width=2.2cm] (grade) at (9.6,3.5)
+  {\textbf{Grader}\\ reads the message};
+\node[box, fill=green!8, text width=2.2cm] (score) at (9.6,1.6)
+  {\textbf{Score}\\ counts a success};
+
+\draw[arr] (agent.east) -- (say.west);
+\draw[arr] (agent.east) -- (do.west);
+\draw[arr] (say.east) -- (grade.west);
+\draw[arr] (grade.south) -- (score.north);
+
+% the break: the grader never consults the record
+\draw[arr, dashed, red!70!black] (do.east) -- (score.west);
+\node[red!70!black, font=\large\bfseries, fill=white, inner sep=1pt] at (7.75,1.6) {$\times$};
+\node[tag, red!70!black, text width=3.0cm] at (7.75,0.95) {the grader never reads it};
+
+\node[tag, text width=5.2cm] at (4.6,4.95) {audits read what is said and what is scored};
+\node[tag, text width=5.2cm, red!70!black] at (4.6,0.35) {this paper tests what actually happened};
 \end{tikzpicture}%
 }
-\caption{The tool contract sits between the two bands the audits we survey read (\S\,\ref{sec:relwork}), and graders read band 2's output as ground truth. MedAgentBench's write path, instantiated: the interface reports a write, the implementation performs none, and the grader accepts the report.}
+\caption{One write in MedAgentBench, seen three ways at once. The agent is told the write executed, no record changes, and the grader scores the message rather than the state. The audits we survey read the outer two boxes (\S\,\ref{sec:relwork}); the contract between them is what this paper tests.}
 \label{fig:concept}
 \end{figure}
 
-We set out to test that interface-to-implementation-to-state-transition contract directly, for every mutating tool a benchmark ships, meaning every tool that changes environment state,, and three challenges make that hard. \textbf{No contract exists to check against.} One must be authored from the tool's own advertised surfaces, and a check built on a surface that is itself wrong inherits the error. \textbf{Simplification is not defect.} A simulated environment is deliberately simplified in ways its maintainers consider harmless, so telling a disclosed simplification from an undisclosed one needs a principled rule, not a maintainer to ask. \textbf{A violation does not name the scores it reached.} That requires tracing the defect through the benchmark's own evaluation code to the fields it reaches.
+We set out to test that interface-to-implementation-to-state-transition contract directly, for every mutating tool a benchmark ships, meaning every tool that changes environment state, and three challenges make that hard. \textbf{No contract exists to check against.} One must be authored from the tool's own advertised surfaces, and a check built on a surface that is itself wrong inherits the error. \textbf{Simplification is not defect.} A simulated environment is deliberately simplified in ways its maintainers consider harmless, so telling a disclosed simplification from an undisclosed one needs a principled rule, not a maintainer to ask. \textbf{A violation does not name the scores it reached.} That requires tracing the defect through the benchmark's own evaluation code to the fields it reaches.
 
 That untested contract is also a data-quality problem: benchmark scores are a published data product the field mines and reuses in leaderboards and model-selection decisions, the context the data-quality dimensions literature judges a product against \cite{wangstrong96}. This paper audits that provenance, formalized for a query by dependency-analysis research \cite{bunemantan01} and surveyed as a data-management problem in its own right \cite{simmhanplale05}. A defect in that instrument is, unlike noise, present on every rerun, so the exposure it creates travels with the number into every downstream use. What that exposure could amount to is what score-at-risk bounds, without asserting that any verdict changed.
 
