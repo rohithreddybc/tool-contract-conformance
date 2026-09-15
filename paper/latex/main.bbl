@@ -90,9 +90,24 @@ Debenedetti, Zhang, Balunovi\'{c}, Beurer-Kellner, Fischer, and Tram\`{e}r,
   defenses for {LLM} agents,'' 2024, {NeurIPS} 2024, Scopus-confirmed; D\&B
   track sub-label unconfirmed.
 
-\bibitem{agentfairbench26}
-Morla, Bellibatlu, Singh, and Kapoor, ``{AgentFairBench}: Do {LLM} agents
-  discriminate when they act?'' 2026, preprint.
+\bibitem{evidencebounds26}
+Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
+  bounds for interactive-agent evaluation,'' 2026, preprint; no venue claim on
+  the abstract page.
+
+\bibitem{judgesense26}
+Bellibatlu, Raff, and Zhang, ``{JudgeSense}: A benchmark for prompt sensitivity
+  in {LLM}-as-a-judge systems,'' 2026.
+
+\bibitem{falsesuccess26}
+Advani, ``From confident closing to silent failure: Characterizing false
+  success in {LLM} agents,'' 2026, accepted, {FAGEN} workshop at {ICML} 2026
+  (non-archival); independently confirmed.
+
+\bibitem{agentpropbench26}
+B.~Gurram, ``Auditing automated evaluation, error propagation, and runtime
+  mitigation in tool-using language agents,'' \emph{arXiv preprint
+  arXiv:2604.16706}, 2026, v2, 2026-08-10; preprint, no venue claimed.
 
 \bibitem{agentdiff26}
 Pysklo, Zhuravel, and Watson, ``{Agent-Diff}: Benchmarking {LLM} agents on
@@ -100,33 +115,23 @@ Pysklo, Zhuravel, and Watson, ``{Agent-Diff}: Benchmarking {LLM} agents on
   in \emph{Proceedings of the 32nd {ACM} {SIGKDD} Conference on Knowledge
   Discovery and Data Mining}, 2026.
 
-\bibitem{evidencebounds26}
-Gao and Zhou, ``Can agent benchmarks support their scores? evidence-supported
-  bounds for interactive-agent evaluation,'' 2026, preprint; no venue claim on
-  the abstract page.
-
-\bibitem{falsesuccess26}
-Advani, ``From confident closing to silent failure: Characterizing false
-  success in {LLM} agents,'' 2026, accepted, {FAGEN} workshop at {ICML} 2026
-  (non-archival); independently confirmed.
-
 \bibitem{constructvalidity25}
 Bean, Kearns, Romanou \emph{et~al.}, ``Measuring what matters: Construct
   validity in large language model benchmarks,'' 2025, {NeurIPS} 2025 Datasets
   and Benchmarks Track; not independently confirmed.
 
-\bibitem{judgesense26}
-Bellibatlu, Raff, and Zhang, ``{JudgeSense}: A benchmark for prompt sensitivity
-  in {LLM}-as-a-judge systems,'' 2026.
+\bibitem{betterbench24}
+Reuel, Hardy \emph{et~al.}, ``{BetterBench}: Assessing {AI} benchmarks,
+  uncovering issues, and establishing best practices,'' in \emph{NeurIPS
+  Datasets and Benchmarks Track}, 2024.
 
-\bibitem{agentpropbench26}
-B.~Gurram, ``Auditing automated evaluation, error propagation, and runtime
-  mitigation in tool-using language agents,'' \emph{arXiv preprint
-  arXiv:2604.16706}, 2026, v2, 2026-08-10; preprint, no venue claimed.
+\bibitem{utboost25}
+Yu, Zhu, He, and Kang, ``{UTBoost}: Rigorous evaluation of coding agents on
+  {SWE}-bench,'' in \emph{Proceedings of ACL}, 2025.
 
-\bibitem{toolfuzz25}
-Milev, Balunovi\'{c}, Baader, and Vechev, ``{ToolFuzz} -- automated agent tool
-  testing,'' 2025.
+\bibitem{kapoor24matter}
+Kapoor, Vaithilingam \emph{et~al.}, ``{AI} agents that matter,''
+  \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
 
 \bibitem{abcchecklist25}
 Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
@@ -137,6 +142,10 @@ Zhu, Jin, Pruksachatkun \emph{et~al.}, ``Establishing best practices for
 Yao, Shinn, Razavi, and Narasimhan, ``$\tau$-bench: A benchmark for
   tool-agent-user interaction in real-world domains,'' 2024, preprint; distinct
   artifact and codebase from $\tau^2$-bench \cite{tau2bench25} (\S\,{II}).
+
+\bibitem{toolfuzz25}
+Milev, Balunovi\'{c}, Baader, and Vechev, ``{ToolFuzz} -- automated agent tool
+  testing,'' 2025.
 
 \bibitem{jcontractor05}
 Karaorman and Abercrombie, ``j{C}ontractor: Introducing design-by-contract to
@@ -206,6 +215,14 @@ Godefroid, Lehmann, and Polishchuk, ``Differential regression testing for
   {REST} {APIs},'' in \emph{Proceedings of the 29th ACM SIGSOFT International
   Symposium on Software Testing and Analysis (ISSTA)}, 2020.
 
+\bibitem{gyori15}
+Gyori, Shi, Hariri, and Marinov, ``Reliable testing: Detecting state-polluting
+  tests to prevent test dependency,'' in \emph{Proceedings of ISSTA}, 2015.
+
+\bibitem{idflakies19}
+Lam, Oei \emph{et~al.}, ``{iDFlakies}: A framework for detecting and partially
+  classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
+
 \bibitem{toolgate26}
 Liu, Peng \emph{et~al.}, ``{ToolGate}: Contract-grounded and verified tool
   execution for {LLMs},'' 2026.
@@ -231,27 +248,6 @@ Shah, Morovati, Rahman, and Khomh, ``Characterizing faults in agentic {AI}: A
 Ning, Zhang \emph{et~al.}, ``Defining and detecting the defects of large
   language model-based autonomous agents,'' \emph{{IEEE} Transactions on
   Software Engineering}, 2026.
-
-\bibitem{betterbench24}
-Reuel, Hardy \emph{et~al.}, ``{BetterBench}: Assessing {AI} benchmarks,
-  uncovering issues, and establishing best practices,'' in \emph{NeurIPS
-  Datasets and Benchmarks Track}, 2024.
-
-\bibitem{utboost25}
-Yu, Zhu, He, and Kang, ``{UTBoost}: Rigorous evaluation of coding agents on
-  {SWE}-bench,'' in \emph{Proceedings of ACL}, 2025.
-
-\bibitem{kapoor24matter}
-Kapoor, Vaithilingam \emph{et~al.}, ``{AI} agents that matter,''
-  \emph{Transactions on Machine Learning Research (TMLR)}, 2024.
-
-\bibitem{gyori15}
-Gyori, Shi, Hariri, and Marinov, ``Reliable testing: Detecting state-polluting
-  tests to prevent test dependency,'' in \emph{Proceedings of ISSTA}, 2015.
-
-\bibitem{idflakies19}
-Lam, Oei \emph{et~al.}, ``{iDFlakies}: A framework for detecting and partially
-  classifying flaky tests,'' in \emph{Proceedings of ICST}, 2019.
 
 \bibitem{mmtoolsandbox26}
 Ma, Feng \emph{et~al.}, ``{MM-ToolSandBox}: A unified framework for evaluating
